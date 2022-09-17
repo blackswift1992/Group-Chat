@@ -57,21 +57,7 @@ struct K {
         static let unknown = "unknown"
         static let emptyString = ""
     }
-    
-    struct BrandColors {
-        static let blue = "BrandBlue"
-        static let darkGray = "BrandDarkGray"
-        static let darkMint = "BrandDarkMint"
-        static let gray = "BrandGray"
-        static let gray3 = "BrandGray3"
-        static let gray5 = "BrandGray5"
-        static let gray6 = "BrandGray6"
-        static let lighBlue = "BrandLightBlue"
-        static let mint = "BrandMint"
-        static let lightMint = "BrandLightMint"
-        static let red = "BrandRed"
-    }
-    
+
     struct BrandFonts {
         static let avenirNextHeavy = "Avenir Next Heavy"
     }

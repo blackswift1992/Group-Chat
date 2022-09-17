@@ -13,7 +13,13 @@ class LogInViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        turnOffProgressIndicator()
+        customizeViewElements()
+    }
+    
+    
+    private func customizeViewElements() {
+        progressIndicator.hidesWhenStopped = true
+        progressIndicator.stopAnimating()
     }
     
     
@@ -23,19 +29,7 @@ class LogInViewController: UIViewController {
         logInButton.isUserInteractionEnabled = state
     }
     
-    
-    private func turnOnProgressIndicator(){
-        progressIndicator.isHidden = false
-        progressIndicator.startAnimating()
-    }
-    
-    
-    private func turnOffProgressIndicator(){
-        progressIndicator.isHidden = true
-        progressIndicator.stopAnimating()
-    }
-    
-    
+
     private func failedToLogIn(with error: Error) {
         errorLabel.text = error.localizedDescription
     }
@@ -51,7 +45,7 @@ class LogInViewController: UIViewController {
               let safeUserPassword = passwordTextfield.text else { return }
         
         setViewElementsInteraction(false)
-        turnOnProgressIndicator()
+        progressIndicator.startAnimating()
         
         Auth.auth().signIn(withEmail: safeUserEmail, password: safeUserPassword) {
             [weak self] authResult, error in
@@ -61,7 +55,7 @@ class LogInViewController: UIViewController {
                 DispatchQueue.main.async {
                     self?.failedToLogIn(with: safeError)
                     self?.setViewElementsInteraction(true)
-                    self?.turnOffProgressIndicator()
+                    self?.progressIndicator.stopAnimating()
                 }
             } else {
                 self?.navigateToChat()

@@ -13,10 +13,18 @@ class SignUpViewController: UIViewController {
     
     var userRGBColor: String?
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        turnOffProgressIndicator()
+        
+        customizeViewElements()
         generateUserRGBColorString()
+    }
+    
+    
+    private func customizeViewElements() {
+        progressIndicator.hidesWhenStopped = true
+        progressIndicator.stopAnimating()
     }
     
     
@@ -24,18 +32,6 @@ class SignUpViewController: UIViewController {
         emailTextfield.isUserInteractionEnabled = state
         passwordTextfield.isUserInteractionEnabled = state
         signUpButton.isUserInteractionEnabled = state
-    }
-    
-    
-    private func turnOnProgressIndicator(){
-        progressIndicator.isHidden = false
-        progressIndicator.startAnimating()
-    }
-    
-    
-    private func turnOffProgressIndicator(){
-        progressIndicator.isHidden = true
-        progressIndicator.stopAnimating()
     }
     
     
@@ -54,7 +50,7 @@ class SignUpViewController: UIViewController {
               let safeUserPassword = passwordTextfield.text else { return }
         
         setViewElementsInteraction(false)
-        turnOnProgressIndicator()
+        progressIndicator.startAnimating()
         
         Auth.auth().createUser(withEmail: safeUserEmail, password: safeUserPassword) {
             [weak self] authResult, error in
@@ -64,7 +60,8 @@ class SignUpViewController: UIViewController {
                 DispatchQueue.main.async {
                     self?.failedToSignUp(with: safeError)
                     self?.setViewElementsInteraction(true)
-                    self?.turnOffProgressIndicator()
+                    self?.progressIndicator.stopAnimating()
+
                 }
             } else {
                 self?.uploadDefaultUserData()

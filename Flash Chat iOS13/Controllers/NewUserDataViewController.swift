@@ -20,7 +20,6 @@ class NewUserDataViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         customizeViewElements()
-        turnOffProgressIndicator()
     }
     
 
@@ -43,17 +42,8 @@ class NewUserDataViewController: UIViewController {
         
         loadPhotoButton.layer.cornerRadius = 16
         skipButton.layer.cornerRadius = 9
-    }
-    
-    
-    private func turnOnProgressIndicator(){
-        progressIndicator.isHidden = false
-        progressIndicator.startAnimating()
-    }
-    
-    
-    private func turnOffProgressIndicator(){
-        progressIndicator.isHidden = true
+        
+        progressIndicator.hidesWhenStopped = true
         progressIndicator.stopAnimating()
     }
 
@@ -78,7 +68,7 @@ class NewUserDataViewController: UIViewController {
     
     
     @IBAction private func continueButtonPressed(_ sender: UIButton) {
-        turnOnProgressIndicator()
+        progressIndicator.startAnimating()
         setViewElementsInteraction(false)
         
         guard let safeFirstName = firstNameTextField.text,
@@ -94,7 +84,7 @@ class NewUserDataViewController: UIViewController {
         } else {
             errorLabel.text = "Type your first name and last name"
             
-            turnOffProgressIndicator()
+            progressIndicator.stopAnimating()
             setViewElementsInteraction(true)
         }
     }
