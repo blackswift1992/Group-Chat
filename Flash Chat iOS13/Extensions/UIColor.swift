@@ -11,5 +11,14 @@ extension UIColor {
     static let brandLightBlue = UIColor(named: "BrandLightBlue")
     static let brandMint = UIColor(named: "BrandMint")
     static let brandLightMint = UIColor(named: "BrandLightMint")
-    static let brandRed = UIColor(named: "BrandRed") 
+    static let brandRed = UIColor(named: "BrandRed")
+    
+    
+    static func generateUserRGBColorString() -> String {
+        let red = round(Double.random(in: 0.4...1.0) * 100) / 100.0
+        let green = round(Double.random(in: 0.4...1.0) * 100) / 100.0
+        let blue = round(Double.random(in: 0.4...1.0) * 100) / 100.0
+        
+        return "\(red),\(green),\(blue)"
+    }
 }

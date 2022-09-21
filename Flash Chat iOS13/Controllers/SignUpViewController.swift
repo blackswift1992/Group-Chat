@@ -10,15 +10,11 @@ class SignUpViewController: UIViewController {
     
     @IBOutlet private weak var progressIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var signUpButton: UIButton!
-    
-    var userRGBColor: String?
-    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         customizeViewElements()
-        generateUserRGBColorString()
     }
     
     
@@ -28,6 +24,7 @@ class SignUpViewController: UIViewController {
     }
     
     
+    //замінить рядки на commonView і після цього видалити аутлети які не юзаються
     private func setViewElementsInteraction(_ state: Bool) {
         emailTextfield.isUserInteractionEnabled = state
         passwordTextfield.isUserInteractionEnabled = state
@@ -35,8 +32,10 @@ class SignUpViewController: UIViewController {
     }
     
     
-    private func failedToSignUp(with error: Error) {
-        errorLabel.text = error.localizedDescription
+    private func failedToSignUp(with errorDescription: String) {
+        errorLabel.text = errorDescription
+        setViewElementsInteraction(true)
+        progressIndicator.stopAnimating()
     }
     
     
@@ -58,55 +57,38 @@ class SignUpViewController: UIViewController {
                 print(safeError)
                 
                 DispatchQueue.main.async {
-                    self?.failedToSignUp(with: safeError)
-                    self?.setViewElementsInteraction(true)
-                    self?.progressIndicator.stopAnimating()
-
+                    self?.failedToSignUp(with: safeError.localizedDescription)
                 }
             } else {
-                self?.uploadDefaultUserData()
+                guard let safeAuthResult = authResult else { return }
+                
+                self?.uploadDefaultUserData(userId: safeAuthResult.user.uid, userEmail: safeUserEmail)
             }
         }
     }
     
     
-    private func uploadDefaultUserData() {
-        guard let safeUserId = Auth.auth().currentUser?.uid,
-              let safeUserEmail = emailTextfield.text,
-              let safeUserRGBColor = userRGBColor
-        else { return }
-        
+    private func uploadDefaultUserData(userId: String, userEmail: String) {
         let docData: [String: Any] = [
-            K.FStore.userIdField: safeUserId,
-            K.FStore.userEmailField: safeUserEmail,
+            K.FStore.userIdField: userId,
+            K.FStore.userEmailField: userEmail,
             K.FStore.firstNameField: K.Case.unknown,
             K.FStore.lastNameField: K.Case.unknown,
-            K.FStore.userRGBColorField: safeUserRGBColor,
+            K.FStore.userRGBColorField: UIColor.generateUserRGBColorString(),
             K.FStore.avatarURLField: K.Case.no
         ]
         
-        Firestore.firestore().collection(K.FStore.usersCollection).document(safeUserId).setData(docData) { [weak self] error in
+        Firestore.firestore().collection(K.FStore.usersCollection).document(userId).setData(docData) { [weak self] error in
             if let safeError = error {
                 print("Error uploading DefaultUserData: \(safeError)")
+                
+                //In NewUserDataViewController there is a code that duplicate default user data uploading (insurance).
+                self?.navigateToNewUserData()
             } else {
                 self?.navigateToNewUserData()
             }
         }
     }
-    
-    
-    private func generateUserRGBColorString() {
-        signUpButton.isUserInteractionEnabled = false
-        
-        let red = round(Double.random(in: 0.4...1.0) * 100) / 100.0
-        let green = round(Double.random(in: 0.4...1.0) * 100) / 100.0
-        let blue = round(Double.random(in: 0.4...1.0) * 100) / 100.0
-        
-        userRGBColor = "\(red),\(green),\(blue)"
-        
-        signUpButton.isUserInteractionEnabled = true
-    }
-    
     
     
     

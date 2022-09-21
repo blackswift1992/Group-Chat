@@ -47,7 +47,7 @@ class NewUserDataViewController: UIViewController {
         progressIndicator.stopAnimating()
     }
 
-    
+    //замінить рядки на commonView і після цього видалити аутлети які не юзаються
     private func setViewElementsInteraction(_ state: Bool) {
         firstNameTextField.isUserInteractionEnabled = state
         lastNameTextField.isUserInteractionEnabled = state
@@ -56,10 +56,13 @@ class NewUserDataViewController: UIViewController {
         loadPhotoButton.isUserInteractionEnabled = state
     }
     
+//    Додати методи типу failedToSignUp
+    
     
     private func navigateToChat() {
         performSegue(withIdentifier: K.Segue.newUserDataToChat, sender: self)
     }
+    
     
     
     
@@ -68,18 +71,24 @@ class NewUserDataViewController: UIViewController {
     
     
     @IBAction private func continueButtonPressed(_ sender: UIButton) {
+        guard let safeUserId = Auth.auth().currentUser?.uid,
+              let safeUserEmail = Auth.auth().currentUser?.email,
+              let safeFirstName = firstNameTextField.text,
+              let safeLastName = lastNameTextField.text,
+              let safeUserAvatar = avatarImageView.image,
+              let safeAvatarData = safeUserAvatar.jpegData(compressionQuality: 0.02)
+        else { return }
+        
         progressIndicator.startAnimating()
         setViewElementsInteraction(false)
         
-        guard let safeFirstName = firstNameTextField.text,
-              let safeLastName = lastNameTextField.text
-        else { return }
         
-        if safeFirstName != K.Case.emptyString && safeLastName != K.Case.emptyString {
-            if avatarImageView.image == UIImage(named: K.Image.defaultAvatar) {
-                uploadUserData(uploadedAvatarURL: nil)
+        if !safeFirstName.isEmpty && !safeLastName.isEmpty {
+            //Заминінити UIImage(named: K.Image.defaultAvatar) на UIImage.defaultAvatar
+            if safeUserAvatar != UIImage(named: K.Image.defaultAvatar) {
+                uploadUserDataAndAvatar(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, userAvatarData: safeAvatarData)
             } else {
-                uploadUserAvatarAndData()
+                uploadUserData(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, uploadedAvatarURL: nil)
             }
         } else {
             errorLabel.text = "Type your first name and last name"
@@ -90,57 +99,72 @@ class NewUserDataViewController: UIViewController {
     }
     
     
-    private func uploadUserAvatarAndData() {
-        guard let safeUserId = Auth.auth().currentUser?.uid,
-              let safeAvatar = avatarImageView.image
-        else { return }
-        
-        let avatarRef = Storage.storage().reference()
-            .child(K.FStore.avatarsCollection)
-            .child(safeUserId)
-        
-        guard let avatarData = safeAvatar.jpegData(compressionQuality: 0.02) else { return }
+    private func uploadUserDataAndAvatar(userId: String, userEmail: String, firstName: String, lastName: String, userAvatarData: Data) {
         
         let avatarMetaData = StorageMetadata()
         avatarMetaData.contentType = K.Image.jpegType
         
-        avatarRef.putData(avatarData, metadata: avatarMetaData) { metaData, error in
+        let avatarRef = Storage.storage().reference()
+            .child(K.FStore.avatarsCollection)
+            .child(userId)
+        
+        avatarRef.putData(userAvatarData, metadata: avatarMetaData) { [weak self] metaData, error in
             guard let _ = metaData else {
                 print("Uploading avatar data was failed")
+                
+                self?.progressIndicator.stopAnimating()
+                self?.setViewElementsInteraction(true)
+                
                 return
             }
             
             avatarRef.downloadURL { [weak self] url, error in
                 guard let safeURL = url else {
                     print("Downloading avatarURL was failed")
+                    
+                    self?.progressIndicator.stopAnimating()
+                    self?.setViewElementsInteraction(true)
+                    
                     return
                 }
                 
-                self?.uploadUserData(uploadedAvatarURL: safeURL.absoluteString)
+                self?.uploadUserData(userId: userId, userEmail: userEmail, firstName: firstName, lastName: lastName, uploadedAvatarURL: safeURL.absoluteString)
             }
             
         }
     }
     
     
-    private func uploadUserData(uploadedAvatarURL: String?) {
-        guard let safeUserId = Auth.auth().currentUser?.uid,
-              let safeFirstName = firstNameTextField.text,
-              let safeLastName = lastNameTextField.text
-        else { return }
-        
+    private func uploadUserData(userId: String, userEmail: String, firstName: String?, lastName: String?, uploadedAvatarURL: String?) {
         var docData: [String: Any] = [
-            K.FStore.firstNameField: safeFirstName,
-            K.FStore.lastNameField: safeLastName
+            K.FStore.userIdField: userId,
+            K.FStore.userEmailField: userEmail,
+            K.FStore.firstNameField: K.Case.unknown,
+            K.FStore.lastNameField: K.Case.unknown,
+            K.FStore.userRGBColorField: UIColor.generateUserRGBColorString(),
+            K.FStore.avatarURLField: K.Case.no
         ]
+        
+        if let safeFirstName = firstName {
+            docData[K.FStore.firstNameField] = safeFirstName
+        }
+        
+        if let safeLastName = lastName {
+            docData[K.FStore.lastNameField] = safeLastName
+        }
         
         if let safeAvatarURL = uploadedAvatarURL {
             docData[K.FStore.avatarURLField] = safeAvatarURL
         }
         
-        Firestore.firestore().collection(K.FStore.usersCollection).document(safeUserId).setData(docData, merge: true) { [weak self] error in
+        Firestore.firestore().collection(K.FStore.usersCollection).document(userId).setData(docData) { [weak self] error in
             if let safeError = error {
                 print("Error writing document: \(safeError)")
+                
+                self?.errorLabel.text = "Try again!"
+                self?.progressIndicator.stopAnimating()
+                self?.setViewElementsInteraction(true)
+                
             } else {
                 self?.navigateToChat()
             }
@@ -154,7 +178,14 @@ class NewUserDataViewController: UIViewController {
     
     
     @IBAction private func skipButtonPressed(_ sender: UIButton) {
-        navigateToChat()
+        guard let safeUserId = Auth.auth().currentUser?.uid,
+              let safeUserEmail = Auth.auth().currentUser?.email
+        else { return }
+        
+        progressIndicator.startAnimating()
+        setViewElementsInteraction(false)
+        
+        uploadUserData(userId: safeUserId, userEmail: safeUserEmail, firstName: nil, lastName: nil, uploadedAvatarURL: nil)
     }
 }
 
