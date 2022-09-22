@@ -102,7 +102,7 @@
                                 <color key="textColor" red="0.7790455366515151" green="0.22764608949269516" blue="0.20575985725041143" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6ll-rX-H2I">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="DefaultAvatar" translatesAutoresizingMaskIntoConstraints="NO" id="6ll-rX-H2I">
                                 <rect key="frame" x="157" y="142" width="100" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="RLH-vz-8ek"/>
@@ -208,34 +208,16 @@
                                     <constraint firstItem="jwl-9g-FMr" firstAttribute="top" secondItem="7I4-wb-drG" secondAttribute="top" constant="20" id="ziu-n6-KmN"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13L-dp-Zwg">
-                                <rect key="frame" x="177" y="555" width="60" height="20"/>
-                                <color key="backgroundColor" name="BrandDarkGray"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="1V4-hS-TJ7"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="Wbu-UR-mXK"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Skip">
-                                    <fontDescription key="titleFontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="15"/>
-                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="skipButtonPressed:" destination="WN1-bb-RTS" eventType="touchUpInside" id="09N-tW-PjO"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Ifh-SD-swR"/>
                         <color key="backgroundColor" name="BrandGray5"/>
                         <constraints>
-                            <constraint firstItem="13L-dp-Zwg" firstAttribute="centerX" secondItem="S8s-oX-AI3" secondAttribute="centerX" id="3WU-eE-dcJ"/>
                             <constraint firstItem="7I4-wb-drG" firstAttribute="leading" secondItem="Ifh-SD-swR" secondAttribute="leading" id="439-xI-pW7"/>
                             <constraint firstItem="CXG-Af-v4i" firstAttribute="top" secondItem="JkV-ZL-dRP" secondAttribute="bottom" id="5ze-S5-0Qn"/>
                             <constraint firstItem="JkV-ZL-dRP" firstAttribute="centerX" secondItem="S8s-oX-AI3" secondAttribute="centerX" id="6dd-jk-xUK"/>
                             <constraint firstItem="JkV-ZL-dRP" firstAttribute="top" secondItem="6ll-rX-H2I" secondAttribute="bottom" constant="20" id="9L1-46-Hm7"/>
                             <constraint firstItem="7I4-wb-drG" firstAttribute="trailing" secondItem="Ifh-SD-swR" secondAttribute="trailing" id="Bqs-Be-uEe"/>
                             <constraint firstItem="CXG-Af-v4i" firstAttribute="trailing" secondItem="Ifh-SD-swR" secondAttribute="trailing" id="EOp-k7-4kK"/>
-                            <constraint firstItem="13L-dp-Zwg" firstAttribute="top" secondItem="7I4-wb-drG" secondAttribute="bottom" constant="5" id="Gh2-X9-PMI"/>
                             <constraint firstItem="7I4-wb-drG" firstAttribute="top" secondItem="CXG-Af-v4i" secondAttribute="bottom" constant="-100" id="Gn6-yo-QPu"/>
                             <constraint firstItem="6ll-rX-H2I" firstAttribute="top" secondItem="i0Y-ad-Os0" secondAttribute="bottom" constant="10" id="LHV-BX-3Ym"/>
                             <constraint firstItem="Ifh-SD-swR" firstAttribute="trailing" secondItem="i0Y-ad-Os0" secondAttribute="trailing" constant="35" id="NpN-CK-qtg"/>
@@ -254,7 +236,6 @@
                         <outlet property="lastNameTextField" destination="Rdi-W0-hBU" id="sWR-J4-05t"/>
                         <outlet property="loadPhotoButton" destination="JkV-ZL-dRP" id="W0e-Ex-Fsq"/>
                         <outlet property="progressIndicator" destination="RY7-lL-TDv" id="zqi-pi-yup"/>
-                        <outlet property="skipButton" destination="13L-dp-Zwg" id="T7k-8A-UYK"/>
                         <segue destination="lwd-AH-u8E" kind="show" identifier="NewUserDataToChat" id="b70-K7-7nm"/>
                     </connections>
                 </viewController>
@@ -1326,7 +1307,7 @@
         <designable name="1dP-Vv-XmK"/>
     </designables>
     <inferredMetricsTieBreakers>
-        <segue reference="b70-K7-7nm"/>
+        <segue reference="Ody-jS-ylr"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemGray3Color"/>
     <resources>

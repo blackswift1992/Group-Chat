@@ -20,7 +20,6 @@ class SignUpViewController: UIViewController {
     
     private func customizeViewElements() {
         progressIndicator.hidesWhenStopped = true
-        progressIndicator.stopAnimating()
     }
     
     
@@ -39,6 +38,12 @@ class SignUpViewController: UIViewController {
     }
     
     
+    private func activateScreenWaitingMode() {
+        errorLabel.text = ""
+        setViewElementsInteraction(false)
+        progressIndicator.startAnimating()
+    }
+    
     
     //MARK: - SIGN UP BUTTON
     
@@ -48,11 +53,9 @@ class SignUpViewController: UIViewController {
         guard let safeUserEmail = emailTextfield.text,
               let safeUserPassword = passwordTextfield.text else { return }
         
-        setViewElementsInteraction(false)
-        progressIndicator.startAnimating()
+        activateScreenWaitingMode()
         
-        Auth.auth().createUser(withEmail: safeUserEmail, password: safeUserPassword) {
-            [weak self] authResult, error in
+        Auth.auth().createUser(withEmail: safeUserEmail, password: safeUserPassword) { [weak self] authResult, error in
             if let safeError = error {
                 print(safeError)
                 
@@ -60,36 +63,10 @@ class SignUpViewController: UIViewController {
                     self?.failedToSignUp(with: safeError.localizedDescription)
                 }
             } else {
-                guard let safeAuthResult = authResult else { return }
-                
-                self?.uploadDefaultUserData(userId: safeAuthResult.user.uid, userEmail: safeUserEmail)
-            }
-        }
-    }
-    
-    
-    private func uploadDefaultUserData(userId: String, userEmail: String) {
-        let docData: [String: Any] = [
-            K.FStore.userIdField: userId,
-            K.FStore.userEmailField: userEmail,
-            K.FStore.firstNameField: K.Case.unknown,
-            K.FStore.lastNameField: K.Case.unknown,
-            K.FStore.userRGBColorField: UIColor.generateUserRGBColorString(),
-            K.FStore.avatarURLField: K.Case.no
-        ]
-        
-        Firestore.firestore().collection(K.FStore.usersCollection).document(userId).setData(docData) { [weak self] error in
-            if let safeError = error {
-                print("Error uploading DefaultUserData: \(safeError)")
-                
-                //In NewUserDataViewController there is a code that duplicate default user data uploading (insurance).
-                self?.navigateToNewUserData()
-            } else {
                 self?.navigateToNewUserData()
             }
         }
     }
-    
     
     
     private func navigateToNewUserData() {
