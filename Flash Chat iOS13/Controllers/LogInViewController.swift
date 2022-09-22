@@ -1,5 +1,6 @@
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 class LogInViewController: UIViewController {
     @IBOutlet private weak var errorLabel: UILabel!
@@ -19,10 +20,10 @@ class LogInViewController: UIViewController {
     
     private func customizeViewElements() {
         progressIndicator.hidesWhenStopped = true
-        progressIndicator.stopAnimating()
     }
     
     
+    //замінити кучу рядків в методі на одне звернення до загальної view
     private func setViewElementsInteraction(_ state: Bool) {
         emailTextfield.isUserInteractionEnabled = state
         passwordTextfield.isUserInteractionEnabled = state
@@ -30,8 +31,17 @@ class LogInViewController: UIViewController {
     }
     
 
-    private func failedToLogIn(with error: Error) {
-        errorLabel.text = error.localizedDescription
+    private func failedToLogIn(with errorDescription: String) {
+        errorLabel.text = errorDescription
+        setViewElementsInteraction(true)
+        progressIndicator.stopAnimating()
+    }
+    
+    
+    private func activateScreenWaitingMode() {
+        errorLabel.text = ""
+        setViewElementsInteraction(false)
+        progressIndicator.startAnimating()
     }
 
     
@@ -44,8 +54,7 @@ class LogInViewController: UIViewController {
         guard let safeUserEmail = emailTextfield.text,
               let safeUserPassword = passwordTextfield.text else { return }
         
-        setViewElementsInteraction(false)
-        progressIndicator.startAnimating()
+        activateScreenWaitingMode()
         
         Auth.auth().signIn(withEmail: safeUserEmail, password: safeUserPassword) {
             [weak self] authResult, error in
@@ -53,12 +62,26 @@ class LogInViewController: UIViewController {
                 print(safeError)
                 
                 DispatchQueue.main.async {
-                    self?.failedToLogIn(with: safeError)
-                    self?.setViewElementsInteraction(true)
-                    self?.progressIndicator.stopAnimating()
+                    self?.failedToLogIn(with: safeError.localizedDescription)
                 }
             } else {
+                self?.checkIsUserDataExists()
+            }
+        }
+    }
+    
+    
+    private func checkIsUserDataExists() {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            failedToLogIn(with: "Try again")
+            return
+        }
+        
+        Firestore.firestore().collection(K.FStore.usersCollection).document(userId).getDocument { [weak self] document, error in
+            if let document = document, document.exists {
                 self?.navigateToChat()
+            } else {
+                self?.navigateToNewUserData()
             }
         }
     }
@@ -66,5 +89,10 @@ class LogInViewController: UIViewController {
     
     private func navigateToChat() {
         performSegue(withIdentifier: K.Segue.logInToChat, sender: self)
+    }
+    
+    
+    private func navigateToNewUserData() {
+        performSegue(withIdentifier: K.Segue.logInToNewUserData, sender: self)
     }
 }

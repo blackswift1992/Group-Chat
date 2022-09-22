@@ -121,7 +121,7 @@ class NewUserDataViewController: UIViewController {
     
     
     private func uploadUserData(userId: String, userEmail: String, firstName: String, lastName: String, uploadedAvatarURL: String) {
-        var docData: [String: Any] = [
+        let docData: [String: Any] = [
             K.FStore.userIdField: userId,
             K.FStore.userEmailField: userEmail,
             K.FStore.firstNameField: firstName,
