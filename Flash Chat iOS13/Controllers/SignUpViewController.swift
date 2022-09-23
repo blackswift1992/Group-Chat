@@ -23,24 +23,16 @@ class SignUpViewController: UIViewController {
     }
     
     
-    //замінить рядки на commonView і після цього видалити аутлети які не юзаються
-    private func setViewElementsInteraction(_ state: Bool) {
-        emailTextfield.isUserInteractionEnabled = state
-        passwordTextfield.isUserInteractionEnabled = state
-        signUpButton.isUserInteractionEnabled = state
-    }
-    
-    
     private func failedToSignUp(with errorDescription: String) {
         errorLabel.text = errorDescription
-        setViewElementsInteraction(true)
+        view.isUserInteractionEnabled = true
         progressIndicator.stopAnimating()
     }
     
     
     private func activateScreenWaitingMode() {
         errorLabel.text = ""
-        setViewElementsInteraction(false)
+        view.isUserInteractionEnabled = false
         progressIndicator.startAnimating()
     }
     
@@ -73,5 +65,4 @@ class SignUpViewController: UIViewController {
         performSegue(withIdentifier: K.Segue.signUpToNewUserData, sender: self)
     }
 }
-
 

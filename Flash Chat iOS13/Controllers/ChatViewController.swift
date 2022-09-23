@@ -17,8 +17,8 @@ class ChatViewController: UIViewController {
     @IBOutlet private weak var deletingView: UIView!
     @IBOutlet private weak var deletingLabel: UILabel!
     
-    @IBOutlet private weak var sideMenuRightBarButton: UIBarButtonItem!
-    private var chatAvatarLeftBarButton: UIButton?
+    @IBOutlet private weak var rightSideMenuBarButtonItem: UIBarButtonItem!
+    private var leftChatAvatarBarButton: UIButton?
     
     private let db = Firestore.firestore()
     private var listener: ListenerRegistration?
@@ -58,10 +58,9 @@ class ChatViewController: UIViewController {
     
     
     
-    private func setViewElementsInteraction(_ state: Bool) {
-        view.isUserInteractionEnabled = state
-        sideMenuRightBarButton.isEnabled = state
-        chatAvatarLeftBarButton?.isUserInteractionEnabled = state
+    private func disableViewUserInteraction() {
+        navigationController?.navigationBar.isUserInteractionEnabled = false
+        view.isUserInteractionEnabled = false
     }
     
     
@@ -308,7 +307,7 @@ class ChatViewController: UIViewController {
         
         groupImageButton.imageView?.contentMode = .scaleAspectFill
         groupImageButton.imageView?.layer.cornerRadius = CGFloat(19)
-        chatAvatarLeftBarButton = groupImageButton
+        leftChatAvatarBarButton = groupImageButton
         
         let menuBarItem = UIBarButtonItem(customView: groupImageButton)
         let currWidth = menuBarItem.customView?.widthAnchor.constraint(equalToConstant: 38)
@@ -681,7 +680,7 @@ extension ChatViewController {
 extension ChatViewController {
     //MARK: - -deleteAccountAndData()
     private func deleteAccountAndData() {
-        setViewElementsInteraction(false)
+        disableViewUserInteraction()
         showDeletingView()
         deleteUserInfo()
     }
@@ -764,7 +763,7 @@ extension ChatViewController {
     //MARK: - -logOut()
     private func logOut() {
         listener?.remove()
-        setViewElementsInteraction(false)
+        disableViewUserInteraction()
         
         do {
             try Auth.auth().signOut()

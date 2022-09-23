@@ -65,7 +65,7 @@ class UserInfoViewController: UIViewController {
     
     
     @IBAction private func logOutButtonPressed(_ sender: UIButton) {
-        disableButtonsInteraction()
+        view.isHidden = true
         logOutButtonPressedCallBack?()
         self.dismiss(animated: false, completion: nil)
     }
@@ -79,15 +79,8 @@ class UserInfoViewController: UIViewController {
     
     private func deleteAccountAndData() {
         view.isHidden = true
-        disableButtonsInteraction()
         deleteAccountButtonPressedCallBack?()
         self.dismiss(animated: true, completion: nil)
-    }
-    
-    
-    private func disableButtonsInteraction() {
-        logOutButton.isUserInteractionEnabled = false
-        deleteAccountButton.isUserInteractionEnabled = false
     }
     
 

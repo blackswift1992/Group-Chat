@@ -22,25 +22,17 @@ class LogInViewController: UIViewController {
         progressIndicator.hidesWhenStopped = true
     }
     
-    
-    //замінити кучу рядків в методі на одне звернення до загальної view
-    private func setViewElementsInteraction(_ state: Bool) {
-        emailTextfield.isUserInteractionEnabled = state
-        passwordTextfield.isUserInteractionEnabled = state
-        logInButton.isUserInteractionEnabled = state
-    }
-    
 
     private func failedToLogIn(with errorDescription: String) {
         errorLabel.text = errorDescription
-        setViewElementsInteraction(true)
+        view.isUserInteractionEnabled = true
         progressIndicator.stopAnimating()
     }
     
     
     private func activateScreenWaitingMode() {
         errorLabel.text = ""
-        setViewElementsInteraction(false)
+        view.isUserInteractionEnabled = false
         progressIndicator.startAnimating()
     }
 

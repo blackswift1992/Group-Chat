@@ -44,15 +44,7 @@ class NewUserDataViewController: UIViewController {
         progressIndicator.hidesWhenStopped = true
     }
     
-    //замінить рядки на commonView і після цього видалити аутлети які не юзаються
-    private func setViewElementsInteraction(_ state: Bool) {
-        firstNameTextField.isUserInteractionEnabled = state
-        lastNameTextField.isUserInteractionEnabled = state
-        continueButton.isUserInteractionEnabled = state
-        loadPhotoButton.isUserInteractionEnabled = state
-    }
-    
-    
+ 
     private func navigateToChat() {
         performSegue(withIdentifier: K.Segue.newUserDataToChat, sender: self)
     }
@@ -60,14 +52,14 @@ class NewUserDataViewController: UIViewController {
     
     private func failedWithErrorMessage(_ errorDescription: String) {
         errorLabel.text = errorDescription
+        view.isUserInteractionEnabled = true
         progressIndicator.stopAnimating()
-        setViewElementsInteraction(true)
     }
     
     private func activateScreenWaitingMode() {
         errorLabel.text = ""
+        view.isUserInteractionEnabled = false
         progressIndicator.startAnimating()
-        setViewElementsInteraction(false)
     }
     
     
@@ -79,7 +71,7 @@ class NewUserDataViewController: UIViewController {
         guard let safeUserId = Auth.auth().currentUser?.uid,
               let safeUserEmail = Auth.auth().currentUser?.email,
               let safeFirstName = firstNameTextField.text,
-              var safeLastName = lastNameTextField.text,
+              let safeLastName = lastNameTextField.text,
               let safeAvatarData = avatarImageView.image?.jpegData(compressionQuality: 0.02)
         else { return }
         
