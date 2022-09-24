@@ -50,14 +50,14 @@ class NewUserDataViewController: UIViewController {
     }
     
     
-    private func failedWithErrorMessage(_ errorDescription: String) {
-        errorLabel.text = errorDescription
+    private func failedWithErrorMessage(_ message: String) {
+        errorLabel.text = message
         view.isUserInteractionEnabled = true
         progressIndicator.stopAnimating()
     }
     
     private func activateScreenWaitingMode() {
-        errorLabel.text = ""
+        errorLabel.text = K.Case.emptyString
         view.isUserInteractionEnabled = false
         progressIndicator.startAnimating()
     }
@@ -94,19 +94,22 @@ class NewUserDataViewController: UIViewController {
             .child(K.FStore.avatarsCollection)
             .child(userId)
         
-        avatarRef.putData(userAvatarData, metadata: avatarMetaData) { [weak self] metaData, error in
-            guard let _ = metaData else {
-                self?.failedWithErrorMessage("Try again")
-                return
-            }
-            
-            avatarRef.downloadURL { [weak self] url, error in
-                guard let safeURL = url else {
+        avatarRef.putData(userAvatarData, metadata: avatarMetaData) {
+            [weak self] metaData, error in
+            DispatchQueue.main.async {
+                guard let _ = metaData else {
                     self?.failedWithErrorMessage("Try again")
                     return
                 }
                 
-                self?.uploadUserData(userId: userId, userEmail: userEmail, firstName: firstName, lastName: lastName, uploadedAvatarURL: safeURL.absoluteString)
+                avatarRef.downloadURL { [weak self] url, error in
+                    guard let safeURL = url else {
+                        self?.failedWithErrorMessage("Try again")
+                        return
+                    }
+                    
+                    self?.uploadUserData(userId: userId, userEmail: userEmail, firstName: firstName, lastName: lastName, uploadedAvatarURL: safeURL.absoluteString)
+                }
             }
         }
     }

@@ -9,7 +9,7 @@ class WelcomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        customizeWelcomeView()
+        customizeViewElements()
     }
     
     
@@ -25,7 +25,7 @@ class WelcomeViewController: UIViewController {
     }
     
     
-    private func customizeWelcomeView() {
+    private func customizeViewElements() {
         titleLabel.text = K.appName
         logInButton.layer.cornerRadius = 23
         registerButton.layer.cornerRadius = 13

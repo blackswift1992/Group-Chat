@@ -23,15 +23,15 @@ class LogInViewController: UIViewController {
     }
     
 
-    private func failedToLogIn(with errorDescription: String) {
-        errorLabel.text = errorDescription
+    private func failedToLogIn(withMessage message: String) {
+        errorLabel.text = message
         view.isUserInteractionEnabled = true
         progressIndicator.stopAnimating()
     }
     
     
     private func activateScreenWaitingMode() {
-        errorLabel.text = ""
+        errorLabel.text = K.Case.emptyString
         view.isUserInteractionEnabled = false
         progressIndicator.startAnimating()
     }
@@ -50,14 +50,13 @@ class LogInViewController: UIViewController {
         
         Auth.auth().signIn(withEmail: safeUserEmail, password: safeUserPassword) {
             [weak self] authResult, error in
-            if let safeError = error {
-                print(safeError)
-                
-                DispatchQueue.main.async {
-                    self?.failedToLogIn(with: safeError.localizedDescription)
+            DispatchQueue.main.async {
+                if let safeError = error {
+                    print(safeError)
+                    self?.failedToLogIn(withMessage: safeError.localizedDescription)
+                } else {
+                    self?.checkIsUserDataExists()
                 }
-            } else {
-                self?.checkIsUserDataExists()
             }
         }
     }
@@ -65,7 +64,7 @@ class LogInViewController: UIViewController {
     
     private func checkIsUserDataExists() {
         guard let userId = Auth.auth().currentUser?.uid else {
-            failedToLogIn(with: "Try again")
+            self.failedToLogIn(withMessage: "Try again")
             return
         }
         

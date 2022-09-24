@@ -1287,14 +1287,13 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="avatar" destination="9aM-0C-o5g" id="xUG-EH-a7R"/>
+                        <outlet property="avatarImageView" destination="9aM-0C-o5g" id="4N0-lP-KXI"/>
                         <outlet property="backgroundView" destination="NBj-eY-AHE" id="faV-UX-alu"/>
                         <outlet property="containerView" destination="4Lj-23-0aX" id="xto-nx-Tlr"/>
                         <outlet property="dataContainerView" destination="G9p-Yd-s9R" id="N5o-vV-8WH"/>
                         <outlet property="deleteAccountButton" destination="3np-Zs-Fly" id="bgK-do-iC0"/>
                         <outlet property="firstNameLabel" destination="91s-aj-Mel" id="bTJ-Lj-f4g"/>
                         <outlet property="lastNameLabel" destination="vHR-Mn-doY" id="vXd-sw-W9k"/>
-                        <outlet property="logOutButton" destination="ggM-hE-vYK" id="z7u-ma-Xv5"/>
                         <outlet property="logOutView" destination="QuG-uE-5HR" id="kBi-Et-PUU"/>
                         <segue destination="v28-YW-bvB" kind="presentation" identifier="UserInfoToDeleteAccountWarning" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="h92-Gw-VXa"/>
                     </connections>

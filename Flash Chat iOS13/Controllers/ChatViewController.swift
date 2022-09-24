@@ -505,7 +505,7 @@ extension ChatViewController: UITableViewDataSource {
                 if let safeSenderMessageCell = uiTableViewCell as? SenderMessageCell {
                     safeSenderMessageCell.delegate = self
                     
-                    safeSenderMessageCell.setMessageCellData(row: message.row, id: message.id, userId: message.userId, body: message.body, timestamp: timeStamp)
+                    safeSenderMessageCell.setSenderMessageCellData(row: message.row, id: message.id, body: message.body, timestamp: timeStamp)
                     
                     return safeSenderMessageCell
                 }
@@ -517,7 +517,7 @@ extension ChatViewController: UITableViewDataSource {
                     
                     let userColor = UIColor(red: rgb[0], green: rgb[1], blue: rgb[2], alpha: 1.0)
                     
-                    safeReceiverMessageCell.setMessageCellData(userColor: userColor, userFirstName: message.userFirstName, body: message.body, timestamp: timeStamp)
+                    safeReceiverMessageCell.setReceiverMessageCellData(userColor: userColor, userFirstName: message.userFirstName, body: message.body, timestamp: timeStamp)
                     
                     return safeReceiverMessageCell
                 }
@@ -615,7 +615,7 @@ extension ChatViewController {
                 if let safeSenderFirstName = senderFirstName,
                    let safeSenderLastName = senderLastName,
                    let safeSenderAvatar = senderAvatar {
-                    destinationVC.setUserData(senderFirstName: safeSenderFirstName, senderLastName: safeSenderLastName, senderAvatar: safeSenderAvatar)
+                    destinationVC.setUserInfo(senderFirstName: safeSenderFirstName, senderLastName: safeSenderLastName, senderAvatar: safeSenderAvatar)
                     
                     destinationVC.logOutButtonPressedCallBack = { [weak self] in
                         self?.logOut()

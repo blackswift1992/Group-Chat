@@ -8,11 +8,10 @@ class UserInfoViewController: UIViewController {
     @IBOutlet private weak var dataContainerView: UIView!
     @IBOutlet private weak var logOutView: UIView!
     
-    @IBOutlet private weak var avatar: UIImageView!
+    @IBOutlet private weak var avatarImageView: UIImageView!
     @IBOutlet private weak var firstNameLabel: UILabel!
     @IBOutlet private weak var lastNameLabel: UILabel!
     
-    @IBOutlet private weak var logOutButton: UIButton!
     @IBOutlet private weak var deleteAccountButton: UIButton!
     
     private var senderFirstName: String?
@@ -29,7 +28,7 @@ class UserInfoViewController: UIViewController {
     }
     
     
-    func setUserData(senderFirstName: String, senderLastName: String, senderAvatar: UIImage) {
+    func setUserInfo(senderFirstName: String, senderLastName: String, senderAvatar: UIImage) {
         self.senderFirstName = senderFirstName
         self.senderLastName = senderLastName
         self.senderAvatar = senderAvatar
@@ -37,8 +36,8 @@ class UserInfoViewController: UIViewController {
     
     
     private func customizeViewElements() {
-        avatar.layer.cornerRadius = 50
-        avatar.layer.borderWidth = 0.5
+        avatarImageView.layer.cornerRadius = 50
+        avatarImageView.layer.borderWidth = 0.5
         
         logOutView.layer.cornerRadius = 17
         deleteAccountButton.layer.cornerRadius = 17
@@ -53,13 +52,12 @@ class UserInfoViewController: UIViewController {
         backgroundView.layer.cornerRadius = 29;
         backgroundView.layer.masksToBounds = true;
         
-        
         if let safeSenderFirstName = senderFirstName,
            let safeSenderLastName = senderLastName,
            let safeSenderAvatar = senderAvatar {
             firstNameLabel.text = safeSenderFirstName
             lastNameLabel.text = safeSenderLastName
-            avatar.image = safeSenderAvatar
+            avatarImageView.image = safeSenderAvatar
         }
     }
     

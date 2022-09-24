@@ -23,15 +23,15 @@ class SignUpViewController: UIViewController {
     }
     
     
-    private func failedToSignUp(with errorDescription: String) {
-        errorLabel.text = errorDescription
+    private func failedToSignUp(withMessage message: String) {
+        errorLabel.text = message
         view.isUserInteractionEnabled = true
         progressIndicator.stopAnimating()
     }
     
     
     private func activateScreenWaitingMode() {
-        errorLabel.text = ""
+        errorLabel.text = K.Case.emptyString
         view.isUserInteractionEnabled = false
         progressIndicator.startAnimating()
     }
@@ -52,7 +52,7 @@ class SignUpViewController: UIViewController {
                 print(safeError)
                 
                 DispatchQueue.main.async {
-                    self?.failedToSignUp(with: safeError.localizedDescription)
+                    self?.failedToSignUp(withMessage: safeError.localizedDescription)
                 }
             } else {
                 self?.navigateToNewUserData()

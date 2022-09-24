@@ -1,5 +1,4 @@
 import UIKit
-import FirebaseAuth
 import AudioToolbox
 
 protocol SenderMessageCellDelegate: AnyObject {
@@ -19,7 +18,6 @@ class SenderMessageCell: UITableViewCell {
 
     private var messageRow: Int?
     private var messageId: String?
-    private var userId: String?
 
     
     override func awakeFromNib() {
@@ -28,10 +26,9 @@ class SenderMessageCell: UITableViewCell {
     }
     
     
-    func setMessageCellData(row: Int, id: String, userId: String, body: String, timestamp: String) {
+    func setSenderMessageCellData(row: Int, id: String, body: String, timestamp: String) {
         messageRow = row
         messageId = id
-        self.userId = userId
         messageBodyLabel.text = body
         timestampLabel.text = timestamp
     }
@@ -48,34 +45,30 @@ class SenderMessageCell: UITableViewCell {
     
     //MARK: - MESSAGE BUTTON
     
-
+    
     
     @IBAction private func messageButtonPressed(_ sender: UIButton) {
-        if userId == Auth.auth().currentUser?.uid {
+        guard let safeMessageRow = messageRow,
+              let safeMessageId = messageId,
+              let safeMessageBody = messageBodyLabel.text
+        else { return }
+        
+        setMessageColor(UIColor.brandDarkMint)
+        
+        Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) {
+            [unowned self] timer in
             DispatchQueue.main.async {
-                self.setMessageColor(UIColor.brandDarkMint)
-                
-                Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] timer in
-                    if sender.isTracking {
-                        self?.setMessageColor(UIColor.brandMint)
-                        
-                        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-
-                        if let safeSelf = self,
-                           let safeMessageRow = safeSelf.messageRow,
-                           let safeMessageId = safeSelf.messageId,
-                           let safeMessageBody = safeSelf.messageBodyLabel.text {
-                            safeSelf.delegate?.messageSelected(safeSelf, row: safeMessageRow, id: safeMessageId, body: safeMessageBody)
-                        }
-                    }
+                if sender.isTracking {
+                    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                     
-                    self?.setMessageColor(UIColor.brandMint)
-                    
+                    self.delegate?.messageSelected(self, row: safeMessageRow, id: safeMessageId, body: safeMessageBody)
                 }
+                
+                self.setMessageColor(UIColor.brandMint)
             }
         }
     }
-    
+
     
     private func setMessageColor(_ color: UIColor?) {
         messageBubble.backgroundColor = color

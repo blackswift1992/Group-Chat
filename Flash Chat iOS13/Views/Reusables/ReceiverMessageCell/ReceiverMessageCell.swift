@@ -10,11 +10,11 @@ class ReceiverMessageCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        customizeMessageCellView()
+        customizeViewElements()
     }
 
     
-    func setMessageCellData(userColor: UIColor, userFirstName: String, body: String, timestamp: String) {
+    func setReceiverMessageCellData(userColor: UIColor, userFirstName: String, body: String, timestamp: String) {
         firstNameLabel.textColor = userColor
         firstNameLabel.text = userFirstName
         messageBodyLabel.text = body
@@ -22,7 +22,7 @@ class ReceiverMessageCell: UITableViewCell {
     }
 
 
-    private func customizeMessageCellView() {
+    private func customizeViewElements() {
             let cornerRadius = messageBubble.frame.size.height / 2.30
             messageBubble.layer.cornerRadius = cornerRadius
             messageButton.layer.cornerRadius = cornerRadius
