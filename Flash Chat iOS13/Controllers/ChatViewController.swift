@@ -18,7 +18,6 @@ class ChatViewController: UIViewController {
     @IBOutlet private weak var deletingLabel: UILabel!
     
     @IBOutlet private weak var rightSideMenuBarButtonItem: UIBarButtonItem!
-    private var leftChatAvatarBarButton: UIButton?
     
     private let db = Firestore.firestore()
     private var listener: ListenerRegistration?
@@ -35,20 +34,20 @@ class ChatViewController: UIViewController {
     private var senderAvatar: UIImage?
     private var senderRGBColor: String?
     
-    var isMoreThanTwoChatUsers = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        sendButton.isUserInteractionEnabled = false
         
         messageTextField.delegate = self
         tableView.dataSource = self
         
         registerTableViewNibs()
-        
-        customizeNavigationTitle()
         customizeViewElements()
+
+        loadMessages()
         
-        loadChatInfo()
         loadSenderInfo()
     }
     
@@ -62,7 +61,7 @@ class ChatViewController: UIViewController {
         navigationController?.navigationBar.isUserInteractionEnabled = false
         view.isUserInteractionEnabled = false
     }
-    
+
     
     private func hideEditBlockView() {
         UIView.animate(withDuration: 0.3) {
@@ -144,12 +143,92 @@ class ChatViewController: UIViewController {
     //MARK: - VIEW CUSTOMIZATION
     
     
+
+    private func customizeViewElements() {
+        customizeChatAvatar()
+        customizeNavigationTitle()
+        customizeEditBlockView()
+        customizeMessageTextField()
+    }
+    
+    
+    private func customizeChatAvatar() {
+        guard let safeSenderId = Auth.auth().currentUser?.uid else { return }
+        
+        db.collection(K.FStore.usersCollection).whereField(K.FStore.userIdField, isNotEqualTo: safeSenderId).getDocuments() { [weak self] (querySnapshot, error) in
+            if let safeError = error {
+                print("Chat avatar loading was failed: \(safeError)")
+            } else {
+                guard let documents = querySnapshot?.documents else { return }
+                
+                if documents.count > 1 {
+                    DispatchQueue.main.async {
+                        self?.setLeftBarButtonItem(with: UIImage(named: K.Image.defaultGroupAvatar))
+                    }
+                } else if documents.count == 1 {
+                    guard let safeAvatarUrl = documents.first?.data()[K.FStore.avatarURLField] as? String else { return }
+                    
+                    self?.downloadChatAvatar(stringURL: safeAvatarUrl)
+                }
+            }
+        }
+    }
+    
+    
+    private func downloadChatAvatar(stringURL: String) {
+        let ref = Storage.storage().reference(forURL: stringURL)
+        
+        let megaByte = Int64(1 * 1024 * 1024)
+        
+        ref.getData(maxSize: megaByte) { [weak self] data, error in
+            if let safeError = error {
+                print(safeError)
+            } else {
+                guard let safeData = data else { return }
+                
+                DispatchQueue.main.async {
+                    self?.setLeftBarButtonItem(with: UIImage(data: safeData))
+                }
+            }
+        }
+    }
+    
+    
+    private func setLeftBarButtonItem(with image: UIImage?){
+        let button = UIButton(type: .custom)
+        button.frame = CGRect(x: 0.0, y: 0.0, width: 38, height: 38)
+        button.setImage(image, for: .normal)
+        button.addTarget(self, action: #selector(chatAvatarLeftBarButtonPressed), for: .touchUpInside)
+        
+        button.imageView?.contentMode = .scaleAspectFill
+        button.imageView?.layer.cornerRadius = CGFloat(19)
+        
+        let barButtonItem = UIBarButtonItem(customView: button)
+        let currWidth = barButtonItem.customView?.widthAnchor.constraint(equalToConstant: 38)
+        currWidth?.isActive = true
+        let currHeight = barButtonItem.customView?.heightAnchor.constraint(equalToConstant: 38)
+        currHeight?.isActive = true
+        navigationItem.leftBarButtonItem = barButtonItem
+    }
+    
+    
+    @objc private func chatAvatarLeftBarButtonPressed() {
+        //for future
+        print(#function)
+    }
+    
+    
+    
+    private func customizeEditBlockView() {
+        editBlockCancelButton.setTitle(K.Case.emptyString, for: .normal)
+        editBlockCancelButton.tintColor = UIColor.brandDarkMint
+        editBlockView.transform = CGAffineTransform(translationX: 0.0, y: +50.0)
+    }
+    
     
     private func customizeNavigationTitle() {
-        sendButton.isUserInteractionEnabled = false
-        
-        guard let safeFont = UIFont(name: K.BrandFonts.avenirNextHeavy, size: 20),
-              let safeColor =  UIColor.brandLightMint
+        guard let safeColor =  UIColor.brandLightMint,
+              let safeFont = UIFont.getAvenirNextHeavy(size: 20)
         else { return }
         
         let titleLabel = UILabel()
@@ -166,16 +245,14 @@ class ChatViewController: UIViewController {
         navigationItem.titleView = titleLabel
     }
     
-    
-    private func customizeViewElements() {
-        editBlockView.transform = CGAffineTransform(translationX: 0.0, y: +50.0)
-        editBlockCancelButton.setTitle(K.Case.emptyString, for: .normal)
-        editBlockCancelButton.tintColor = UIColor.brandDarkMint
-        
+
+    private func customizeMessageTextField() {
         messageTextField.layer.cornerRadius = 18
         messageTextField.setLeftPaddingPoints(10)
         messageTextField.setRightPaddingPoints(10)
     }
+    
+    
     
     
     
@@ -247,81 +324,7 @@ class ChatViewController: UIViewController {
         return formatedDateString
     }
     
-    
-    
-    //MARK: - LOAD CHAT INFO
-    
-    
-    
-    private func loadChatInfo() {
-        guard let safeSenderId = Auth.auth().currentUser?.uid else { return }
-        
-        db.collection(K.FStore.usersCollection).whereField(K.FStore.userIdField, isNotEqualTo: safeSenderId).getDocuments() { [weak self] (querySnapshot, error) in
-            if let safeError = error {
-                print("Error load users: \(safeError)")
-            } else {
-                guard let documents = querySnapshot?.documents else { return }
-                
-                DispatchQueue.main.async {
-                    if documents.count > 1 {
-                        self?.isMoreThanTwoChatUsers = true
-                        self?.setUpChatAvatarToLeftBarItem(image: UIImage(named: K.Image.defaultGroupAvatar))
-                    } else {
-                        guard let safeAvatarUrl = documents.first?.data()[K.FStore.avatarURLField] as? String
-                        else { return }
-                        
-                        if safeAvatarUrl == K.Case.no {
-                            self?.setUpChatAvatarToLeftBarItem(image: UIImage(named: K.Image.defaultAvatar))
-                        } else {
-                            self?.loadChatAvatar(urlString: safeAvatarUrl)
-                        }
-                    }
-                }
-            }
-            self?.loadMessages()
-        }
-    }
-    
-    
-    private func loadChatAvatar(urlString: String) {
-        let ref = Storage.storage().reference(forURL: urlString)
-        
-        let megaByte = Int64(1 * 1024 * 1024)
-        
-        ref.getData(maxSize: megaByte) { [weak self] data, error in
-            if let safeError = error {
-                print(safeError)
-            } else {
-                guard let safeData = data else { return }
-                self?.setUpChatAvatarToLeftBarItem(image: UIImage(data: safeData))
-            }
-        }
-    }
-    
-    
-    private func setUpChatAvatarToLeftBarItem(image: UIImage?){
-        let groupImageButton = UIButton(type: .custom)
-        groupImageButton.frame = CGRect(x: 0.0, y: 0.0, width: 38, height: 38)
-        groupImageButton.setImage(image, for: .normal)
-        groupImageButton.addTarget(self, action: #selector(chatAvatarLeftBarButtonPressed), for: .touchUpInside)
-        
-        groupImageButton.imageView?.contentMode = .scaleAspectFill
-        groupImageButton.imageView?.layer.cornerRadius = CGFloat(19)
-        leftChatAvatarBarButton = groupImageButton
-        
-        let menuBarItem = UIBarButtonItem(customView: groupImageButton)
-        let currWidth = menuBarItem.customView?.widthAnchor.constraint(equalToConstant: 38)
-        currWidth?.isActive = true
-        let currHeight = menuBarItem.customView?.heightAnchor.constraint(equalToConstant: 38)
-        currHeight?.isActive = true
-        navigationItem.leftBarButtonItem = menuBarItem
-    }
-    
-    
-    @objc private func chatAvatarLeftBarButtonPressed() {
-        print(#function)
-    }
-    
+
     
     
     //MARK: - LOAD SENDER INFO
@@ -339,17 +342,15 @@ class ChatViewController: UIViewController {
                       let safeUserRGBColor = document.data()?[K.FStore.userRGBColorField] as? String
                 else { return }
                 
+                //В структурі User додати проперті userRGBColor. Потім в LogInVC та в NewUserDataVC створювати такий об'єкт і передавати його в ChatVC при переході. Таким чином ми уникаємо потреби в loadSenderInfo(). Менше скачувань в ChatVC - менше очікування для користувача чата.
+                //Також не не потрібно буде встановлювати sendButton.isUserInteractionEnabled = true/false, адже дані вже будуть з самого початку.
                 self?.senderFirstName = safeFirstName
                 self?.senderLastName = safeLastName
                 self?.senderRGBColor = safeUserRGBColor
                 
                 self?.sendButton.isUserInteractionEnabled = true
                 
-                if safeAvatarUrl == K.Case.no {
-                    self?.senderAvatar = UIImage(named: K.Image.defaultAvatar)
-                } else {
-                    self?.loadSenderAvatar(urlString: safeAvatarUrl)
-                }
+                self?.loadSenderAvatar(urlString: safeAvatarUrl)
             } else {
                 print("Sender info were not existed")
             }

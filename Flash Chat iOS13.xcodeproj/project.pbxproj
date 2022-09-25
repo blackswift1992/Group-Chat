@@ -25,6 +25,7 @@
 		494F696B28B5399E003ED6BF /* UITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F696A28B5399E003ED6BF /* UITextField.swift */; };
 		49541BB7289E920F00800CFE /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49541BB6289E920F00800CFE /* Colors.xcassets */; };
 		49541BBA289EAAFE00800CFE /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49541BB9289EAAFE00800CFE /* UIColor.swift */; };
+		495717BF28DFA2D800400220 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495717BE28DFA2D800400220 /* UIFont.swift */; };
 		496D238C28A6B8A5005B1A7C /* NewUserDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496D238B28A6B8A5005B1A7C /* NewUserDataViewController.swift */; };
 		498B2AA728C7CB1F00B52BAD /* GreetingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B2AA628C7CB1F00B52BAD /* GreetingMessage.swift */; };
 		498B2AA928C7CB6300B52BAD /* TableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B2AA828C7CB6300B52BAD /* TableCell.swift */; };
@@ -61,6 +62,7 @@
 		494F696A28B5399E003ED6BF /* UITextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextField.swift; sourceTree = "<group>"; };
 		49541BB6289E920F00800CFE /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		49541BB9289EAAFE00800CFE /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		495717BE28DFA2D800400220 /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		496D238B28A6B8A5005B1A7C /* NewUserDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewUserDataViewController.swift; sourceTree = "<group>"; };
 		498B2AA628C7CB1F00B52BAD /* GreetingMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreetingMessage.swift; sourceTree = "<group>"; };
 		498B2AA828C7CB6300B52BAD /* TableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCell.swift; sourceTree = "<group>"; };
@@ -169,9 +171,10 @@
 		49541BB8289EAACC00800CFE /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				49541BB9289EAAFE00800CFE /* UIColor.swift */,
 				494F696A28B5399E003ED6BF /* UITextField.swift */,
 				493B9C0F28C4033600E0A95A /* UIView.swift */,
+				49541BB9289EAAFE00800CFE /* UIColor.swift */,
+				495717BE28DFA2D800400220 /* UIFont.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -353,6 +356,7 @@
 			files = (
 				493B9C1028C4033600E0A95A /* UIView.swift in Sources */,
 				494E508C28C239B600D411A5 /* ReceiverMessageCell.swift in Sources */,
+				495717BF28DFA2D800400220 /* UIFont.swift in Sources */,
 				496D238C28A6B8A5005B1A7C /* NewUserDataViewController.swift in Sources */,
 				49F8C0E328BBB4A60034EA6B /* UserInfoViewController.swift in Sources */,
 				0B62818B235DF00000E35CAF /* WelcomeViewController.swift in Sources */,

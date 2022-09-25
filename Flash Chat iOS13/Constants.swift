@@ -58,9 +58,5 @@ struct K {
         static let unknown = "unknown"
         static let emptyString = ""
     }
-
-    struct BrandFonts {
-        static let avenirNextHeavy = "Avenir Next Heavy"
-    }
 }
 
