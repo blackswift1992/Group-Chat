@@ -12,7 +12,7 @@ class LogInViewController: UIViewController {
     @IBOutlet private weak var progressIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var logInButton: UIButton!
     
-    private var currentUser: ChatUser?
+    private var currentUser: User?
     
     
     override func viewDidLoad() {
@@ -105,7 +105,7 @@ class LogInViewController: UIViewController {
                     return
                 }
                 
-                self?.currentUser = ChatUser(data: userData, avatar: safeAvatar)
+                self?.currentUser = User(data: userData, avatar: safeAvatar)
                 self?.navigateToChat()
             }
         }

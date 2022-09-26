@@ -21,4 +21,11 @@ extension UIColor {
         
         return "\(red),\(green),\(blue)"
     }
+    
+    
+    static func getColorFromRGBString(_ rgbString: String) -> UIColor {
+        let rgb = rgbString.components(separatedBy: ",").compactMap{Double($0)}
+        
+        return UIColor(red: rgb[0], green: rgb[1], blue: rgb[2], alpha: 1.0)
+    }
 }

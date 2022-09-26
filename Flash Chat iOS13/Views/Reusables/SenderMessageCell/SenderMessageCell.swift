@@ -2,7 +2,7 @@ import UIKit
 import AudioToolbox
 
 protocol SenderMessageCellDelegate: AnyObject {
-    func messageSelected(_ messageCell: SenderMessageCell, row: Int, id: String, body: String)
+    func messageSelected(_ messageCell: SenderMessageCell, message: Message)
 }
 
 
@@ -16,23 +16,20 @@ class SenderMessageCell: UITableViewCell {
     
     weak var delegate: SenderMessageCellDelegate?
 
-    private var messageRow: Int?
-    private var messageId: String?
+    private var senderMessage: Message?
 
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         customizeViewElements()
     }
     
     
-    func setSenderMessageCellData(row: Int, id: String, body: String, timestamp: String) {
-        messageRow = row
-        messageId = id
-        messageBodyLabel.text = body
-        timestampLabel.text = timestamp
+    func setSenderMessageCellData(_ message: Message) {
+        senderMessage = message
+        
+        messageBodyLabel.text = message.data.textBody
+        timestampLabel.text = (message.data.isEdited == K.Case.yes ? "edited " : K.Case.emptyString) + message.timestamp
     }
-    
     
     private func customizeViewElements() {
         let cornerRadius = messageBubble.frame.size.height / 2.30
@@ -48,10 +45,7 @@ class SenderMessageCell: UITableViewCell {
     
     
     @IBAction private func messageButtonPressed(_ sender: UIButton) {
-        guard let safeMessageRow = messageRow,
-              let safeMessageId = messageId,
-              let safeMessageBody = messageBodyLabel.text
-        else { return }
+        guard let safeSenderMessage = senderMessage else { return }
         
         setMessageColor(UIColor.brandDarkMint)
         
@@ -61,7 +55,7 @@ class SenderMessageCell: UITableViewCell {
                 if sender.isTracking {
                     AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                     
-                    self.delegate?.messageSelected(self, row: safeMessageRow, id: safeMessageId, body: safeMessageBody)
+                    self.delegate?.messageSelected(self, message: safeSenderMessage)
                 }
                 
                 self.setMessageColor(UIColor.brandMint)

@@ -14,11 +14,13 @@ class ReceiverMessageCell: UITableViewCell {
     }
 
     
-    func setReceiverMessageCellData(userColor: UIColor, userFirstName: String, body: String, timestamp: String) {
-        firstNameLabel.textColor = userColor
-        firstNameLabel.text = userFirstName
-        messageBodyLabel.text = body
-        timestampLabel.text = timestamp
+    func setReceiverMessageCellData(_ message: Message) {
+        firstNameLabel.text = message.data.userFirstName
+        messageBodyLabel.text = message.data.textBody
+        
+        timestampLabel.text = (message.data.isEdited == K.Case.yes ? "edited " : K.Case.emptyString) + message.timestamp
+
+        firstNameLabel.textColor = UIColor.getColorFromRGBString(message.data.userRGBColor)
     }
 
 

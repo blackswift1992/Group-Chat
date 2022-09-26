@@ -15,7 +15,7 @@ class NewUserDataViewController: UIViewController {
     @IBOutlet private weak var progressIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var continueButton: UIButton!
     
-    private var currentUser: ChatUser?
+    private var currentUser: User?
     
     
     override func viewDidLoad() {
@@ -124,7 +124,7 @@ class NewUserDataViewController: UIViewController {
                     
                     let userData = UserData(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, avatarURL: safeURL.absoluteString, userRGBColor: UIColor.getRandomRGBString())
                     
-                    self?.currentUser = ChatUser(data: userData, avatar: safeCompressedAvatar)
+                    self?.currentUser = User(data: userData, avatar: safeCompressedAvatar)
                     
                     self?.uploadData(userData)
                 }

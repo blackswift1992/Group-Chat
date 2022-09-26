@@ -25,14 +25,10 @@ class ChatViewController: UIViewController {
     private var messageState: State = State.creating
     private var tableCells: [TableCell] = []
     
-    private var chatSender: ChatUser?
-    
-    //скоріш за все під заміну!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    private var messageRow: Int?
-    private var messageId: String?
-    private var messageBody: String?
-    
+    private var chatSender: User?
+    private var selectedSenderMessage: Message?
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -44,8 +40,8 @@ class ChatViewController: UIViewController {
     }
     
     
-    func setChatSender(_ chatUser: ChatUser?) {
-        chatSender = chatUser
+    func setChatSender(_ user: User?) {
+        chatSender = user
     }
     
 
@@ -109,11 +105,9 @@ class ChatViewController: UIViewController {
     }
     
     
-    //скоріш за все під заміну!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    private func clearMessageCellData() {
-        messageRow = nil
-        messageId = nil
-        messageBody = nil
+    //можливо потрібно видалити???????????????????????????????????????????
+    private func clearSenderMessageSelected() {
+        selectedSenderMessage = nil
     }
     
     
@@ -267,26 +261,26 @@ class ChatViewController: UIViewController {
             if let safeError = error {
                 print("Error load messages: \(safeError)")
             } else {
-                self?.tableCells = [ GreetingMessage() ]
+                self?.tableCells = [GreetingMessage()]
                 
                 guard let documents = querySnapshot?.documents else { return }
                 
                 for document in documents {
-                    guard let safeUserId = document.data()[K.FStore.userIdField] as? String,
-                          let safeUserFirstName = document.data()[K.FStore.userFirstNameField] as? String,
-                          let safeTextBody = document.data()[K.FStore.textBodyField] as? String,
-                          let safeDateString = document.data()[K.FStore.dateField] as? String,
-                          let safeIsEdited = document.data()[K.FStore.isEdited] as? String,
-                          let safeUserRGBColor = document.data()[K.FStore.userRGBColorField] as? String
-                    else { return }
-                    
-                    guard let safeTimestamp = self?.formatDateString(milliseconds: safeDateString),
-                          let tableCellsCount = self?.tableCells.count
-                    else { return }
-                    
-                    let message = Message(row: tableCellsCount, id: document.documentID, timestamp: safeTimestamp, userId: safeUserId, userFirstName: safeUserFirstName, body: safeTextBody, isEdited: safeIsEdited, userRGBColor: safeUserRGBColor)
-                    
-                    self?.tableCells.append(message)
+                    do {
+                        let messageData = try document.data(as: MessageData.self)
+
+                        guard let safeTimestamp = self?.formatDateString(milliseconds: messageData.date),
+                              let tableCellsCount = self?.tableCells.count
+                        else { return }
+                        
+                        let message = Message(cellRow: tableCellsCount, data: messageData, timestamp: safeTimestamp)
+                        
+                        self?.tableCells.append(message)
+                    }
+                    catch {
+                        print("totalpizda!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                        return  //continue?????
+                    }
                 }
                 
                 if self?.messageState == State.creating {
@@ -306,6 +300,7 @@ class ChatViewController: UIViewController {
     }
     
     
+    //перенести в Sender/ReceiverMessageCell
     private func formatDateString(milliseconds: String) -> String {
         var formatedDateString = String()
         
@@ -370,7 +365,7 @@ class ChatViewController: UIViewController {
             }
         } else if messageState == State.editing {
             if messageTextField.text != K.Case.emptyString {
-                guard let safeMessageId = messageId,
+                guard let safeMessageId = selectedSenderMessage?.data.documentId,
                       let editedMessage = messageTextField.text
                 else { return }
                 
@@ -403,7 +398,7 @@ class ChatViewController: UIViewController {
                 navigateToCancelEdit()
             }
             
-            clearMessageCellData()
+            clearSenderMessageSelected()
         }
     }
     
@@ -419,7 +414,7 @@ class ChatViewController: UIViewController {
         setSendButtonCreatingAppearance()
         clearMessageTextField()
         messageState = State.creating
-        clearMessageCellData()
+        clearSenderMessageSelected()
     }
 }
 
@@ -450,16 +445,15 @@ extension ChatViewController: UITableViewDataSource {
             return uiTableViewCell
         } else {
             guard let message = tableCell as? Message else { return uiTableViewCell }
-            
-            let timeStamp = (message.isEdited == K.Case.yes ? "edited " : K.Case.emptyString) + message.timestamp
-            
-            if message.userId == Auth.auth().currentUser?.uid {
+
+            if message.data.userId == chatSender?.data.userId {
                 uiTableViewCell = tableView.dequeueReusableCell(withIdentifier: K.TableCell.senderNibIdentifier, for: indexPath)
                 
                 if let safeSenderMessageCell = uiTableViewCell as? SenderMessageCell {
                     safeSenderMessageCell.delegate = self
                     
-                    safeSenderMessageCell.setSenderMessageCellData(row: message.row, id: message.id, body: message.body, timestamp: timeStamp)
+                    //Що краще передавати в якості CellData?? struct Message чи class Message?????????????????????????????
+                    safeSenderMessageCell.setSenderMessageCellData(message)
                     
                     return safeSenderMessageCell
                 }
@@ -467,12 +461,10 @@ extension ChatViewController: UITableViewDataSource {
                 uiTableViewCell = tableView.dequeueReusableCell(withIdentifier: K.TableCell.receiverNibIdentifier, for: indexPath)
                 
                 if let safeReceiverMessageCell = uiTableViewCell as? ReceiverMessageCell {
-                    let rgb = message.userRGBColor.components(separatedBy: ",").compactMap{Double($0)}
                     
-                    let userColor = UIColor(red: rgb[0], green: rgb[1], blue: rgb[2], alpha: 1.0)
-                    
-                    safeReceiverMessageCell.setReceiverMessageCellData(userColor: userColor, userFirstName: message.userFirstName, body: message.body, timestamp: timeStamp)
-                    
+                    //Що краще передавати в якості CellData?? struct Message чи class Message?????????????????????????????
+                    safeReceiverMessageCell.setReceiverMessageCellData(message)
+
                     return safeReceiverMessageCell
                 }
             }
@@ -489,11 +481,8 @@ extension ChatViewController: UITableViewDataSource {
 
 
 extension ChatViewController: SenderMessageCellDelegate {
-    func messageSelected(_ messageCell: SenderMessageCell, row: Int, id: String, body: String) {
-        messageRow = row
-        messageId = id
-        messageBody = body
-        
+    func messageSelected(_ messageCell: SenderMessageCell, message: Message) {
+        selectedSenderMessage = message
         navigateToEditMenu()
     }
 }
@@ -591,9 +580,9 @@ extension ChatViewController {
     //MARK: - -editMessageBody()
     private func editMessageBody() {
         messageState = State.editing
-        messageTextField.text = messageBody
+        messageTextField.text = selectedSenderMessage?.data.textBody
         
-        if let safeRow = messageRow {
+        if let safeRow = selectedSenderMessage?.cellRow {
             let indexPath = IndexPath(row: safeRow, section: 0)
             tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
@@ -601,14 +590,14 @@ extension ChatViewController {
         moveUpKeyboard()
         
         setSendButtonEditingAppearance()
-        editBlockMessageTextLabel.text = messageBody
+        editBlockMessageTextLabel.text = selectedSenderMessage?.data.textBody
         showEditBlockView()
     }
     
     
     //MARK: - -deleteMessage()
     private func deleteMessage() {
-        if let safeMessageId = messageId {
+        if let safeMessageId = selectedSenderMessage?.data.documentId {
             db.collection(K.FStore.messagesCollection).document(safeMessageId).delete() { error in
                 if let safeError = error {
                     print("Error removing document: \(safeError)")
@@ -616,7 +605,7 @@ extension ChatViewController {
             }
         }
         
-        clearMessageCellData()
+        clearSenderMessageSelected()
     }
 }
 
