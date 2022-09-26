@@ -25,21 +25,16 @@ class ChatViewController: UIViewController {
     private var messageState: State = State.creating
     private var tableCells: [TableCell] = []
     
+    private var chatSender: ChatSender?
+    
     private var messageRow: Int?
     private var messageId: String?
     private var messageBody: String?
     
-    private var senderFirstName: String?
-    private var senderLastName: String?
-    private var senderAvatar: UIImage?
-    private var senderRGBColor: String?
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        sendButton.isUserInteractionEnabled = false
-        
+
         messageTextField.delegate = self
         tableView.dataSource = self
         
@@ -47,11 +42,14 @@ class ChatViewController: UIViewController {
         customizeViewElements()
 
         loadMessages()
-        
-        loadSenderInfo()
     }
     
     
+    func setChatSender(_ chatSender: ChatSender?) {
+        self.chatSender = chatSender
+    }
+    
+
     
     //MARK: - COMMON METHODS
     
@@ -326,55 +324,6 @@ class ChatViewController: UIViewController {
     
 
     
-    
-    //MARK: - LOAD SENDER INFO
-    
-    
-    
-    private func loadSenderInfo() {
-        guard let safeSenderId = Auth.auth().currentUser?.uid else { return }
-        
-        db.collection(K.FStore.usersCollection).document(safeSenderId).getDocument { [weak self] (document, error) in
-            if let document = document, document.exists {
-                guard let safeFirstName = document.data()?[K.FStore.firstNameField] as? String,
-                      let safeLastName = document.data()?[K.FStore.lastNameField] as? String,
-                      let safeAvatarUrl = document.data()?[K.FStore.avatarURLField] as? String,
-                      let safeUserRGBColor = document.data()?[K.FStore.userRGBColorField] as? String
-                else { return }
-                
-                //В структурі User додати проперті userRGBColor. Потім в LogInVC та в NewUserDataVC створювати такий об'єкт і передавати його в ChatVC при переході. Таким чином ми уникаємо потреби в loadSenderInfo(). Менше скачувань в ChatVC - менше очікування для користувача чата.
-                //Також не не потрібно буде встановлювати sendButton.isUserInteractionEnabled = true/false, адже дані вже будуть з самого початку.
-                self?.senderFirstName = safeFirstName
-                self?.senderLastName = safeLastName
-                self?.senderRGBColor = safeUserRGBColor
-                
-                self?.sendButton.isUserInteractionEnabled = true
-                
-                self?.loadSenderAvatar(urlString: safeAvatarUrl)
-            } else {
-                print("Sender info were not existed")
-            }
-        }
-    }
-    
-    
-    private func loadSenderAvatar(urlString: String) {
-        let ref = Storage.storage().reference(forURL: urlString)
-        
-        let megaByte = Int64(1 * 1024 * 1024)
-        
-        ref.getData(maxSize: megaByte) { [weak self] data, error in
-            if let safeError = error {
-                print(safeError)
-            } else {
-                guard let safeData = data else { return }
-                self?.senderAvatar = UIImage(data: safeData)
-            }
-        }
-    }
-    
-    
-    
     //MARK: - SIDE MENU BUTTON
     
     
@@ -393,9 +342,9 @@ class ChatViewController: UIViewController {
         if messageState == State.creating {
             if messageTextField.text != K.Case.emptyString {
                 guard let safeUserId = Auth.auth().currentUser?.uid,
-                      let safeSenderFirstName = senderFirstName,
+                      let safeSenderFirstName = chatSender?.info.firstName,
                       let safeMessageBody = messageTextField.text,
-                      let safeSenderRGBColor = senderRGBColor
+                      let safeSenderRGBColor = chatSender?.info.userRGBColor
                 else { return }
                 
                 clearMessageTextField()
@@ -613,20 +562,15 @@ extension ChatViewController {
             moveDownKeyboard()
             
             if let destinationVC = segue.destination as? UserInfoViewController {
-                if let safeSenderFirstName = senderFirstName,
-                   let safeSenderLastName = senderLastName,
-                   let safeSenderAvatar = senderAvatar {
-                    destinationVC.setUserInfo(senderFirstName: safeSenderFirstName, senderLastName: safeSenderLastName, senderAvatar: safeSenderAvatar)
-                    
-                    destinationVC.logOutButtonPressedCallBack = { [weak self] in
-                        self?.logOut()
-                    }
-                    
-                    destinationVC.deleteAccountButtonPressedCallBack = { [weak self] in
-                        self?.deleteAccountAndData()
-                    }
-                }
+                destinationVC.setChatSender(chatSender)
                 
+                destinationVC.setLogOutButtonPressedCallBack({ [weak self] in
+                    self?.logOut()
+                })
+                
+                destinationVC.setDeleteAccountButtonPressedCallBack({ [weak self] in
+                    self?.deleteAccountAndData()
+                })
             }
         }
     }

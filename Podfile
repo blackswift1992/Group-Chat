@@ -1,6 +1,6 @@
 platform :ios, '14.0'
 
-target 'Group Chat iOS13' do
+target 'Flash Chat iOS13' do
   use_frameworks!
   
   post_install do |installer|
@@ -15,6 +15,7 @@ target 'Group Chat iOS13' do
   pod 'CLTypingLabel', '~> 0.4.0'
   pod 'FirebaseAuth'
   pod 'FirebaseFirestore'
-  pod 'IQKeyboardManagerSwift', '6.5.0'
   pod 'FirebaseStorage'
+  pod 'FirebaseFirestoreSwift'
+  pod 'IQKeyboardManagerSwift', '6.5.0'
 end

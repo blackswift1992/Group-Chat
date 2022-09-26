@@ -13,25 +13,30 @@ class UserInfoViewController: UIViewController {
     @IBOutlet private weak var lastNameLabel: UILabel!
     
     @IBOutlet private weak var deleteAccountButton: UIButton!
-    
-    private var senderFirstName: String?
-    private var senderLastName: String?
-    private var senderAvatar: UIImage?
-    
-    var logOutButtonPressedCallBack: (() -> ())?
-    var deleteAccountButtonPressedCallBack: (() -> ())?
+ 
+    private var chatSender: ChatSender?
+    private var logOutButtonPressedCallBack: (() -> ())?
+    private var deleteAccountButtonPressedCallBack: (() -> ())?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         customizeViewElements()
     }
+
+    
+    func setChatSender(_ chatSender: ChatSender?) {
+        self.chatSender = chatSender
+    }
     
     
-    func setUserInfo(senderFirstName: String, senderLastName: String, senderAvatar: UIImage) {
-        self.senderFirstName = senderFirstName
-        self.senderLastName = senderLastName
-        self.senderAvatar = senderAvatar
+    func setLogOutButtonPressedCallBack(_ callback: (() -> ())?) {
+        logOutButtonPressedCallBack = callback
+    }
+    
+    
+    func setDeleteAccountButtonPressedCallBack(_ callback: (() -> ())?) {
+        deleteAccountButtonPressedCallBack = callback
     }
     
     
@@ -52,13 +57,9 @@ class UserInfoViewController: UIViewController {
         backgroundView.layer.cornerRadius = 29;
         backgroundView.layer.masksToBounds = true;
         
-        if let safeSenderFirstName = senderFirstName,
-           let safeSenderLastName = senderLastName,
-           let safeSenderAvatar = senderAvatar {
-            firstNameLabel.text = safeSenderFirstName
-            lastNameLabel.text = safeSenderLastName
-            avatarImageView.image = safeSenderAvatar
-        }
+        firstNameLabel.text = chatSender?.info.firstName
+        lastNameLabel.text = chatSender?.info.lastName
+        avatarImageView.image = chatSender?.avatar
     }
     
     

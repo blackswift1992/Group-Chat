@@ -1,4 +1,5 @@
 import UIKit
+import FirebaseStorage
 import FirebaseAuth
 import FirebaseFirestore
 
@@ -10,6 +11,8 @@ class LogInViewController: UIViewController {
     
     @IBOutlet private weak var progressIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var logInButton: UIButton!
+    
+    private var chatSender: ChatSender?
     
     
     override func viewDidLoad() {
@@ -63,16 +66,47 @@ class LogInViewController: UIViewController {
     
     
     private func checkIsUserDataExists() {
-        guard let userId = Auth.auth().currentUser?.uid else {
+        guard let safeCurrentUserId = Auth.auth().currentUser?.uid else {
             self.failedToLogIn(withMessage: "Try again")
             return
         }
         
-        Firestore.firestore().collection(K.FStore.usersCollection).document(userId).getDocument { [weak self] document, error in
+        Firestore.firestore().collection(K.FStore.usersCollection).document(safeCurrentUserId).getDocument { [weak self] document, error in
             if let document = document, document.exists {
-                self?.navigateToChat()
+                do {
+                    let chatUser = try document.data(as: ChatUser.self)
+                    self?.downloadAvatar(for: chatUser)
+                }
+                catch {
+                    self?.failedToLogIn(withMessage: "Try again")
+                    return
+                }
             } else {
                 self?.navigateToNewUserData()
+            }
+        }
+    }
+    
+    
+    private func downloadAvatar(for chatUser: ChatUser) {
+        let ref = Storage.storage().reference(forURL: chatUser.avatarURL)
+        
+        let megaByte = Int64(1 * 1024 * 1024)
+        
+        ref.getData(maxSize: megaByte) { [weak self] data, error in
+            if let safeError = error {
+                print(safeError)
+                self?.failedToLogIn(withMessage: "Try again")
+            } else {
+                guard let safeData = data,
+                      let avatar = UIImage(data: safeData)
+                else {
+                    self?.failedToLogIn(withMessage: "Try again")
+                    return
+                }
+                
+                self?.chatSender = ChatSender(info: chatUser, avatar: avatar)
+                self?.navigateToChat()
             }
         }
     }
@@ -85,5 +119,14 @@ class LogInViewController: UIViewController {
     
     private func navigateToNewUserData() {
         performSegue(withIdentifier: K.Segue.logInToNewUserData, sender: self)
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == K.Segue.logInToChat {
+            if let destinationVC = segue.destination as? ChatViewController {
+                destinationVC.setChatSender(chatSender)
+            }
+        }
     }
 }

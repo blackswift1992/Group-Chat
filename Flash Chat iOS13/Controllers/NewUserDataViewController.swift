@@ -15,6 +15,7 @@ class NewUserDataViewController: UIViewController {
     @IBOutlet private weak var progressIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var continueButton: UIButton!
     
+    private var chatSender: ChatSender?
     
     
     override func viewDidLoad() {
@@ -49,6 +50,14 @@ class NewUserDataViewController: UIViewController {
         performSegue(withIdentifier: K.Segue.newUserDataToChat, sender: self)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == K.Segue.newUserDataToChat {
+            if let destinationVC = segue.destination as? ChatViewController {
+                destinationVC.setChatSender(chatSender)
+            }
+        }
+    }
+    
     
     private func failedWithErrorMessage(_ message: String) {
         errorLabel.text = message
@@ -68,33 +77,38 @@ class NewUserDataViewController: UIViewController {
     
     
     @IBAction private func continueButtonPressed(_ sender: UIButton) {
-        guard let safeUserId = Auth.auth().currentUser?.uid,
-              let safeUserEmail = Auth.auth().currentUser?.email,
-              let safeFirstName = firstNameTextField.text,
-              let safeLastName = lastNameTextField.text,
-              let safeAvatarData = avatarImageView.image?.jpegData(compressionQuality: 0.02)
-        else { return }
-        
         activateScreenWaitingMode()
+
+        guard let safeFirstName = firstNameTextField.text else { return }
         
         if !safeFirstName.isEmpty {
-            uploadUserAvatarAndData(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, userAvatarData: safeAvatarData)
+            uploadAvatar()
         } else {
             failedWithErrorMessage("Type your first name")
         }
     }
     
     
-    private func uploadUserAvatarAndData(userId: String, userEmail: String, firstName: String, lastName: String, userAvatarData: Data) {
+    private func uploadAvatar() {
+        guard let safeUserId = Auth.auth().currentUser?.uid,
+              let safeUserEmail = Auth.auth().currentUser?.email,
+              let safeFirstName = firstNameTextField.text,
+              let safeLastName = lastNameTextField.text,
+              let safeAvatarData = avatarImageView.image?.jpegData(compressionQuality: 0.02),
+              let safeCompressedAvatar = UIImage(data: safeAvatarData)
+        else {
+            failedWithErrorMessage("Try again")
+            return
+        }
         
         let avatarMetaData = StorageMetadata()
         avatarMetaData.contentType = K.Image.jpegType
         
         let avatarRef = Storage.storage().reference()
             .child(K.FStore.avatarsCollection)
-            .child(userId)
+            .child(safeUserId)
         
-        avatarRef.putData(userAvatarData, metadata: avatarMetaData) {
+        avatarRef.putData(safeAvatarData, metadata: avatarMetaData) {
             [weak self] metaData, error in
             DispatchQueue.main.async {
                 guard let _ = metaData else {
@@ -108,29 +122,30 @@ class NewUserDataViewController: UIViewController {
                         return
                     }
                     
-                    self?.uploadUserData(userId: userId, userEmail: userEmail, firstName: firstName, lastName: lastName, uploadedAvatarURL: safeURL.absoluteString)
+                    let chatUser = ChatUser(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, avatarURL: safeURL.absoluteString, userRGBColor: UIColor.getRandomRGBString())
+                    
+                    self?.chatSender = ChatSender(info: chatUser, avatar: safeCompressedAvatar)
+                    
+                    self?.uploadData(for: chatUser)
                 }
             }
         }
     }
     
     
-    private func uploadUserData(userId: String, userEmail: String, firstName: String, lastName: String, uploadedAvatarURL: String) {
-        let docData: [String: Any] = [
-            K.FStore.userIdField: userId,
-            K.FStore.userEmailField: userEmail,
-            K.FStore.firstNameField: firstName,
-            K.FStore.lastNameField: lastName,
-            K.FStore.userRGBColorField: UIColor.getRandomRGBString(),
-            K.FStore.avatarURLField: uploadedAvatarURL
-        ]
-        
-        Firestore.firestore().collection(K.FStore.usersCollection).document(userId).setData(docData) { [weak self] error in
-            if let _ = error {
-                self?.failedWithErrorMessage("Try again")
-            } else {
-                self?.navigateToChat()
+    private func uploadData(for chatUser: ChatUser) {
+        do {
+            try Firestore.firestore().collection(K.FStore.usersCollection).document(chatUser.userId).setData(from: chatUser) { [weak self] error in
+                if let _ = error {
+                    self?.failedWithErrorMessage("Try again")
+                } else {
+                    self?.navigateToChat()
+                }
             }
+        }
+        catch let error {
+            print("Error writing city to Firestore: \(error)")
+            failedWithErrorMessage("Try again")
         }
     }
 }
