@@ -12,7 +12,7 @@ class LogInViewController: UIViewController {
     @IBOutlet private weak var progressIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var logInButton: UIButton!
     
-    private var chatSender: ChatSender?
+    private var currentUser: ChatUser?
     
     
     override func viewDidLoad() {
@@ -74,8 +74,8 @@ class LogInViewController: UIViewController {
         Firestore.firestore().collection(K.FStore.usersCollection).document(safeCurrentUserId).getDocument { [weak self] document, error in
             if let document = document, document.exists {
                 do {
-                    let chatUser = try document.data(as: ChatUser.self)
-                    self?.downloadAvatar(for: chatUser)
+                    let userData = try document.data(as: UserData.self)
+                    self?.downloadAvatar(with: userData)
                 }
                 catch {
                     self?.failedToLogIn(withMessage: "Try again")
@@ -88,8 +88,8 @@ class LogInViewController: UIViewController {
     }
     
     
-    private func downloadAvatar(for chatUser: ChatUser) {
-        let ref = Storage.storage().reference(forURL: chatUser.avatarURL)
+    private func downloadAvatar(with userData: UserData) {
+        let ref = Storage.storage().reference(forURL: userData.avatarURL)
         
         let megaByte = Int64(1 * 1024 * 1024)
         
@@ -98,14 +98,14 @@ class LogInViewController: UIViewController {
                 print(safeError)
                 self?.failedToLogIn(withMessage: "Try again")
             } else {
-                guard let safeData = data,
-                      let avatar = UIImage(data: safeData)
+                guard let safeAvatarData = data,
+                      let safeAvatar = UIImage(data: safeAvatarData)
                 else {
                     self?.failedToLogIn(withMessage: "Try again")
                     return
                 }
                 
-                self?.chatSender = ChatSender(info: chatUser, avatar: avatar)
+                self?.currentUser = ChatUser(data: userData, avatar: safeAvatar)
                 self?.navigateToChat()
             }
         }
@@ -125,7 +125,7 @@ class LogInViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == K.Segue.logInToChat {
             if let destinationVC = segue.destination as? ChatViewController {
-                destinationVC.setChatSender(chatSender)
+                destinationVC.setChatSender(currentUser)
             }
         }
     }

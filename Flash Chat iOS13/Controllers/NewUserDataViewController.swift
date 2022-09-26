@@ -15,7 +15,7 @@ class NewUserDataViewController: UIViewController {
     @IBOutlet private weak var progressIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var continueButton: UIButton!
     
-    private var chatSender: ChatSender?
+    private var currentUser: ChatUser?
     
     
     override func viewDidLoad() {
@@ -53,7 +53,7 @@ class NewUserDataViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == K.Segue.newUserDataToChat {
             if let destinationVC = segue.destination as? ChatViewController {
-                destinationVC.setChatSender(chatSender)
+                destinationVC.setChatSender(currentUser)
             }
         }
     }
@@ -122,20 +122,20 @@ class NewUserDataViewController: UIViewController {
                         return
                     }
                     
-                    let chatUser = ChatUser(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, avatarURL: safeURL.absoluteString, userRGBColor: UIColor.getRandomRGBString())
+                    let userData = UserData(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, avatarURL: safeURL.absoluteString, userRGBColor: UIColor.getRandomRGBString())
                     
-                    self?.chatSender = ChatSender(info: chatUser, avatar: safeCompressedAvatar)
+                    self?.currentUser = ChatUser(data: userData, avatar: safeCompressedAvatar)
                     
-                    self?.uploadData(for: chatUser)
+                    self?.uploadData(userData)
                 }
             }
         }
     }
     
     
-    private func uploadData(for chatUser: ChatUser) {
+    private func uploadData(_ userData: UserData) {
         do {
-            try Firestore.firestore().collection(K.FStore.usersCollection).document(chatUser.userId).setData(from: chatUser) { [weak self] error in
+            try Firestore.firestore().collection(K.FStore.usersCollection).document(userData.userId).setData(from: userData) { [weak self] error in
                 if let _ = error {
                     self?.failedWithErrorMessage("Try again")
                 } else {

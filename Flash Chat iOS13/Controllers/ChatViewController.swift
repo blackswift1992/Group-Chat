@@ -25,8 +25,9 @@ class ChatViewController: UIViewController {
     private var messageState: State = State.creating
     private var tableCells: [TableCell] = []
     
-    private var chatSender: ChatSender?
+    private var chatSender: ChatUser?
     
+    //скоріш за все під заміну!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private var messageRow: Int?
     private var messageId: String?
     private var messageBody: String?
@@ -38,15 +39,13 @@ class ChatViewController: UIViewController {
         messageTextField.delegate = self
         tableView.dataSource = self
         
-        registerTableViewNibs()
         customizeViewElements()
-
-        loadMessages()
+        registerTableViewNibs()
     }
     
     
-    func setChatSender(_ chatSender: ChatSender?) {
-        self.chatSender = chatSender
+    func setChatSender(_ chatUser: ChatUser?) {
+        chatSender = chatUser
     }
     
 
@@ -78,14 +77,16 @@ class ChatViewController: UIViewController {
     
     
     private func showDeletingView() {
-        deletingView.isHidden = false
-        deletingLabel.blink()
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = deletingView.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         deletingView.addSubview(blurEffectView)
         deletingView.addSubview(deletingLabel)
+        
+        deletingLabel.blink()
+        
+        deletingView.isHidden = false
     }
     
     
@@ -108,6 +109,7 @@ class ChatViewController: UIViewController {
     }
     
     
+    //скоріш за все під заміну!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private func clearMessageCellData() {
         messageRow = nil
         messageId = nil
@@ -134,6 +136,8 @@ class ChatViewController: UIViewController {
         tableView.register(UINib(nibName: K.TableCell.greetingNibName, bundle: nil), forCellReuseIdentifier: K.TableCell.greetingNibIdentifier)
         tableView.register(UINib(nibName: K.TableCell.senderNibName, bundle: nil), forCellReuseIdentifier: K.TableCell.senderNibIdentifier)
         tableView.register(UINib(nibName: K.TableCell.receiverNibName, bundle: nil), forCellReuseIdentifier: K.TableCell.receiverNibIdentifier)
+        
+        loadMessages()
     }
     
     
@@ -342,9 +346,9 @@ class ChatViewController: UIViewController {
         if messageState == State.creating {
             if messageTextField.text != K.Case.emptyString {
                 guard let safeUserId = Auth.auth().currentUser?.uid,
-                      let safeSenderFirstName = chatSender?.info.firstName,
+                      let safeSenderFirstName = chatSender?.data.firstName,
                       let safeMessageBody = messageTextField.text,
-                      let safeSenderRGBColor = chatSender?.info.userRGBColor
+                      let safeSenderRGBColor = chatSender?.data.userRGBColor
                 else { return }
                 
                 clearMessageTextField()

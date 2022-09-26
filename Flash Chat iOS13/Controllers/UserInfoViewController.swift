@@ -14,7 +14,7 @@ class UserInfoViewController: UIViewController {
     
     @IBOutlet private weak var deleteAccountButton: UIButton!
  
-    private var chatSender: ChatSender?
+    private var chatSender: ChatUser?
     private var logOutButtonPressedCallBack: (() -> ())?
     private var deleteAccountButtonPressedCallBack: (() -> ())?
     
@@ -25,8 +25,8 @@ class UserInfoViewController: UIViewController {
     }
 
     
-    func setChatSender(_ chatSender: ChatSender?) {
-        self.chatSender = chatSender
+    func setChatSender(_ chatUser: ChatUser?) {
+        chatSender = chatUser
     }
     
     
@@ -57,8 +57,8 @@ class UserInfoViewController: UIViewController {
         backgroundView.layer.cornerRadius = 29;
         backgroundView.layer.masksToBounds = true;
         
-        firstNameLabel.text = chatSender?.info.firstName
-        lastNameLabel.text = chatSender?.info.lastName
+        firstNameLabel.text = chatSender?.data.firstName
+        lastNameLabel.text = chatSender?.data.lastName
         avatarImageView.image = chatSender?.avatar
     }
     

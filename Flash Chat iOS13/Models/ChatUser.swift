@@ -1,11 +1,11 @@
-import Foundation
-import FirebaseFirestoreSwift
+import UIKit
 
-struct ChatUser: Codable {
-    let userId: String
-    let userEmail: String
-    let firstName: String
-    let lastName: String
-    let avatarURL: String
-    let userRGBColor: String
+class ChatUser {
+    let data: UserData
+    let avatar: UIImage
+    
+    init(data: UserData, avatar: UIImage) {
+        self.data = data
+        self.avatar = avatar
+    }
 }

@@ -10,3 +10,15 @@ struct Message: TableCell {
     let isEdited: String
     let userRGBColor: String
 }
+
+//struct ChatMessage: Codable {
+////    let row: Int
+////    let id: String
+//
+//    let date: String
+//    let userId: String
+//    let userFirstName: String
+//    let textBody: String
+//    let isEdited: String
+//    let userRGBColor: String
+//}
