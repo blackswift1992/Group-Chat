@@ -262,41 +262,43 @@ class ChatViewController: UIViewController {
             } else {
                 self?.tableCells = [GreetingMessage()]
                 
-                guard let documents = querySnapshot?.documents else { return }
+                guard let documents = querySnapshot?.documents,
+                      let nextCellRowNumber = self?.tableCells.count
+                else { return }
                 
                 for document in documents {
                     do {
                         let messageData = try document.data(as: MessageData.self)
                         
-                        guard let tableCellsCount = self?.tableCells.count
-                        else { return } //continue?????
-                        
-                        let message = Message(cellRow: tableCellsCount, data: messageData)
+                        let message = Message(cellRow: nextCellRowNumber, data: messageData)
                         
                         self?.tableCells.append(message)
                     }
                     catch {
-                        print("totalpizda!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                        return  //continue?????
+                        print("Retrieving fields from a document was failed")
+                        return
                     }
                 }
                 
-                if self?.messageState == State.creating {
-                    DispatchQueue.main.async {
-                        self?.tableView.reloadData()
-                        
-                        guard let tableCellsCount = self?.tableCells.count else { return }
-                        
-                        let indexPath = IndexPath(row: tableCellsCount - 1, section: 0)
-                        self?.tableView.scrollToRow(at: indexPath, at: .top , animated: true)
-                    }
-                } else {
-                    self?.messageState = State.creating
+                DispatchQueue.main.async {
+                    self?.showLoadedMessagesAndScroll()
                 }
             }
         }
     }
     
+    
+    private func showLoadedMessagesAndScroll() {
+        if messageState == State.creating {
+            tableView.reloadData()
+            
+            let indexPath = IndexPath(row: tableCells.count - 1, section: 0)
+            tableView.scrollToRow(at: indexPath, at: .top , animated: true)
+        } else {
+            messageState = State.creating
+        }
+    }
+
     
     
     //MARK: - SIDE MENU BUTTON
@@ -552,8 +554,8 @@ extension ChatViewController {
         messageState = State.editing
         messageTextField.text = selectedSenderMessage?.data.textBody
         
-        if let safeRow = selectedSenderMessage?.cellRow {
-            let indexPath = IndexPath(row: safeRow, section: 0)
+        if let safeCellRow = selectedSenderMessage?.cellRow {
+            let indexPath = IndexPath(row: safeCellRow, section: 0)
             tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
         
