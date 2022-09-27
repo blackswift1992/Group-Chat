@@ -260,17 +260,17 @@ class ChatViewController: UIViewController {
             if let safeError = error {
                 print("Error load messages: \(safeError)")
             } else {
-                self?.tableCells = [GreetingMessage()]
+                guard let documents = querySnapshot?.documents else { return }
                 
-                guard let documents = querySnapshot?.documents,
-                      let nextCellRowNumber = self?.tableCells.count
-                else { return }
+                self?.tableCells = [GreetingMessage()]
                 
                 for document in documents {
                     do {
                         let messageData = try document.data(as: MessageData.self)
                         
-                        let message = Message(cellRow: nextCellRowNumber, data: messageData)
+                        guard let cellRowNumber = self?.tableCells.count else { continue }  //continue норм??????????????????????????
+                        
+                        let message = Message(cellRow: cellRowNumber, data: messageData)
                         
                         self?.tableCells.append(message)
                     }
