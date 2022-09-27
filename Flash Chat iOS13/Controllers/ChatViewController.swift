@@ -37,6 +37,7 @@ class ChatViewController: UIViewController {
         
         customizeViewElements()
         registerTableViewNibs()
+        loadMessages()
     }
     
     
@@ -130,8 +131,6 @@ class ChatViewController: UIViewController {
         tableView.register(UINib(nibName: K.TableCell.greetingNibName, bundle: nil), forCellReuseIdentifier: K.TableCell.greetingNibIdentifier)
         tableView.register(UINib(nibName: K.TableCell.senderNibName, bundle: nil), forCellReuseIdentifier: K.TableCell.senderNibIdentifier)
         tableView.register(UINib(nibName: K.TableCell.receiverNibName, bundle: nil), forCellReuseIdentifier: K.TableCell.receiverNibIdentifier)
-        
-        loadMessages()
     }
     
     
@@ -268,12 +267,11 @@ class ChatViewController: UIViewController {
                 for document in documents {
                     do {
                         let messageData = try document.data(as: MessageData.self)
-
-                        guard let safeTimestamp = self?.formatDateString(milliseconds: messageData.date),
-                              let tableCellsCount = self?.tableCells.count
-                        else { return }
                         
-                        let message = Message(cellRow: tableCellsCount, data: messageData, timestamp: safeTimestamp)
+                        guard let tableCellsCount = self?.tableCells.count
+                        else { return } //continue?????
+                        
+                        let message = Message(cellRow: tableCellsCount, data: messageData)
                         
                         self?.tableCells.append(message)
                     }
@@ -300,28 +298,6 @@ class ChatViewController: UIViewController {
     }
     
     
-    //перенести в Sender/ReceiverMessageCell
-    private func formatDateString(milliseconds: String) -> String {
-        var formatedDateString = String()
-        
-        if let msDouble = Double(milliseconds) {
-            let dateObject = Date(timeIntervalSince1970: TimeInterval(msDouble))
-            
-            let dateFormatterGet = DateFormatter()
-            dateFormatterGet.dateFormat = K.Date.getFormat
-            
-            let dateFormatterPrint = DateFormatter()
-            dateFormatterPrint.dateFormat = K.Date.printFormat
-            
-            if let safeGottedDate = dateFormatterGet.date(from: dateObject.description) {
-                formatedDateString = dateFormatterPrint.string(from: safeGottedDate)
-            }
-        }
-        
-        return formatedDateString
-    }
-    
-
     
     //MARK: - SIDE MENU BUTTON
     
@@ -441,32 +417,26 @@ extension ChatViewController: UITableViewDataSource {
         
         if tableCell is GreetingMessage {
             uiTableViewCell = tableView.dequeueReusableCell(withIdentifier: K.TableCell.greetingNibIdentifier, for: indexPath)
+        } else if tableCell is Message {
+            guard let message = tableCell as? Message
+            else { return UITableViewCell() }
             
-            return uiTableViewCell
-        } else {
-            guard let message = tableCell as? Message else { return uiTableViewCell }
-
             if message.data.userId == chatSender?.data.userId {
                 uiTableViewCell = tableView.dequeueReusableCell(withIdentifier: K.TableCell.senderNibIdentifier, for: indexPath)
                 
-                if let safeSenderMessageCell = uiTableViewCell as? SenderMessageCell {
-                    safeSenderMessageCell.delegate = self
-                    
-                    //Що краще передавати в якості CellData?? struct Message чи class Message?????????????????????????????
-                    safeSenderMessageCell.setSenderMessageCellData(message)
-                    
-                    return safeSenderMessageCell
-                }
+                guard let safeSenderMessageCell = uiTableViewCell as? SenderMessageCell
+                else { return UITableViewCell() }
+                
+                safeSenderMessageCell.delegate = self
+                safeSenderMessageCell.setData(message)
             } else {
                 uiTableViewCell = tableView.dequeueReusableCell(withIdentifier: K.TableCell.receiverNibIdentifier, for: indexPath)
                 
-                if let safeReceiverMessageCell = uiTableViewCell as? ReceiverMessageCell {
-                    
-                    //Що краще передавати в якості CellData?? struct Message чи class Message?????????????????????????????
-                    safeReceiverMessageCell.setReceiverMessageCellData(message)
-
-                    return safeReceiverMessageCell
-                }
+                guard let safeReceiverMessageCell = uiTableViewCell as? ReceiverMessageCell
+                else { return UITableViewCell() }
+                
+                //Краще передавати struct Message чи class Message????????
+                safeReceiverMessageCell.setData(message)
             }
         }
         

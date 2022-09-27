@@ -7,23 +7,20 @@ class ReceiverMessageCell: UITableViewCell {
     @IBOutlet private weak var timestampLabel: UILabel!
     @IBOutlet private weak var messageButton: UIButton!
 
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         customizeViewElements()
     }
 
     
-    func setReceiverMessageCellData(_ message: Message) {
+    func setData(_ message: Message) {
         firstNameLabel.text = message.data.userFirstName
+        firstNameLabel.textColor = message.userColor
         messageBodyLabel.text = message.data.textBody
-        
-        timestampLabel.text = (message.data.isEdited == K.Case.yes ? "edited " : K.Case.emptyString) + message.timestamp
-
-        firstNameLabel.textColor = UIColor.getColorFromRGBString(message.data.userRGBColor)
+        timestampLabel.text = message.timestamp
     }
-
-
+    
+    
     private func customizeViewElements() {
             let cornerRadius = messageBubble.frame.size.height / 2.30
             messageBubble.layer.cornerRadius = cornerRadius

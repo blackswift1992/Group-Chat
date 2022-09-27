@@ -48,8 +48,7 @@ struct K {
     }
     
     struct Date {
-        static let getFormat = "yyyy-MM-dd HH:mm:ss Z"
-        static let printFormat = "HH:mm"
+        static let messageTimestampFormat = "HH:mm"
     }
     
     struct Case {

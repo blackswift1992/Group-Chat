@@ -24,12 +24,12 @@ class SenderMessageCell: UITableViewCell {
     }
     
     
-    func setSenderMessageCellData(_ message: Message) {
+    func setData(_ message: Message) {
         senderMessage = message
-        
         messageBodyLabel.text = message.data.textBody
-        timestampLabel.text = (message.data.isEdited == K.Case.yes ? "edited " : K.Case.emptyString) + message.timestamp
+        timestampLabel.text = message.timestamp
     }
+    
     
     private func customizeViewElements() {
         let cornerRadius = messageBubble.frame.size.height / 2.30
