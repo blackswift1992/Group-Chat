@@ -6,7 +6,7 @@ struct MessageData: Codable {
     let date: String
     let userId: String
     let userFirstName: String
-    let textBody: String
-    let isEdited: String
+    var textBody: String
+    var isEdited: String
     let userRGBColor: String
 }

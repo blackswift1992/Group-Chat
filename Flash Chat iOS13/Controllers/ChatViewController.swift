@@ -7,6 +7,7 @@ import IQKeyboardManagerSwift
 class ChatViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     
+    //замінити edit на editing
     @IBOutlet private weak var editBlockView: UIView!
     @IBOutlet private weak var editBlockMessageTextLabel: UILabel!
     @IBOutlet private weak var editBlockCancelButton: UIButton!
@@ -57,15 +58,15 @@ class ChatViewController: UIViewController {
     }
 
     
-    private func hideEditBlockView() {
+    private func hideEditingBlockView() {
         UIView.animate(withDuration: 0.3) {
             self.tableView.transform = .identity
             self.editBlockView.transform = CGAffineTransform(translationX: 0.0, y: +50.0)
         }
     }
     
-    
-    private func showEditBlockView() {
+
+    private func showEditingBlockView() {
         UIView.animate(withDuration: 0.2) {
             self.tableView.transform = CGAffineTransform(translationX: 0.0, y: -50.0)
             self.editBlockView.transform = .identity
@@ -87,7 +88,7 @@ class ChatViewController: UIViewController {
     }
     
     
-    private func setSendButtonCreatingAppearance() {
+    private func setSendButtonCreationAppearance() {
         sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
         sendButton.tintColor = UIColor.brandLightBlue
     }
@@ -103,12 +104,6 @@ class ChatViewController: UIViewController {
     
     private func clearMessageTextField() {
         messageTextField.text = K.Case.emptyString
-    }
-    
-    
-    //можливо потрібно видалити???????????????????????????????????????????
-    private func clearSenderMessageSelected() {
-        selectedSenderMessage = nil
     }
     
     
@@ -268,34 +263,32 @@ class ChatViewController: UIViewController {
                     do {
                         let messageData = try document.data(as: MessageData.self)
                         
-                        guard let cellRowNumber = self?.tableCells.count else { continue }  //continue норм??????????????????????????
+                        guard let cellRowNumber = self?.tableCells.count else { return }  //може continue????????????????????
                         
                         let message = Message(cellRow: cellRowNumber, data: messageData)
                         
                         self?.tableCells.append(message)
                     }
                     catch {
-                        print("Retrieving fields from a document was failed")
+                        print("Retrieving MessageData from Firestore was failed")
                         return
                     }
                 }
                 
                 DispatchQueue.main.async {
-                    self?.showLoadedMessagesAndScroll()
+                    self?.showLoadedMessages()
                 }
             }
         }
     }
     
     
-    private func showLoadedMessagesAndScroll() {
+    private func showLoadedMessages() {
+        tableView.reloadData()
+        
         if messageState == State.creating {
-            tableView.reloadData()
-            
             let indexPath = IndexPath(row: tableCells.count - 1, section: 0)
             tableView.scrollToRow(at: indexPath, at: .top , animated: true)
-        } else {
-            messageState = State.creating
         }
     }
 
@@ -317,67 +310,83 @@ class ChatViewController: UIViewController {
     
     @IBAction private func sendButtonPressed(_ sender: UIButton) {
         if messageState == State.creating {
-            if messageTextField.text != K.Case.emptyString {
-                guard let safeUserId = Auth.auth().currentUser?.uid,
-                      let safeSenderFirstName = chatSender?.data.firstName,
-                      let safeMessageBody = messageTextField.text,
-                      let safeSenderRGBColor = chatSender?.data.userRGBColor
-                else { return }
-                
-                clearMessageTextField()
-                
-                let docData: [String: Any] = [
-                    K.FStore.userIdField: safeUserId,
-                    K.FStore.userFirstNameField: safeSenderFirstName,
-                    K.FStore.textBodyField: safeMessageBody,
-                    K.FStore.dateField: String(Date().timeIntervalSince1970),
-                    K.FStore.isEdited: K.Case.no,
-                    K.FStore.userRGBColorField: safeSenderRGBColor
-                ]
-                
-                db.collection(K.FStore.messagesCollection).addDocument(data: docData) { error in
-                    if let safeError = error {
-                        print("Error adding document: \(safeError)")
-                    }
-                }
-            }
+            createMessage()
         } else if messageState == State.editing {
-            if messageTextField.text != K.Case.emptyString {
-                guard let safeMessageId = selectedSenderMessage?.data.documentId,
-                      let editedMessage = messageTextField.text
-                else { return }
-                
-                clearMessageTextField()
-                
-                let docData: [String: Any] = [
-                    K.FStore.textBodyField: editedMessage,
-                    K.FStore.isEdited: K.Case.yes
-                ]
-                
-                db.collection(K.FStore.messagesCollection).document(safeMessageId).updateData(docData) { [weak self] error in
+            editMessage()
+        }
+    }
+    
+    
+    private func createMessage() {
+        guard let safeMessageBody = messageTextField.text else { return }
+
+        if !safeMessageBody.isEmpty {
+            guard let safeChatSender = chatSender else { return }
+            
+            let messageData = MessageData(
+                date: String(Date().timeIntervalSince1970),
+                userId: safeChatSender.data.userId,
+                userFirstName: safeChatSender.data.firstName,
+                textBody: safeMessageBody,
+                isEdited: K.Case.no,
+                userRGBColor: safeChatSender.data.userRGBColor)
+            
+            do {
+                let _ = try db.collection(K.FStore.messagesCollection).addDocument(from: messageData) { [weak self] error in
                     if let safeError = error {
-                        print("Error updating document: \(safeError)")
+                        print("Message creation was failed: \(safeError)")
                     } else {
                         DispatchQueue.main.async {
-                            self?.setSendButtonCreatingAppearance()
-                            self?.hideEditBlockView()
-                            self?.tableView.reloadData()
+                            self?.clearMessageTextField()
                         }
                     }
                 }
-            } else {
-                messageState = State.creating
-                
-                DispatchQueue.main.async {
-                    self.hideEditBlockView()
-                    self.setSendButtonCreatingAppearance()
-                }
-                
-                navigateToCancelEdit()
+            } catch let error {
+                print("Message creation was failed: \(error)")
             }
-            
-            clearSenderMessageSelected()
         }
+    }
+    
+    
+    private func editMessage() {
+        guard let safeMessageBody = messageTextField.text else { return }
+        
+        if !safeMessageBody.isEmpty {
+            guard var messageData = selectedSenderMessage?.data,
+                  let messageId = messageData.documentId
+            else { return }
+
+            let mergeFields = [K.FStore.textBodyField, K.FStore.isEdited]
+            
+            messageData.textBody = safeMessageBody
+            messageData.isEdited = K.Case.yes
+            
+            do {
+                try
+                db.collection(K.FStore.messagesCollection).document(messageId).setData(from: messageData, mergeFields: mergeFields) { [weak self] error in
+                    if let safeError = error {
+                        print("Message editing was failed: \(safeError)")
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.clearMessageTextField()
+                            self?.finishMessageEditing()
+                        }
+                    }
+                }
+            } catch let error {
+                print("Message editing was failed \(error)")
+            }
+        } else {
+            finishMessageEditing()
+            navigateToCancelEdit()
+        }
+    }
+    
+    
+    private func finishMessageEditing() {
+        messageState = State.creating
+        setSendButtonCreationAppearance()
+        hideEditingBlockView()
     }
     
     
@@ -387,12 +396,8 @@ class ChatViewController: UIViewController {
     
     
     @IBAction private func cancelButtonPressed(_ sender: UIButton) {
-        hideEditBlockView()
-        tableView.reloadData()
-        setSendButtonCreatingAppearance()
         clearMessageTextField()
-        messageState = State.creating
-        clearSenderMessageSelected()
+        finishMessageEditing()
     }
 }
 
@@ -481,7 +486,7 @@ extension ChatViewController: UITextFieldDelegate {
 
 extension ChatViewController {
     private enum State {
-        case creating, editing
+        case creating, editing, deleting
     }
 }
 
@@ -563,21 +568,23 @@ extension ChatViewController {
         
         setSendButtonEditingAppearance()
         editBlockMessageTextLabel.text = selectedSenderMessage?.data.textBody
-        showEditBlockView()
+        showEditingBlockView()
     }
     
     
     //MARK: - -deleteMessage()
     private func deleteMessage() {
         if let safeMessageId = selectedSenderMessage?.data.documentId {
-            db.collection(K.FStore.messagesCollection).document(safeMessageId).delete() { error in
+            messageState = State.deleting
+            
+            db.collection(K.FStore.messagesCollection).document(safeMessageId).delete() { [weak self] error in
                 if let safeError = error {
                     print("Error removing document: \(safeError)")
                 }
+                
+                self?.messageState = State.creating
             }
         }
-        
-        clearSenderMessageSelected()
     }
 }
 

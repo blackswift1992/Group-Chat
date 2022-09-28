@@ -142,8 +142,7 @@ class NewUserDataViewController: UIViewController {
                     self?.navigateToChat()
                 }
             }
-        }
-        catch let error {
+        } catch let error {
             print("Error writing city to Firestore: \(error)")
             failedWithErrorMessage("Try again")
         }
