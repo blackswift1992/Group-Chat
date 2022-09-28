@@ -30,13 +30,13 @@ class UserInfoViewController: UIViewController {
     }
     
     
-    func setLogOutButtonPressedCallBack(_ callback: (() -> ())?) {
-        logOutButtonPressedCallBack = callback
+    func setLogOutButtonPressedCallBack(_ logOutCallback: (() -> ())?) {
+        logOutButtonPressedCallBack = logOutCallback
     }
     
     
-    func setDeleteAccountButtonPressedCallBack(_ callback: (() -> ())?) {
-        deleteAccountButtonPressedCallBack = callback
+    func setDeleteAccountButtonPressedCallBack(_ deleteAccountCallback: (() -> ())?) {
+        deleteAccountButtonPressedCallBack = deleteAccountCallback
     }
     
     
@@ -76,7 +76,7 @@ class UserInfoViewController: UIViewController {
     }
     
     
-    private func deleteAccountAndData() {
+    private func deleteAccount() {
         view.isHidden = true
         deleteAccountButtonPressedCallBack?()
         self.dismiss(animated: true, completion: nil)
@@ -92,7 +92,7 @@ class UserInfoViewController: UIViewController {
         if segue.identifier == K.Segue.userInfoToDeleteAccountWarning {
             if let destinationVC = segue.destination as? DeleteAccountWarningViewController {
                 destinationVC.yesButtonPressedCallBack = { [weak self] in
-                    self?.deleteAccountAndData()
+                    self?.deleteAccount()
                 }
             }
         }

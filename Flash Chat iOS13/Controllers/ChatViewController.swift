@@ -74,7 +74,7 @@ class ChatViewController: UIViewController {
     }
     
     
-    private func showDeletingView() {
+    private func showDeletionScreensaver() {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = deletingView.bounds
@@ -390,6 +390,14 @@ class ChatViewController: UIViewController {
     }
     
     
+    private func startMessageEditing() {
+        messageState = State.editing
+        setSendButtonEditingAppearance()
+        showEditingBlockView()
+        moveUpKeyboard()
+    }
+    
+    
     
     //MARK: - CANCEL BUTTON
     
@@ -458,8 +466,8 @@ extension ChatViewController: UITableViewDataSource {
 
 
 extension ChatViewController: SenderMessageCellDelegate {
-    func messageSelected(_ messageCell: SenderMessageCell, message: Message) {
-        selectedSenderMessage = message
+    func messageSelected(_ messageCell: SenderMessageCell, selectedMessage: Message) {
+        selectedSenderMessage = selectedMessage
         navigateToEditMenu()
     }
 }
@@ -520,13 +528,13 @@ extension ChatViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == K.Segue.chatToEditMenu {
             if let destinationVC = segue.destination as? EditMenuViewController {
-                destinationVC.editButtonPressedCallBack = { [weak self] in
-                    self?.editMessageBody()
-                }
+                destinationVC.setEditButtonPressedCallBack({ [weak self] in
+                    self?.editSelectedMessage()
+                })
                 
-                destinationVC.deleteButtonPressedCallBack = { [weak self] in
-                    self?.deleteMessage()
-                }
+                destinationVC.setDeleteButtonPressedCallBack({ [weak self] in
+                    self?.deleteSelectedMessage()
+                })
             }
         } else if segue.identifier == K.Segue.chatToUserInfo {
             moveDownKeyboard()
@@ -539,7 +547,7 @@ extension ChatViewController {
                 })
                 
                 destinationVC.setDeleteAccountButtonPressedCallBack({ [weak self] in
-                    self?.deleteAccountAndData()
+                    self?.deleteAccount()
                 })
             }
         }
@@ -554,36 +562,35 @@ extension ChatViewController {
 
 
 extension ChatViewController {
-    //MARK: - -editMessageBody()
-    private func editMessageBody() {
-        messageState = State.editing
-        messageTextField.text = selectedSenderMessage?.data.textBody
+    //MARK: - -editSelectedMessage()
+    private func editSelectedMessage() {
+        guard let selectedMessageTextBody = selectedSenderMessage?.data.textBody,
+              let selectedMessageCellRow = selectedSenderMessage?.cellRow
+        else { return }
         
-        if let safeCellRow = selectedSenderMessage?.cellRow {
-            let indexPath = IndexPath(row: safeCellRow, section: 0)
-            tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-        }
+        messageTextField.text = selectedMessageTextBody
+        editBlockMessageTextLabel.text = selectedMessageTextBody
         
-        moveUpKeyboard()
+        startMessageEditing()
         
-        setSendButtonEditingAppearance()
-        editBlockMessageTextLabel.text = selectedSenderMessage?.data.textBody
-        showEditingBlockView()
+        let indexPath = IndexPath(row: selectedMessageCellRow, section: 0)
+        tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
     }
     
     
-    //MARK: - -deleteMessage()
-    private func deleteMessage() {
-        if let safeMessageId = selectedSenderMessage?.data.documentId {
-            messageState = State.deleting
-            
-            db.collection(K.FStore.messagesCollection).document(safeMessageId).delete() { [weak self] error in
-                if let safeError = error {
-                    print("Error removing document: \(safeError)")
-                }
-                
-                self?.messageState = State.creating
+    //MARK: - -deleteSelectedMessage()
+    private func deleteSelectedMessage() {
+        guard let selectedMessageId = selectedSenderMessage?.data.documentId
+        else { return }
+        
+        messageState = State.deleting
+        
+        db.collection(K.FStore.messagesCollection).document(selectedMessageId).delete() { [weak self] error in
+            if let safeError = error {
+                print("Message deleting was failed: \(safeError)")
             }
+            
+            self?.messageState = State.creating
         }
     }
 }
@@ -596,15 +603,16 @@ extension ChatViewController {
 
 extension ChatViewController {
     //MARK: - -deleteAccountAndData()
-    private func deleteAccountAndData() {
-        disableViewUserInteraction()
-        showDeletingView()
-        deleteUserInfo()
+    private func deleteAccount() {
+        deleteUserData()
     }
     
     
-    private func deleteUserInfo() {
+    private func deleteUserData() {
         guard let safeCurrentUserUid = Auth.auth().currentUser?.uid else { return }
+        
+        disableViewUserInteraction()
+        showDeletionScreensaver()
         
         db.collection(K.FStore.usersCollection).document(safeCurrentUserUid).delete { [weak self] error in
             if let safeError = error {

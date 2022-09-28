@@ -2,7 +2,7 @@ import UIKit
 import AudioToolbox
 
 protocol SenderMessageCellDelegate: AnyObject {
-    func messageSelected(_ messageCell: SenderMessageCell, message: Message)
+    func messageSelected(_ messageCell: SenderMessageCell, selectedMessage: Message)
 }
 
 
@@ -55,7 +55,7 @@ class SenderMessageCell: UITableViewCell {
                 if sender.isTracking {
                     AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                     
-                    self.delegate?.messageSelected(self, message: safeSenderMessage)
+                    self.delegate?.messageSelected(self, selectedMessage: safeSenderMessage)
                 }
                 
                 self.setMessageColor(UIColor.brandMint)

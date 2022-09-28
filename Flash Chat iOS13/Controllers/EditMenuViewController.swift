@@ -4,8 +4,18 @@ class EditMenuViewController: UIViewController {
     @IBOutlet private weak var deleteButton: UIButton!
     @IBOutlet private weak var editButton: UIButton!
 
-    var editButtonPressedCallBack: (() -> ())?
-    var deleteButtonPressedCallBack: (() -> ())?
+    private var editButtonPressedCallBack: (() -> ())?
+    private var deleteButtonPressedCallBack: (() -> ())?
+    
+    
+    func setEditButtonPressedCallBack(_ editCallBack: (() -> ())?) {
+        editButtonPressedCallBack = editCallBack
+    }
+    
+    
+    func setDeleteButtonPressedCallBack(_ deleteCallBack: (() -> ())?) {
+        deleteButtonPressedCallBack = deleteCallBack
+    }
     
     
     override func viewDidLoad() {
