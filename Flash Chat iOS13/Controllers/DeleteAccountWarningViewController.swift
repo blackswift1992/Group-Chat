@@ -34,6 +34,8 @@ class DeleteAccountWarningViewController: UIViewController {
         dismiss(animated: true, completion: nil)
         
         yesButtonPressedCallBack?()
+        
+        
     }
     
     

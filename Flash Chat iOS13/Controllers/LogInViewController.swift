@@ -96,7 +96,7 @@ class LogInViewController: UIViewController {
         ref.getData(maxSize: megaByte) { [weak self] data, error in
             if let safeError = error {
                 print(safeError)
-                self?.failedToLogIn(withMessage: "Try again")
+                self?.navigateToNewUserData()
             } else {
                 guard let safeAvatarData = data,
                       let safeAvatar = UIImage(data: safeAvatarData)

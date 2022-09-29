@@ -604,15 +604,32 @@ extension ChatViewController {
 extension ChatViewController {
     //MARK: - -deleteAccountAndData()
     private func deleteAccount() {
+//        logOut()
+//        navigateToWelcome()
+//        deleteUserAvatar()
         deleteUserData()
     }
+    
+    
+//    private func deleteUserAvatar() {
+//        guard let safeUserId = chatSender?.data.userId else { return }
+//
+//
+//
+//        Storage.storage().reference().child(K.FStore.avatarsCollection).child(safeUserId).delete { [weak self] error in
+//            if let _ = error {
+//                self?.logOut()
+//            } else {
+////                jjj
+//            }
+//        }
+//    }
     
     
     private func deleteUserData() {
         guard let safeCurrentUserUid = Auth.auth().currentUser?.uid else { return }
         
-        disableViewUserInteraction()
-        showDeletionScreensaver()
+        
         
         db.collection(K.FStore.usersCollection).document(safeCurrentUserUid).delete { [weak self] error in
             if let safeError = error {
@@ -622,6 +639,9 @@ extension ChatViewController {
             }
         }
     }
+    
+    
+    
     
     
     private func deleteUserMessages() {
@@ -663,7 +683,7 @@ extension ChatViewController {
     
     private func deleteUserAvatar() {
         guard let safeCurrentUserUid = Auth.auth().currentUser?.uid else { return }
-        
+
         Storage.storage().reference().child(K.FStore.avatarsCollection).child(safeCurrentUserUid).delete { [weak self] error in
             if let _ = error {
                 self?.deleteCurrentUser()
@@ -695,6 +715,7 @@ extension ChatViewController {
             navigateToWelcome()
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
+            navigateToWelcome()
         }
     }
 }
