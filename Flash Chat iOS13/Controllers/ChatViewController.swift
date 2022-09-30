@@ -52,9 +52,9 @@ class ChatViewController: UIViewController {
     
     
     
-    private func disableViewUserInteraction() {
-        navigationController?.navigationBar.isUserInteractionEnabled = false
-        view.isUserInteractionEnabled = false
+    private func setUserInteraction(isEnabled state: Bool) {
+        navigationController?.navigationBar.isUserInteractionEnabled = state
+        view.isUserInteractionEnabled = state
     }
 
     
@@ -88,6 +88,11 @@ class ChatViewController: UIViewController {
     }
     
     
+    private func hideDeletionScreensaver() {
+        deletingView.isHidden = true
+    }
+    
+    
     private func setSendButtonCreationAppearance() {
         sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
         sendButton.tintColor = UIColor.brandLightBlue
@@ -114,6 +119,11 @@ class ChatViewController: UIViewController {
     
     private func moveDownKeyboard() {
         messageTextField.resignFirstResponder()
+    }
+    
+    
+    private func stopTableViewCellsUpdating() {
+        listener?.remove()
     }
     
     
@@ -525,6 +535,10 @@ extension ChatViewController {
     }
     
     
+    private func navigateToNewUserData() {
+        performSegue(withIdentifier: "ChatToNewUserData", sender: self)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == K.Segue.chatToEditMenu {
             if let destinationVC = segue.destination as? EditMenuViewController {
@@ -604,73 +618,76 @@ extension ChatViewController {
 extension ChatViewController {
     //MARK: - -deleteAccountAndData()
     private func deleteAccount() {
-//        logOut()
-//        navigateToWelcome()
-//        deleteUserAvatar()
-        deleteUserData()
-    }
-    
-    
-//    private func deleteUserAvatar() {
-//        guard let safeUserId = chatSender?.data.userId else { return }
-//
-//
-//
-//        Storage.storage().reference().child(K.FStore.avatarsCollection).child(safeUserId).delete { [weak self] error in
-//            if let _ = error {
-//                self?.logOut()
-//            } else {
-////                jjj
-//            }
-//        }
-//    }
-    
-    
-    private func deleteUserData() {
-        guard let safeCurrentUserUid = Auth.auth().currentUser?.uid else { return }
-        
-        
-        
-        db.collection(K.FStore.usersCollection).document(safeCurrentUserUid).delete { [weak self] error in
-            if let safeError = error {
-                print("Deleting user info was failed: \(safeError)")
-            } else {
-                self?.deleteUserMessages()
-            }
+        if let safeUserId = chatSender?.data.userId {
+            showDeletionScreensaver()
+            setUserInteraction(isEnabled: false)
+            
+            deleteUserAvatar(userId: safeUserId)
         }
     }
     
     
     
-    
-    
-    private func deleteUserMessages() {
-        guard let safeCurrentUserUid = Auth.auth().currentUser?.uid else { return }
-        
-        listener?.remove()
-        
-        db.collection(K.FStore.messagesCollection).whereField(K.FStore.userIdField, isEqualTo: safeCurrentUserUid).getDocuments() { [weak self] (querySnapshot, error) in
+    private func deleteUserAvatar(userId: String) {
+        Storage.storage().reference().child(K.FStore.avatarsCollection).child(userId).delete { [weak self] error in
             if let safeError = error {
-                print("Error getting user messages: \(safeError)")
-            } else {
-                guard let documents = querySnapshot?.documents else { return }
+                print("Avatar deletion was failed: \(safeError)")
                 
-                if documents.isEmpty {
-                    self?.deleteUserAvatar()
+                DispatchQueue.main.async {
+                    self?.hideDeletionScreensaver()
+                    self?.setUserInteraction(isEnabled: true)
+                }
+            } else {
+                self?.deleteUserData(userId: userId)
+            }
+        }
+    }
+    
+    
+    private func deleteUserData(userId: String) {
+        db.collection(K.FStore.usersCollection).document(userId).delete { [weak self] error in
+            if let safeError = error {
+                print("User data deletion was failed: \(safeError)")
+                
+                //After error occuring NewUserDataVC will run to recreating user's data and avatar if some of them doesn't exist. Then user will back to ChatVC and can try delete account again.
+                self?.navigateToNewUserData()
+            } else {
+                self?.deleteUserMessages(userId: userId)
+            }
+        }
+    }
+    
+    
+    private func deleteUserMessages(userId: String) {
+        stopTableViewCellsUpdating()
+        
+        db.collection(K.FStore.messagesCollection).whereField(K.FStore.userIdField, isEqualTo: userId).getDocuments() { [weak self] (querySnapshot, error) in
+            if let safeError = error {
+                print("User messages getting was failed: \(safeError)")
+                self?.navigateToNewUserData()
+            } else {
+                guard let messages = querySnapshot?.documents else {
+                    self?.navigateToNewUserData()
+                    return
+                }
+                
+                if messages.isEmpty {
+                    self?.deleteCurrentUser()
                 } else {
-                    var documentIdArray = [String]()
+                    var messageIdentifiers = [String]()
                     
-                    for document in documents {
-                        documentIdArray.append(document.documentID)
+                    for message in messages {
+                        messageIdentifiers.append(message.documentID)
                     }
                     
-                    for documentId in documentIdArray {
-                        self?.db.collection(K.FStore.messagesCollection).document(documentId).delete() { [weak self] error in
+                    for messageId in messageIdentifiers {
+                        self?.db.collection(K.FStore.messagesCollection).document(messageId).delete() { [weak self] error in
                             if let safeError = error {
-                                print("Error removing user message: \(safeError)")
+                                print("User message deletion was failed: \(safeError)")
+                                self?.navigateToNewUserData()
                             } else {
-                                if documentId == documentIdArray.last {
-                                    self?.deleteUserAvatar()
+                                if messageId == messageIdentifiers.last {
+                                    self?.deleteCurrentUser()
                                 }
                             }
                         }
@@ -681,23 +698,11 @@ extension ChatViewController {
     }
     
     
-    private func deleteUserAvatar() {
-        guard let safeCurrentUserUid = Auth.auth().currentUser?.uid else { return }
-
-        Storage.storage().reference().child(K.FStore.avatarsCollection).child(safeCurrentUserUid).delete { [weak self] error in
-            if let _ = error {
-                self?.deleteCurrentUser()
-            } else {
-                self?.deleteCurrentUser()
-            }
-        }
-    }
-    
-    
     private func deleteCurrentUser() {
         Auth.auth().currentUser?.delete { [weak self] error in
             if let safeError = error {
-                print(safeError)
+                print("User deletion was failed: \(safeError)")
+                self?.navigateToNewUserData()
             } else {
                 self?.logOut()
             }
@@ -707,8 +712,7 @@ extension ChatViewController {
     
     //MARK: - -logOut()
     private func logOut() {
-        listener?.remove()
-        disableViewUserInteraction()
+        setUserInteraction(isEnabled: false)
         
         do {
             try Auth.auth().signOut()
