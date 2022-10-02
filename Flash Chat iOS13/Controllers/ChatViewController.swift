@@ -561,7 +561,7 @@ extension ChatViewController {
                 })
                 
                 destinationVC.setDeleteAccountButtonPressedCallBack({ [weak self] in
-                    self?.deleteAccount()
+                    self?.deleteAccountTotally()
                 })
             }
         }
@@ -616,20 +616,20 @@ extension ChatViewController {
 
 
 extension ChatViewController {
-    //MARK: - -deleteAccountAndData()
-    private func deleteAccount() {
-        if let safeUserId = chatSender?.data.userId {
+    //MARK: - -deleteAccountTotally()
+    private func deleteAccountTotally() {
+        if let safeUser = chatSender {
             showDeletionScreensaver()
             setUserInteraction(isEnabled: false)
             
-            deleteUserAvatar(userId: safeUserId)
+            deleteAccountAvatar(forUser: safeUser)
         }
     }
     
     
     
-    private func deleteUserAvatar(userId: String) {
-        Storage.storage().reference().child(K.FStore.avatarsCollection).child(userId).delete { [weak self] error in
+    private func deleteAccountAvatar(forUser user: User) {
+        Storage.storage().reference().child(K.FStore.avatarsCollection).child(user.data.userId).delete { [weak self] error in
             if let safeError = error {
                 print("Avatar deletion was failed: \(safeError)")
                 
@@ -638,30 +638,32 @@ extension ChatViewController {
                     self?.setUserInteraction(isEnabled: true)
                 }
             } else {
-                self?.deleteUserData(userId: userId)
+                self?.deleteAccountData(forUser: user)
             }
         }
     }
     
     
-    private func deleteUserData(userId: String) {
-        db.collection(K.FStore.usersCollection).document(userId).delete { [weak self] error in
+    private func deleteAccountData(forUser user: User) {
+        db.collection(K.FStore.usersCollection).document(user.data.userId).delete { [weak self] error in
             if let safeError = error {
                 print("User data deletion was failed: \(safeError)")
                 
                 //After error occuring NewUserDataVC will run to recreating user's data and avatar if some of them doesn't exist. Then user will back to ChatVC and can try delete account again.
                 self?.navigateToNewUserData()
             } else {
-                self?.deleteUserMessages(userId: userId)
+                self?.deleteAccountMessages(forUser: user)
             }
         }
     }
     
     
-    private func deleteUserMessages(userId: String) {
+    private func deleteAccountMessages(forUser user: User) {
         stopTableViewCellsUpdating()
-        
-        db.collection(K.FStore.messagesCollection).whereField(K.FStore.userIdField, isEqualTo: userId).getDocuments() { [weak self] (querySnapshot, error) in
+
+        db.collection(K.FStore.messagesCollection)
+            .whereField(K.FStore.userIdField, isEqualTo: user.data.userId)
+            .getDocuments() { [weak self] (querySnapshot, error) in
             if let safeError = error {
                 print("User messages getting was failed: \(safeError)")
                 self?.navigateToNewUserData()
@@ -670,24 +672,22 @@ extension ChatViewController {
                     self?.navigateToNewUserData()
                     return
                 }
-                
+
                 if messages.isEmpty {
-                    self?.deleteCurrentUser()
+                    self?.deleteAccount(forUser: user)
                 } else {
-                    var messageIdentifiers = [String]()
+                    var messagesCount = messages.count
                     
                     for message in messages {
-                        messageIdentifiers.append(message.documentID)
-                    }
-                    
-                    for messageId in messageIdentifiers {
-                        self?.db.collection(K.FStore.messagesCollection).document(messageId).delete() { [weak self] error in
+                        message.reference.delete() { [weak self] error in
                             if let safeError = error {
                                 print("User message deletion was failed: \(safeError)")
                                 self?.navigateToNewUserData()
                             } else {
-                                if messageId == messageIdentifiers.last {
-                                    self?.deleteCurrentUser()
+                                messagesCount -= 1
+                                
+                                if messagesCount <= 0 {
+                                    self?.deleteAccount(forUser: user)
                                 }
                             }
                         }
@@ -696,9 +696,9 @@ extension ChatViewController {
             }
         }
     }
+
     
-    
-    private func deleteCurrentUser() {
+    private func deleteAccount(forUser user: User) {
         Auth.auth().currentUser?.delete { [weak self] error in
             if let safeError = error {
                 print("User deletion was failed: \(safeError)")
