@@ -13,6 +13,7 @@ class LogInViewController: UIViewController {
     @IBOutlet private weak var logInButton: UIButton!
     
     private var chatSender: ChatUser?
+    private var errorMessage: String?
     
     
     override func viewDidLoad() {
@@ -75,27 +76,32 @@ class LogInViewController: UIViewController {
             if let document = document, document.exists {
                 do {
                     let chatUserData = try document.data(as: ChatUserData.self)
-                    self?.downloadAvatar(with: chatUserData)
+                    
+                    self?.chatSender = ChatUser(data: chatUserData, avatar: UIImage(named: K.Image.defaultAvatar))
+                    self?.downloadAvatar(with: chatUserData.avatarURL)
                 }
                 catch {
                     self?.failedToLogIn(withMessage: "Try again")
                     return
                 }
             } else {
+                self?.errorMessage = "Your user data doesn't exist. Set data please."
                 self?.navigateToNewUserData()
             }
         }
     }
     
     
-    private func downloadAvatar(with chatUserData: ChatUserData) {
-        let ref = Storage.storage().reference(forURL: chatUserData.avatarURL)
+    private func downloadAvatar(with url: String) {
+        let ref = Storage.storage().reference(forURL: url)
         
         let megaByte = Int64(1 * 1024 * 1024)
         
         ref.getData(maxSize: megaByte) { [weak self] data, error in
             if let safeError = error {
                 print(safeError)
+                
+                self?.errorMessage = "Your user avatar does not exist. Set your avatar or click \"Continue\" to leave the default one."
                 self?.navigateToNewUserData()
             } else {
                 guard let safeAvatarData = data,
@@ -105,7 +111,7 @@ class LogInViewController: UIViewController {
                     return
                 }
                 
-                self?.chatSender = ChatUser(data: chatUserData, avatar: safeAvatar)
+                self?.chatSender?.avatar = safeAvatar
                 self?.navigateToChat()
             }
         }
@@ -126,6 +132,10 @@ class LogInViewController: UIViewController {
         if segue.identifier == K.Segue.logInToChat {
             if let destinationVC = segue.destination as? ChatViewController {
                 destinationVC.setChatSender(chatSender)
+            }
+        } else if segue.identifier == K.Segue.logInToNewUserData {
+            if let destinationVC = segue.destination as? NewUserDataViewController {
+                destinationVC.setChatSender(chatSender, errorMessage: errorMessage)
             }
         }
     }

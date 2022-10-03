@@ -536,7 +536,7 @@ extension ChatViewController {
     
     
     private func navigateToNewUserData() {
-        performSegue(withIdentifier: "ChatToNewUserData", sender: self)
+        performSegue(withIdentifier: K.Segue.chatToNewUserData, sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -563,6 +563,10 @@ extension ChatViewController {
                 destinationVC.setDeleteAccountButtonPressedCallBack({ [weak self] in
                     self?.deleteAccountTotally()
                 })
+            }
+        } else if segue.identifier == K.Segue.chatToNewUserData {
+            if let destinationVC = segue.destination as? NewUserDataViewController {
+                destinationVC.setChatSender(chatSender, errorMessage: "Account deletion was failed. Click \"Continue\" and try again.")
             }
         }
     }

@@ -6,6 +6,7 @@ struct K {
         static let logInToChat = "LogInToChat"
         static let logInToNewUserData = "LogInToNewUserData"
         static let chatToEditMenu = "ChatToEditMenu"
+        static let chatToNewUserData = "ChatToNewUserData"
         static let chatToCancelEdit = "ChatToCancelEdit"
         static let signUpToNewUserData = "SignUpToNewUserData"
         static let newUserDataToChat = "NewUserDataToChat"

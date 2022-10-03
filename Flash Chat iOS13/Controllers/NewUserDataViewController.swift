@@ -16,15 +16,16 @@ class NewUserDataViewController: UIViewController {
     @IBOutlet private weak var continueButton: UIButton!
     
     private var chatSender: ChatUser?
-    
+    private var errorMessage: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         customizeViewElements()
     }
     
-    func setChatSender(_ chatSender: ChatUser) {
+    func setChatSender(_ chatSender: ChatUser?, errorMessage: String?) {
         self.chatSender = chatSender
+        self.errorMessage = errorMessage
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,13 +48,18 @@ class NewUserDataViewController: UIViewController {
         
         progressIndicator.hidesWhenStopped = true
         
-        firstNameTextField.text = chatSender?.data.firstName
-        lastNameTextField.text = chatSender?.data.lastName
-        avatarImageView.image = chatSender?.avatar
-        chatSender = nil
+        if let safeChatSender = chatSender {
+            firstNameTextField.text = safeChatSender.data.firstName
+            lastNameTextField.text = safeChatSender.data.lastName
+            avatarImageView.image = safeChatSender.avatar
+            chatSender = nil
+        }
+        
+        errorLabel.text = errorMessage
+        
     }
     
- 
+    
     private func navigateToChat() {
         performSegue(withIdentifier: K.Segue.newUserDataToChat, sender: self)
     }

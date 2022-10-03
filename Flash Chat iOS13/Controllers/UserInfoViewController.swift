@@ -57,9 +57,11 @@ class UserInfoViewController: UIViewController {
         backgroundView.layer.cornerRadius = 29;
         backgroundView.layer.masksToBounds = true;
         
-        firstNameLabel.text = chatSender?.data.firstName
-        lastNameLabel.text = chatSender?.data.lastName
-        avatarImageView.image = chatSender?.avatar
+        if let safeChatSender = chatSender {
+            firstNameLabel.text = safeChatSender.data.firstName
+            lastNameLabel.text = safeChatSender.data.lastName
+            avatarImageView.image = safeChatSender.avatar
+        }
     }
     
     
