@@ -14,7 +14,7 @@ class UserInfoViewController: UIViewController {
     
     @IBOutlet private weak var deleteAccountButton: UIButton!
  
-    private var chatSender: User?
+    private var chatSender: ChatUser?
     private var logOutButtonPressedCallBack: (() -> ())?
     private var deleteAccountButtonPressedCallBack: (() -> ())?
     
@@ -25,7 +25,7 @@ class UserInfoViewController: UIViewController {
     }
 
     
-    func setChatSender(_ user: User?) {
+    func setChatSender(_ user: ChatUser?) {
         chatSender = user
     }
     

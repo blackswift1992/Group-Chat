@@ -15,7 +15,7 @@ class NewUserDataViewController: UIViewController {
     @IBOutlet private weak var progressIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var continueButton: UIButton!
     
-    private var currentUser: User?
+    private var chatSender: ChatUser?
     
     
     override func viewDidLoad() {
@@ -23,8 +23,8 @@ class NewUserDataViewController: UIViewController {
         customizeViewElements()
     }
     
-    func setCurrentUser(_ user: User) {
-        currentUser = user
+    func setChatSender(_ user: ChatUser) {
+        chatSender = user
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,12 +47,10 @@ class NewUserDataViewController: UIViewController {
         
         progressIndicator.hidesWhenStopped = true
         
-        if let safeCurrentUser = currentUser {
-            firstNameTextField.text = safeCurrentUser.data.firstName
-            lastNameTextField.text = safeCurrentUser.data.lastName
-            avatarImageView.image = safeCurrentUser.avatar
-            currentUser = nil
-        }
+        firstNameTextField.text = chatSender?.data.firstName
+        lastNameTextField.text = chatSender?.data.lastName
+        avatarImageView.image = chatSender?.avatar
+        chatSender = nil
     }
     
  
@@ -63,7 +61,7 @@ class NewUserDataViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == K.Segue.newUserDataToChat {
             if let destinationVC = segue.destination as? ChatViewController {
-                destinationVC.setChatSender(currentUser)
+                destinationVC.setChatSender(chatSender)
             }
         }
     }
@@ -132,20 +130,20 @@ class NewUserDataViewController: UIViewController {
                         return
                     }
                     
-                    let userData = UserData(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, avatarURL: safeURL.absoluteString, userRGBColor: UIColor.getRandomRGBString())
+                    let chatUserData = ChatUserData(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, avatarURL: safeURL.absoluteString, userRGBColor: UIColor.getRandomRGBString())
                     
-                    self?.currentUser = User(data: userData, avatar: safeCompressedAvatar)
+                    self?.chatSender = ChatUser(data: chatUserData, avatar: safeCompressedAvatar)
                     
-                    self?.uploadData(userData)
+                    self?.uploadData(chatUserData)
                 }
             }
         }
     }
     
     
-    private func uploadData(_ userData: UserData) {
+    private func uploadData(_ chatUserData: ChatUserData) {
         do {
-            try Firestore.firestore().collection(K.FStore.usersCollection).document(userData.userId).setData(from: userData) { [weak self] error in
+            try Firestore.firestore().collection(K.FStore.usersCollection).document(chatUserData.userId).setData(from: chatUserData) { [weak self] error in
                 if let _ = error {
                     self?.failedWithErrorMessage("Try again")
                 } else {

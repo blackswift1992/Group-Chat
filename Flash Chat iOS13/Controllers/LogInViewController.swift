@@ -12,7 +12,7 @@ class LogInViewController: UIViewController {
     @IBOutlet private weak var progressIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var logInButton: UIButton!
     
-    private var currentUser: User?
+    private var chatSender: ChatUser?
     
     
     override func viewDidLoad() {
@@ -74,8 +74,8 @@ class LogInViewController: UIViewController {
         Firestore.firestore().collection(K.FStore.usersCollection).document(safeCurrentUserId).getDocument { [weak self] document, error in
             if let document = document, document.exists {
                 do {
-                    let userData = try document.data(as: UserData.self)
-                    self?.downloadAvatar(with: userData)
+                    let chatUserData = try document.data(as: ChatUserData.self)
+                    self?.downloadAvatar(with: chatUserData)
                 }
                 catch {
                     self?.failedToLogIn(withMessage: "Try again")
@@ -88,8 +88,8 @@ class LogInViewController: UIViewController {
     }
     
     
-    private func downloadAvatar(with userData: UserData) {
-        let ref = Storage.storage().reference(forURL: userData.avatarURL)
+    private func downloadAvatar(with chatUserData: ChatUserData) {
+        let ref = Storage.storage().reference(forURL: chatUserData.avatarURL)
         
         let megaByte = Int64(1 * 1024 * 1024)
         
@@ -105,7 +105,7 @@ class LogInViewController: UIViewController {
                     return
                 }
                 
-                self?.currentUser = User(data: userData, avatar: safeAvatar)
+                self?.chatSender = ChatUser(data: chatUserData, avatar: safeAvatar)
                 self?.navigateToChat()
             }
         }
@@ -125,7 +125,7 @@ class LogInViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == K.Segue.logInToChat {
             if let destinationVC = segue.destination as? ChatViewController {
-                destinationVC.setChatSender(currentUser)
+                destinationVC.setChatSender(chatSender)
             }
         }
     }

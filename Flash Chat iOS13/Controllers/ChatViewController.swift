@@ -26,7 +26,7 @@ class ChatViewController: UIViewController {
     private var messageState: State = State.creating
     private var tableCells: [TableCell] = []
     
-    private var chatSender: User?
+    private var chatSender: ChatUser?
     private var selectedSenderMessage: Message?
 
     
@@ -42,7 +42,7 @@ class ChatViewController: UIViewController {
     }
     
     
-    func setChatSender(_ user: User?) {
+    func setChatSender(_ user: ChatUser?) {
         chatSender = user
     }
     
@@ -628,7 +628,7 @@ extension ChatViewController {
     
     
     
-    private func deleteAccountAvatar(forUser user: User) {
+    private func deleteAccountAvatar(forUser user: ChatUser) {
         Storage.storage().reference().child(K.FStore.avatarsCollection).child(user.data.userId).delete { [weak self] error in
             if let safeError = error {
                 print("Avatar deletion was failed: \(safeError)")
@@ -644,7 +644,7 @@ extension ChatViewController {
     }
     
     
-    private func deleteAccountData(forUser user: User) {
+    private func deleteAccountData(forUser user: ChatUser) {
         db.collection(K.FStore.usersCollection).document(user.data.userId).delete { [weak self] error in
             if let safeError = error {
                 print("User data deletion was failed: \(safeError)")
@@ -658,7 +658,7 @@ extension ChatViewController {
     }
     
     
-    private func deleteAccountMessages(forUser user: User) {
+    private func deleteAccountMessages(forUser user: ChatUser) {
         stopTableViewCellsUpdating()
 
         db.collection(K.FStore.messagesCollection)
@@ -698,7 +698,7 @@ extension ChatViewController {
     }
 
     
-    private func deleteAccount(forUser user: User) {
+    private func deleteAccount(forUser user: ChatUser) {
         Auth.auth().currentUser?.delete { [weak self] error in
             if let safeError = error {
                 print("User deletion was failed: \(safeError)")

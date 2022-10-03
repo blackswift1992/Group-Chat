@@ -1,7 +1,7 @@
 import Foundation
 import FirebaseFirestoreSwift
 
-struct UserData: Codable {
+struct ChatUserData: Codable {
     let userId: String
     let userEmail: String
     let firstName: String

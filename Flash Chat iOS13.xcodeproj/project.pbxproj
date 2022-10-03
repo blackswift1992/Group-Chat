@@ -18,8 +18,8 @@
 		0B628191235DF01B00E35CAF /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B628190235DF01B00E35CAF /* ChatViewController.swift */; };
 		0B62819E235F0F4D00E35CAF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0B62819D235F0F4D00E35CAF /* README.md */; };
 		45B850BF2A94518D1DA0DE5A /* Pods_Flash_Chat_iOS13.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3F7954D03B3DD8D76065F27 /* Pods_Flash_Chat_iOS13.framework */; };
-		4913F16E28A9A90F0056AB4D /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4913F16D28A9A90F0056AB4D /* UserData.swift */; };
-		491AD50328E113FF00C042F7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491AD50228E113FF00C042F7 /* User.swift */; };
+		4913F16E28A9A90F0056AB4D /* ChatUserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4913F16D28A9A90F0056AB4D /* ChatUserData.swift */; };
+		491AD50328E113FF00C042F7 /* ChatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491AD50228E113FF00C042F7 /* ChatUser.swift */; };
 		493B9C1028C4033600E0A95A /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493B9C0F28C4033600E0A95A /* UIView.swift */; };
 		494E508C28C239B600D411A5 /* ReceiverMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494E508A28C239B600D411A5 /* ReceiverMessageCell.swift */; };
 		494E508D28C239B600D411A5 /* ReceiverMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 494E508B28C239B600D411A5 /* ReceiverMessageCell.xib */; };
@@ -58,8 +58,8 @@
 		0B62818E235DF01000E35CAF /* LogInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		0B628190235DF01B00E35CAF /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		0B62819D235F0F4D00E35CAF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		4913F16D28A9A90F0056AB4D /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
-		491AD50228E113FF00C042F7 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		4913F16D28A9A90F0056AB4D /* ChatUserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUserData.swift; sourceTree = "<group>"; };
+		491AD50228E113FF00C042F7 /* ChatUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUser.swift; sourceTree = "<group>"; };
 		493B9C0F28C4033600E0A95A /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		494E508A28C239B600D411A5 /* ReceiverMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiverMessageCell.swift; sourceTree = "<group>"; };
 		494E508B28C239B600D411A5 /* ReceiverMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReceiverMessageCell.xib; sourceTree = "<group>"; };
@@ -166,8 +166,8 @@
 		0B628194235DF03A00E35CAF /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				4913F16D28A9A90F0056AB4D /* UserData.swift */,
-				491AD50228E113FF00C042F7 /* User.swift */,
+				4913F16D28A9A90F0056AB4D /* ChatUserData.swift */,
+				491AD50228E113FF00C042F7 /* ChatUser.swift */,
 				49912B4C28E1F80200E09E83 /* MessageData.swift */,
 				498B2AA828C7CB6300B52BAD /* TableCell.swift */,
 				49912B4E28E1F87200E09E83 /* Message.swift */,
@@ -376,7 +376,7 @@
 				0B628177235DEE8100E35CAF /* AppDelegate.swift in Sources */,
 				49912B5128E25FA400E09E83 /* Date.swift in Sources */,
 				0B628179235DEE8100E35CAF /* SceneDelegate.swift in Sources */,
-				4913F16E28A9A90F0056AB4D /* UserData.swift in Sources */,
+				4913F16E28A9A90F0056AB4D /* ChatUserData.swift in Sources */,
 				0B62818F235DF01000E35CAF /* LogInViewController.swift in Sources */,
 				49FF39D928885DDE00B508D0 /* Constants.swift in Sources */,
 				49912B4F28E1F87200E09E83 /* Message.swift in Sources */,
@@ -385,7 +385,7 @@
 				0B628191235DF01B00E35CAF /* ChatViewController.swift in Sources */,
 				498B2AA928C7CB6300B52BAD /* TableCell.swift in Sources */,
 				49912B4D28E1F80200E09E83 /* MessageData.swift in Sources */,
-				491AD50328E113FF00C042F7 /* User.swift in Sources */,
+				491AD50328E113FF00C042F7 /* ChatUser.swift in Sources */,
 				0B62818D235DF00B00E35CAF /* SignUpViewController.swift in Sources */,
 				49FF39DE2889BA4300B508D0 /* SenderMessageCell.swift in Sources */,
 				498B2AA728C7CB1F00B52BAD /* GreetingMessage.swift in Sources */,
