@@ -23,8 +23,8 @@ class NewUserDataViewController: UIViewController {
         customizeViewElements()
     }
     
-    func setChatSender(_ user: ChatUser) {
-        chatSender = user
+    func setChatSender(_ chatSender: ChatUser) {
+        self.chatSender = chatSender
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -25,8 +25,8 @@ class UserInfoViewController: UIViewController {
     }
 
     
-    func setChatSender(_ user: ChatUser?) {
-        chatSender = user
+    func setChatSender(_ chatSender: ChatUser?) {
+        self.chatSender = chatSender
     }
     
     
