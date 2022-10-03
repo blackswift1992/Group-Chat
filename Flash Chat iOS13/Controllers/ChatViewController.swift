@@ -556,6 +556,10 @@ extension ChatViewController {
             if let destinationVC = segue.destination as? UserInfoViewController {
                 destinationVC.setChatSender(chatSender)
                 
+                destinationVC.setEditAccountButtonPressedCallBack { [weak self] in
+                    self?.editAccount()
+                }
+                
                 destinationVC.setLogOutButtonPressedCallBack({ [weak self] in
                     self?.logOut()
                 })
@@ -724,6 +728,13 @@ extension ChatViewController {
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
             navigateToWelcome()
+        }
+    }
+    
+    
+    private func editAccount() {
+        if let _ = chatSender {
+            navigateToNewUserData()
         }
     }
 }

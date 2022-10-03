@@ -1128,6 +1128,59 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G9p-Yd-s9R">
                                                 <rect key="frame" x="0.0" y="0.0" width="240" height="316"/>
                                                 <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uxp-xs-Gc5">
+                                                        <rect key="frame" x="15" y="17" width="37" height="37"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="uxp-xs-Gc5" secondAttribute="height" multiplier="1:1" id="SXo-S9-LYE"/>
+                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="37" id="n5F-c2-KeA"/>
+                                                        </constraints>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain" image="square.and.pencil" catalog="system">
+                                                            <color key="baseForegroundColor" name="BrandMint"/>
+                                                        </buttonConfiguration>
+                                                        <connections>
+                                                            <action selector="editAccountButtonPressed:" destination="M0t-4g-gLg" eventType="touchUpInside" id="j1P-oW-6AA"/>
+                                                        </connections>
+                                                    </button>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QuG-uE-5HR">
+                                                        <rect key="frame" x="112" y="17" width="113" height="37"/>
+                                                        <subviews>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="A3M-qj-nlN">
+                                                                <rect key="frame" x="78" y="6" width="29" height="25"/>
+                                                                <color key="tintColor" name="BrandDarkGray"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" secondItem="A3M-qj-nlN" secondAttribute="height" multiplier="1:1" id="PN0-3n-xnv"/>
+                                                                </constraints>
+                                                                <imageReference key="image" image="rectangle.portrait.and.arrow.right" catalog="system" symbolScale="small"/>
+                                                            </imageView>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ggM-hE-vYK">
+                                                                <rect key="frame" x="0.0" y="0.0" width="113" height="37"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="37" id="ZVp-qp-yRe"/>
+                                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="113" id="gal-YA-gnW"/>
+                                                                </constraints>
+                                                                <state key="normal" title="Button"/>
+                                                                <buttonConfiguration key="configuration" style="plain" title="Log Out">
+                                                                    <fontDescription key="titleFontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
+                                                                    <color key="baseForegroundColor" name="BrandDarkGray"/>
+                                                                </buttonConfiguration>
+                                                                <connections>
+                                                                    <action selector="logOutButtonPressed:" destination="M0t-4g-gLg" eventType="touchUpInside" id="wyw-J0-0AB"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                        <color key="backgroundColor" name="BrandMint"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="trailing" secondItem="ggM-hE-vYK" secondAttribute="trailing" id="2Zo-Gg-coh"/>
+                                                            <constraint firstAttribute="bottom" secondItem="ggM-hE-vYK" secondAttribute="bottom" id="RC2-pO-tb6"/>
+                                                            <constraint firstItem="ggM-hE-vYK" firstAttribute="top" secondItem="QuG-uE-5HR" secondAttribute="top" id="lWp-37-suR"/>
+                                                            <constraint firstAttribute="trailing" secondItem="A3M-qj-nlN" secondAttribute="trailing" constant="6" id="miA-Qw-YQs"/>
+                                                            <constraint firstAttribute="bottom" secondItem="A3M-qj-nlN" secondAttribute="bottom" constant="4" id="naS-fh-lLb"/>
+                                                            <constraint firstItem="ggM-hE-vYK" firstAttribute="leading" secondItem="QuG-uE-5HR" secondAttribute="leading" id="oeg-5v-y3l"/>
+                                                            <constraint firstItem="A3M-qj-nlN" firstAttribute="top" secondItem="QuG-uE-5HR" secondAttribute="top" constant="4" id="z3K-iJ-9Nf"/>
+                                                        </constraints>
+                                                    </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IUP-dz-e5S">
                                                         <rect key="frame" x="0.0" y="67" width="240" height="182.5"/>
                                                         <subviews>
@@ -1192,7 +1245,7 @@
                                                     </view>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3np-Zs-Fly">
                                                         <rect key="frame" x="15" y="265" width="135.5" height="36"/>
-                                                        <color key="backgroundColor" red="0.54968799640833343" green="0.15848631738137958" blue="0.14016868827310891" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                        <color key="backgroundColor" red="0.47200041502812506" green="0.13616196121361815" blue="0.11903837351989222" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="36" id="VZH-bm-LQN"/>
                                                         </constraints>
@@ -1205,61 +1258,25 @@
                                                             <action selector="deleteAccountButtonPressed:" destination="M0t-4g-gLg" eventType="touchUpInside" id="3II-dD-SAR"/>
                                                         </connections>
                                                     </button>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QuG-uE-5HR">
-                                                        <rect key="frame" x="112" y="17" width="113" height="37"/>
-                                                        <subviews>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="A3M-qj-nlN">
-                                                                <rect key="frame" x="78" y="6" width="29" height="25"/>
-                                                                <color key="tintColor" name="BrandDarkGray"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" secondItem="A3M-qj-nlN" secondAttribute="height" multiplier="1:1" id="PN0-3n-xnv"/>
-                                                                </constraints>
-                                                                <imageReference key="image" image="rectangle.portrait.and.arrow.right" catalog="system" symbolScale="small"/>
-                                                            </imageView>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ggM-hE-vYK">
-                                                                <rect key="frame" x="0.0" y="0.0" width="113" height="37"/>
-                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="37" id="ZVp-qp-yRe"/>
-                                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="113" id="gal-YA-gnW"/>
-                                                                </constraints>
-                                                                <state key="normal" title="Button"/>
-                                                                <buttonConfiguration key="configuration" style="plain" title="Log Out">
-                                                                    <fontDescription key="titleFontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
-                                                                    <color key="baseForegroundColor" name="BrandDarkGray"/>
-                                                                </buttonConfiguration>
-                                                                <connections>
-                                                                    <action selector="logOutButtonPressed:" destination="M0t-4g-gLg" eventType="touchUpInside" id="wyw-J0-0AB"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                        <color key="backgroundColor" name="BrandMint"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="trailing" secondItem="ggM-hE-vYK" secondAttribute="trailing" id="2Zo-Gg-coh"/>
-                                                            <constraint firstAttribute="bottom" secondItem="ggM-hE-vYK" secondAttribute="bottom" id="RC2-pO-tb6"/>
-                                                            <constraint firstItem="ggM-hE-vYK" firstAttribute="top" secondItem="QuG-uE-5HR" secondAttribute="top" id="lWp-37-suR"/>
-                                                            <constraint firstAttribute="trailing" secondItem="A3M-qj-nlN" secondAttribute="trailing" constant="6" id="miA-Qw-YQs"/>
-                                                            <constraint firstAttribute="bottom" secondItem="A3M-qj-nlN" secondAttribute="bottom" constant="4" id="naS-fh-lLb"/>
-                                                            <constraint firstItem="ggM-hE-vYK" firstAttribute="leading" secondItem="QuG-uE-5HR" secondAttribute="leading" id="oeg-5v-y3l"/>
-                                                            <constraint firstItem="A3M-qj-nlN" firstAttribute="top" secondItem="QuG-uE-5HR" secondAttribute="top" constant="4" id="z3K-iJ-9Nf"/>
-                                                        </constraints>
-                                                    </view>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="trailing" secondItem="IUP-dz-e5S" secondAttribute="trailing" id="F18-J8-OhC"/>
+                                                    <constraint firstItem="QuG-uE-5HR" firstAttribute="leading" secondItem="uxp-xs-Gc5" secondAttribute="trailing" constant="60" id="Ho3-HL-WCe"/>
                                                     <constraint firstItem="IUP-dz-e5S" firstAttribute="leading" secondItem="G9p-Yd-s9R" secondAttribute="leading" id="J5C-sP-1BD"/>
+                                                    <constraint firstItem="uxp-xs-Gc5" firstAttribute="top" secondItem="G9p-Yd-s9R" secondAttribute="top" constant="17" id="Ovh-Ix-FVI"/>
                                                     <constraint firstItem="3np-Zs-Fly" firstAttribute="leading" secondItem="G9p-Yd-s9R" secondAttribute="leading" constant="15" id="QTr-Hm-mEG"/>
                                                     <constraint firstAttribute="trailing" secondItem="QuG-uE-5HR" secondAttribute="trailing" constant="15" id="R9d-fr-IHG"/>
                                                     <constraint firstItem="IUP-dz-e5S" firstAttribute="centerX" secondItem="G9p-Yd-s9R" secondAttribute="centerX" id="VmD-Xe-bin"/>
                                                     <constraint firstItem="IUP-dz-e5S" firstAttribute="centerY" secondItem="G9p-Yd-s9R" secondAttribute="centerY" id="XZ9-t3-isW"/>
                                                     <constraint firstItem="QuG-uE-5HR" firstAttribute="top" secondItem="G9p-Yd-s9R" secondAttribute="top" constant="17" id="gYd-GL-KeW"/>
                                                     <constraint firstAttribute="bottom" secondItem="3np-Zs-Fly" secondAttribute="bottom" constant="15" id="oRY-Sk-vsJ"/>
+                                                    <constraint firstItem="uxp-xs-Gc5" firstAttribute="leading" secondItem="G9p-Yd-s9R" secondAttribute="leading" constant="15" id="vde-PK-z1u"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="3np-Zs-Fly" secondAttribute="trailing" constant="89.5" id="w2a-63-ePo"/>
                                                 </constraints>
                                             </view>
                                         </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.071683567880794732" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="G9p-Yd-s9R" firstAttribute="leading" secondItem="4Lj-23-0aX" secondAttribute="leading" id="LZ9-O6-fIq"/>
@@ -1319,6 +1336,7 @@
         <image name="paperplane.fill" catalog="system" width="128" height="119"/>
         <image name="pencil" catalog="system" width="128" height="113"/>
         <image name="rectangle.portrait.and.arrow.right" catalog="system" width="128" height="109"/>
+        <image name="square.and.pencil" catalog="system" width="128" height="113"/>
         <image name="textfield" width="298" height="93"/>
         <namedColor name="BrandDarkGray">
             <color red="0.25" green="0.27599999308586121" blue="0.29800000786781311" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

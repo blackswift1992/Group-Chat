@@ -15,6 +15,7 @@ class UserInfoViewController: UIViewController {
     @IBOutlet private weak var deleteAccountButton: UIButton!
  
     private var chatSender: ChatUser?
+    private var editAccountButtonPressedCallBack: (() -> ())?
     private var logOutButtonPressedCallBack: (() -> ())?
     private var deleteAccountButtonPressedCallBack: (() -> ())?
     
@@ -32,6 +33,11 @@ class UserInfoViewController: UIViewController {
     
     func setLogOutButtonPressedCallBack(_ logOutCallback: (() -> ())?) {
         logOutButtonPressedCallBack = logOutCallback
+    }
+    
+    
+    func setEditAccountButtonPressedCallBack(_ editAccountCallback: (() -> ())?) {
+        editAccountButtonPressedCallBack = editAccountCallback
     }
     
     
@@ -63,6 +69,14 @@ class UserInfoViewController: UIViewController {
             avatarImageView.image = safeChatSender.avatar
         }
     }
+    
+    
+    
+    @IBAction func editAccountButtonPressed(_ sender: UIButton) {
+        editAccountButtonPressedCallBack?()
+        self.dismiss(animated: false, completion: nil)
+    }
+    
     
     
     @IBAction private func logOutButtonPressed(_ sender: UIButton) {
@@ -102,6 +116,12 @@ class UserInfoViewController: UIViewController {
 //            }
 //        }
 //    }
+    
+    
+    
+    
+    
+    
     
     
     //any touch out of the UI element heads back to previous view
