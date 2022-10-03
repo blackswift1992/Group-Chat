@@ -28,6 +28,8 @@ class ChatViewController: UIViewController {
     
     private var chatSender: ChatUser?
     private var selectedSenderMessage: Message?
+    
+    private var errorMessage: String?
 
     
     override func viewDidLoad() {
@@ -570,7 +572,7 @@ extension ChatViewController {
             }
         } else if segue.identifier == K.Segue.chatToNewUserData {
             if let destinationVC = segue.destination as? NewUserDataViewController {
-                destinationVC.setChatSender(chatSender, errorMessage: "Account deletion was failed. Click \"Continue\" and try again.")
+                destinationVC.setChatSender(chatSender, errorMessage: errorMessage)
             }
         }
     }
@@ -624,6 +626,31 @@ extension ChatViewController {
 
 
 extension ChatViewController {
+    //MARK: - -editAccount()
+    private func editAccount() {
+        if let _ = chatSender {
+            errorMessage = K.Case.emptyString
+            navigateToNewUserData()
+        }
+    }
+    
+    
+    
+    //MARK: - -logOut()
+    private func logOut() {
+        setUserInteraction(isEnabled: false)
+        
+        do {
+            try Auth.auth().signOut()
+            navigateToWelcome()
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
+            navigateToWelcome()
+        }
+    }
+    
+    
+    
     //MARK: - -deleteAccountTotally()
     private func deleteAccountTotally() {
         if let safeUser = Auth.auth().currentUser {
@@ -641,10 +668,8 @@ extension ChatViewController {
             if let safeError = error {
                 print("Avatar deletion was failed: \(safeError)")
                 
-                DispatchQueue.main.async {
-                    self?.hideDeletionScreensaver()
-                    self?.setUserInteraction(isEnabled: true)
-                }
+                //After error occuring NewUserDataVC will run to user's data and avatar recreating if some of them doesn't exist or something goes wrong. Then user will back to ChatVC and can try delete account again.
+                self?.failedToDeleteAccount()
             } else {
                 self?.deleteAccountData(forUser: user)
             }
@@ -656,9 +681,7 @@ extension ChatViewController {
         db.collection(K.FStore.usersCollection).document(user.uid).delete { [weak self] error in
             if let safeError = error {
                 print("User data deletion was failed: \(safeError)")
-                
-                //After error occuring NewUserDataVC will run to recreating user's data and avatar if some of them doesn't exist. Then user will back to ChatVC and can try delete account again.
-                self?.navigateToNewUserData()
+                self?.failedToDeleteAccount()
             } else {
                 self?.deleteAccountMessages(forUser: user)
             }
@@ -674,10 +697,10 @@ extension ChatViewController {
             .getDocuments() { [weak self] (querySnapshot, error) in
             if let safeError = error {
                 print("User messages getting was failed: \(safeError)")
-                self?.navigateToNewUserData()
+                self?.failedToDeleteAccount()
             } else {
                 guard let messages = querySnapshot?.documents else {
-                    self?.navigateToNewUserData()
+                    self?.failedToDeleteAccount()
                     return
                 }
 
@@ -690,7 +713,7 @@ extension ChatViewController {
                         message.reference.delete() { [weak self] error in
                             if let safeError = error {
                                 print("User message deletion was failed: \(safeError)")
-                                self?.navigateToNewUserData()
+                                self?.failedToDeleteAccount()
                             } else {
                                 messagesCount -= 1
                                 
@@ -710,7 +733,7 @@ extension ChatViewController {
         user.delete { [weak self] error in
             if let safeError = error {
                 print("User deletion was failed: \(safeError)")
-                self?.navigateToNewUserData()
+                self?.failedToDeleteAccount()
             } else {
                 self?.logOut()
             }
@@ -718,23 +741,8 @@ extension ChatViewController {
     }
     
     
-    //MARK: - -logOut()
-    private func logOut() {
-        setUserInteraction(isEnabled: false)
-        
-        do {
-            try Auth.auth().signOut()
-            navigateToWelcome()
-        } catch let signOutError as NSError {
-            print("Error signing out: %@", signOutError)
-            navigateToWelcome()
-        }
-    }
-    
-    
-    private func editAccount() {
-        if let _ = chatSender {
-            navigateToNewUserData()
-        }
+    private func failedToDeleteAccount() {
+        errorMessage = "Account deletion was failed. Click \"Continue\" and try again."
+        navigateToNewUserData()
     }
 }
