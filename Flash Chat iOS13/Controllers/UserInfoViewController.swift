@@ -73,57 +73,58 @@ class UserInfoViewController: UIViewController {
     
     
     @IBAction func editAccountButtonPressed(_ sender: UIButton) {
-        editAccountButtonPressedCallBack?()
-        self.dismiss(animated: false, completion: nil)
+//        editAccountButtonPressedCallBack?()
+//        self.dismiss(animated: false, completion: nil)
+        
+        dismiss(animated: false) {
+            self.editAccountButtonPressedCallBack?()
+        }
     }
     
     
     
     @IBAction private func logOutButtonPressed(_ sender: UIButton) {
-        view.isHidden = true
-        logOutButtonPressedCallBack?()
-        self.dismiss(animated: false, completion: nil)
+//        view.isHidden = true
+//        logOutButtonPressedCallBack?()
+//        self.dismiss(animated: false, completion: nil)
+        
+        dismiss(animated: false) {
+            self.logOutButtonPressedCallBack?()
+        }
     }
     
     
     @IBAction private func deleteAccountButtonPressed(_ sender: UIButton) {
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-//        navigateToDeleteAccountWarning()
-        self.dismiss(animated: true, completion: nil)
-        deleteAccountButtonPressedCallBack?()
-        
+        navigateToDeleteAccountWarning()
     }
     
     
-//    private func deleteAccount() {
-//        view.isHidden = true
-//        deleteAccountButtonPressedCallBack?()
-//        self.dismiss(animated: true, completion: nil)
-//    }
+    private func deleteAccount() {
+        view.isHidden = true
+        
+        dismiss(animated: false) {
+            self.deleteAccountButtonPressedCallBack?()
+        }
+    }
     
 
-//    private func navigateToDeleteAccountWarning() {
-//        performSegue(withIdentifier: K.Segue.userInfoToDeleteAccountWarning, sender: self)
-//    }
+    private func navigateToDeleteAccountWarning() {
+        performSegue(withIdentifier: K.Segue.userInfoToDeleteAccountWarning, sender: self)
+    }
     
     
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == K.Segue.userInfoToDeleteAccountWarning {
-//            if let destinationVC = segue.destination as? DeleteAccountWarningViewController {
-//                destinationVC.yesButtonPressedCallBack = { [weak self] in
-//                    self?.deleteAccount()
-//                }
-//            }
-//        }
-//    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == K.Segue.userInfoToDeleteAccountWarning {
+            if let destinationVC = segue.destination as? DeleteAccountWarningViewController {
+                destinationVC.yesButtonPressedCallBack = { [weak self] in
+                    self?.deleteAccount()
+                }
+            }
+        }
+    }
     
-    
-    
-    
-    
-    
-    
-    
+
     //any touch out of the UI element heads back to previous view
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)

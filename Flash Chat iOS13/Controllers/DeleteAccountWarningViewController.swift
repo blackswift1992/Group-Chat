@@ -31,10 +31,9 @@ class DeleteAccountWarningViewController: UIViewController {
     @IBAction private func yesButtonPressed(_ sender: UIButton) {
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         
-        dismiss(animated: true, completion: nil)
-        
-        yesButtonPressedCallBack?()
-        
+        dismiss(animated: true) {
+            self.yesButtonPressedCallBack?()
+        }
         
     }
     
