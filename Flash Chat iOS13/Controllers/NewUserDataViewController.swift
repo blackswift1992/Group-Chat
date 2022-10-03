@@ -23,6 +23,9 @@ class NewUserDataViewController: UIViewController {
         customizeViewElements()
     }
     
+    func setCurrentUser(_ user: User) {
+        currentUser = user
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -43,6 +46,13 @@ class NewUserDataViewController: UIViewController {
         loadPhotoButton.layer.cornerRadius = 16
         
         progressIndicator.hidesWhenStopped = true
+        
+        if let safeCurrentUser = currentUser {
+            firstNameTextField.text = safeCurrentUser.data.firstName
+            lastNameTextField.text = safeCurrentUser.data.lastName
+            avatarImageView.image = safeCurrentUser.avatar
+            currentUser = nil
+        }
     }
     
  
