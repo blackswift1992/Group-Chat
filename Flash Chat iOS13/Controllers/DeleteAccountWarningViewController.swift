@@ -5,9 +5,8 @@ class DeleteAccountWarningViewController: UIViewController {
     @IBOutlet private weak var backgroundView: UIView!
     @IBOutlet private weak var containerView: UIStackView!
     
-    var yesButtonPressedCallBack: (() -> ())?
-    var noButtonPressedCallBack: (() -> ())?
-    
+    private var yesButtonPressedCallBack: (() -> ())?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,10 +14,20 @@ class DeleteAccountWarningViewController: UIViewController {
     }
     
     
+    func setYesButtonPressedCallBack(_ yesCallback: (() -> ())?) {
+        yesButtonPressedCallBack = yesCallback
+    }
+    
+    
     private func customizeViewElements() {
         containerView.layer.cornerRadius = 17;
         containerView.layer.masksToBounds = true;
         
+        activateBlurEffectInBackgroundView()
+    }
+    
+    
+    private func activateBlurEffectInBackgroundView() {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = backgroundView.bounds
@@ -34,7 +43,6 @@ class DeleteAccountWarningViewController: UIViewController {
         dismiss(animated: true) {
             self.yesButtonPressedCallBack?()
         }
-        
     }
     
     

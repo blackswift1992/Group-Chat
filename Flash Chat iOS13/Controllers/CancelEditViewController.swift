@@ -15,6 +15,11 @@ class CancelEditViewController: UIViewController {
         containerView.layer.cornerRadius = 17;
         containerView.layer.masksToBounds = true;
         
+        activateBlurEffectInBackgroundView()
+    }
+    
+    
+    private func activateBlurEffectInBackgroundView() {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = backgroundView.bounds

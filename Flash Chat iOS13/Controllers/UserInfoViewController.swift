@@ -47,21 +47,16 @@ class UserInfoViewController: UIViewController {
     
     
     private func customizeViewElements() {
+        backgroundView.layer.cornerRadius = 29;
+        backgroundView.layer.masksToBounds = true;
+        
         avatarImageView.layer.cornerRadius = 50
         avatarImageView.layer.borderWidth = 0.5
         
         logOutView.layer.cornerRadius = 17
         deleteAccountButton.layer.cornerRadius = 17
         
-        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.regular)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = containerView.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        containerView.addSubview(blurEffectView)
-        containerView.addSubview(dataContainerView)
-        
-        backgroundView.layer.cornerRadius = 29;
-        backgroundView.layer.masksToBounds = true;
+        activateBlurEffectInContainerView()
         
         if let safeChatSender = chatSender {
             firstNameLabel.text = safeChatSender.data.firstName
@@ -71,8 +66,17 @@ class UserInfoViewController: UIViewController {
     }
     
     
+    private func activateBlurEffectInContainerView() {
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.regular)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = containerView.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        containerView.addSubview(blurEffectView)
+        containerView.addSubview(dataContainerView)
+    }
     
-    @IBAction func editAccountButtonPressed(_ sender: UIButton) {
+    
+    @IBAction private func editAccountButtonPressed(_ sender: UIButton) {
         dismiss(animated: false) {
             self.editAccountButtonPressedCallBack?()
         }
@@ -93,7 +97,7 @@ class UserInfoViewController: UIViewController {
     }
     
     
-    private func deleteAccount() {
+    private func deleteAccountTotally() {
         view.isHidden = true
         
         dismiss(animated: false) {
@@ -110,9 +114,9 @@ class UserInfoViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == K.Segue.userInfoToDeleteAccountWarning {
             if let destinationVC = segue.destination as? DeleteAccountWarningViewController {
-                destinationVC.yesButtonPressedCallBack = { [weak self] in
-                    self?.deleteAccount()
-                }
+                destinationVC.setYesButtonPressedCallBack({ [weak self] in
+                    self?.deleteAccountTotally()
+                })
             }
         }
     }

@@ -77,16 +77,19 @@ class ChatViewController: UIViewController {
     
     
     private func showDeletionScreensaver() {
+        activateBlurEffectInDeletingView()
+        deletingLabel.blink()
+        deletingView.isHidden = false
+    }
+    
+    
+    private func activateBlurEffectInDeletingView() {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = deletingView.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         deletingView.addSubview(blurEffectView)
         deletingView.addSubview(deletingLabel)
-        
-        deletingLabel.blink()
-        
-        deletingView.isHidden = false
     }
     
     
