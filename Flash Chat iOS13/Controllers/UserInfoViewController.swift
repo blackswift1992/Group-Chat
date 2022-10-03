@@ -73,9 +73,6 @@ class UserInfoViewController: UIViewController {
     
     
     @IBAction func editAccountButtonPressed(_ sender: UIButton) {
-//        editAccountButtonPressedCallBack?()
-//        self.dismiss(animated: false, completion: nil)
-        
         dismiss(animated: false) {
             self.editAccountButtonPressedCallBack?()
         }
@@ -84,10 +81,6 @@ class UserInfoViewController: UIViewController {
     
     
     @IBAction private func logOutButtonPressed(_ sender: UIButton) {
-//        view.isHidden = true
-//        logOutButtonPressedCallBack?()
-//        self.dismiss(animated: false, completion: nil)
-        
         dismiss(animated: false) {
             self.logOutButtonPressedCallBack?()
         }

@@ -31,14 +31,16 @@ class EditMenuViewController: UIViewController {
     
     
     @IBAction private func deleteButtonPressed(_ sender: UIButton) {
-        deleteButtonPressedCallBack?()
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true) {
+            self.deleteButtonPressedCallBack?()
+        }
     }
     
     
     @IBAction private func editButtonPressed(_ sender: UIButton) {
-        editButtonPressedCallBack?()
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true) {
+            self.editButtonPressedCallBack?()
+        }
     }
 
     
