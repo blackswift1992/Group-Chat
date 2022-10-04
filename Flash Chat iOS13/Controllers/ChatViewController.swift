@@ -319,7 +319,7 @@ class ChatViewController: UIViewController {
     
     
     @IBAction private func sideMenuRightBarButtonPressed(_ sender: UIBarButtonItem) {
-        navigateToUserInfo()
+        navigateToUserMenu()
     }
     
     
@@ -530,8 +530,8 @@ extension ChatViewController {
     }
     
     
-    private func navigateToUserInfo() {
-        performSegue(withIdentifier: K.Segue.chatToUserInfo, sender: self)
+    private func navigateToUserMenu() {
+        performSegue(withIdentifier: K.Segue.chatToUserMenu, sender: self)
     }
     
     
@@ -560,10 +560,10 @@ extension ChatViewController {
                     self?.deleteSelectedMessage()
                 })
             }
-        } else if segue.identifier == K.Segue.chatToUserInfo {
+        } else if segue.identifier == K.Segue.chatToUserMenu {
             moveDownKeyboard()
             
-            if let destinationVC = segue.destination as? UserInfoViewController {
+            if let destinationVC = segue.destination as? UserMenuViewController {
                 destinationVC.setChatSender(chatSender)
                 
                 destinationVC.setEditAccountButtonPressedCallBack { [weak self] in
@@ -629,7 +629,7 @@ extension ChatViewController {
 
 
 
-//MARK: - UserInfoVC CALLBACKS
+//MARK: - UserMenuVC CALLBACKS
 
 
 

@@ -779,7 +779,7 @@
                         <outlet property="tableView" destination="S6L-hg-cne" id="dTJ-K9-WAe"/>
                         <segue destination="L8K-gF-GuO" kind="presentation" identifier="ChatToEditMenu" modalPresentationStyle="overCurrentContext" modalTransitionStyle="coverVertical" id="hqh-rX-tMw"/>
                         <segue destination="vgI-qo-t4P" kind="presentation" identifier="ChatToEditMessageWarning" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="HYD-B5-RGk"/>
-                        <segue destination="M0t-4g-gLg" kind="presentation" identifier="ChatToUserInfo" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="RqG-5Q-meC"/>
+                        <segue destination="M0t-4g-gLg" kind="presentation" identifier="ChatToUserMenu" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="RqG-5Q-meC"/>
                         <segue destination="WN1-bb-RTS" kind="show" identifier="ChatToNewUserData" id="VED-6t-Kg4"/>
                     </connections>
                 </viewController>
@@ -1111,10 +1111,10 @@
             </objects>
             <point key="canvasLocation" x="-630" y="481"/>
         </scene>
-        <!--User Info View Controller-->
+        <!--User Menu View Controller-->
         <scene sceneID="hQp-yH-Kgo">
             <objects>
-                <viewController id="M0t-4g-gLg" customClass="UserInfoViewController" customModule="Flash_Chat_iOS13" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="M0t-4g-gLg" customClass="UserMenuViewController" customModule="Flash_Chat_iOS13" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="sFW-py-h1F">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1313,7 +1313,7 @@
                         <outlet property="firstNameLabel" destination="91s-aj-Mel" id="bTJ-Lj-f4g"/>
                         <outlet property="lastNameLabel" destination="vHR-Mn-doY" id="vXd-sw-W9k"/>
                         <outlet property="logOutView" destination="QuG-uE-5HR" id="kBi-Et-PUU"/>
-                        <segue destination="v28-YW-bvB" kind="presentation" identifier="UserInfoToDeleteAccountWarning" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="h92-Gw-VXa"/>
+                        <segue destination="v28-YW-bvB" kind="presentation" identifier="UserMenuToDeleteAccountWarning" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="h92-Gw-VXa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jY3-rb-0e3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

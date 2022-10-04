@@ -40,7 +40,7 @@
 		49C315D8288715D8008672BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 49C315D7288715D8008672BF /* GoogleService-Info.plist */; };
 		49F2523428C252E200BBD462 /* GreetingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F2523228C252E200BBD462 /* GreetingTableCell.swift */; };
 		49F2523528C252E200BBD462 /* GreetingTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 49F2523328C252E200BBD462 /* GreetingTableCell.xib */; };
-		49F8C0E328BBB4A60034EA6B /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F8C0E228BBB4A60034EA6B /* UserInfoViewController.swift */; };
+		49F8C0E328BBB4A60034EA6B /* UserMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F8C0E228BBB4A60034EA6B /* UserMenuViewController.swift */; };
 		49FF39D928885DDE00B508D0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF39D828885DDE00B508D0 /* Constants.swift */; };
 		49FF39DE2889BA4300B508D0 /* SenderMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FF39DC2889BA4300B508D0 /* SenderMessageCell.swift */; };
 		49FF39DF2889BA4300B508D0 /* SenderMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 49FF39DD2889BA4300B508D0 /* SenderMessageCell.xib */; };
@@ -82,7 +82,7 @@
 		49C315D7288715D8008672BF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		49F2523228C252E200BBD462 /* GreetingTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreetingTableCell.swift; sourceTree = "<group>"; };
 		49F2523328C252E200BBD462 /* GreetingTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GreetingTableCell.xib; sourceTree = "<group>"; };
-		49F8C0E228BBB4A60034EA6B /* UserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
+		49F8C0E228BBB4A60034EA6B /* UserMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMenuViewController.swift; sourceTree = "<group>"; };
 		49FF39D828885DDE00B508D0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		49FF39DC2889BA4300B508D0 /* SenderMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SenderMessageCell.swift; sourceTree = "<group>"; };
 		49FF39DD2889BA4300B508D0 /* SenderMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SenderMessageCell.xib; sourceTree = "<group>"; };
@@ -152,7 +152,7 @@
 				0B628190235DF01B00E35CAF /* ChatViewController.swift */,
 				49B2F0E82891F2FB0034BBBA /* EditMenuViewController.swift */,
 				49A4AFE928959C9600E707FE /* EditMessageWarningViewController.swift */,
-				49F8C0E228BBB4A60034EA6B /* UserInfoViewController.swift */,
+				49F8C0E228BBB4A60034EA6B /* UserMenuViewController.swift */,
 				49FFCC0728C0EA54001B0739 /* DeleteAccountWarningViewController.swift */,
 			);
 			path = Controllers;
@@ -373,7 +373,7 @@
 				494E508C28C239B600D411A5 /* ReceiverMessageCell.swift in Sources */,
 				495717BF28DFA2D800400220 /* UIFont.swift in Sources */,
 				496D238C28A6B8A5005B1A7C /* NewUserDataViewController.swift in Sources */,
-				49F8C0E328BBB4A60034EA6B /* UserInfoViewController.swift in Sources */,
+				49F8C0E328BBB4A60034EA6B /* UserMenuViewController.swift in Sources */,
 				0B62818B235DF00000E35CAF /* WelcomeViewController.swift in Sources */,
 				495B7E2F28EBB87300D941A0 /* UIImage.swift in Sources */,
 				49A4AFEA28959C9600E707FE /* EditMessageWarningViewController.swift in Sources */,

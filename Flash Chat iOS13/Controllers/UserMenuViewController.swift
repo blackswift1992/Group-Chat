@@ -2,7 +2,7 @@ import UIKit
 import FirebaseAuth
 import AudioToolbox
 
-class UserInfoViewController: UIViewController {
+class UserMenuViewController: UIViewController {
     @IBOutlet private weak var backgroundView: UIView!
     @IBOutlet private weak var containerView: UIView!
     @IBOutlet private weak var dataContainerView: UIView!
@@ -107,12 +107,12 @@ class UserInfoViewController: UIViewController {
     
 
     private func navigateToDeleteAccountWarning() {
-        performSegue(withIdentifier: K.Segue.userInfoToDeleteAccountWarning, sender: self)
+        performSegue(withIdentifier: K.Segue.userMenuToDeleteAccountWarning, sender: self)
     }
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == K.Segue.userInfoToDeleteAccountWarning {
+        if segue.identifier == K.Segue.userMenuToDeleteAccountWarning {
             if let destinationVC = segue.destination as? DeleteAccountWarningViewController {
                 destinationVC.setYesButtonPressedCallBack({ [weak self] in
                     self?.deleteAccountTotally()

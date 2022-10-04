@@ -14,9 +14,9 @@ struct K {
         
         static let chatToEditMenu = "ChatToEditMenu"
         static let chatToEditMessageWarning = "ChatToEditMessageWarning"
-        static let chatToUserInfo = "ChatToUserInfo"
+        static let chatToUserMenu = "ChatToUserMenu"
         
-        static let userInfoToDeleteAccountWarning = "UserInfoToDeleteAccountWarning"
+        static let userMenuToDeleteAccountWarning = "UserMenuToDeleteAccountWarning"
     }
     
     
