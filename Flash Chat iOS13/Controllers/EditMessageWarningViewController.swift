@@ -1,6 +1,6 @@
 import UIKit
 
-class CancelEditViewController: UIViewController {
+class EditMessageWarningViewController: UIViewController {
     @IBOutlet private weak var backgroundView: UIView!
     @IBOutlet private weak var containerView: UIStackView!
     

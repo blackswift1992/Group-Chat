@@ -398,7 +398,7 @@ class ChatViewController: UIViewController {
             }
         } else {
             finishMessageEditing()
-            navigateToCancelEdit()
+            navigateToEditMessageWarning()
         }
     }
     
@@ -535,8 +535,8 @@ extension ChatViewController {
     }
     
     
-    private func navigateToCancelEdit() {
-        performSegue(withIdentifier: K.Segue.chatToCancelEdit, sender: self)
+    private func navigateToEditMessageWarning() {
+        performSegue(withIdentifier: K.Segue.chatToEditMessageWarning, sender: self)
     }
     
     

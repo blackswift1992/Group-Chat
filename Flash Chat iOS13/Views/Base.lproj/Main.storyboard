@@ -778,7 +778,7 @@
                         <outlet property="sendButton" destination="pym-e9-R2r" id="5gw-F7-1r2"/>
                         <outlet property="tableView" destination="S6L-hg-cne" id="dTJ-K9-WAe"/>
                         <segue destination="L8K-gF-GuO" kind="presentation" identifier="ChatToEditMenu" modalPresentationStyle="overCurrentContext" modalTransitionStyle="coverVertical" id="hqh-rX-tMw"/>
-                        <segue destination="vgI-qo-t4P" kind="presentation" identifier="ChatToCancelEdit" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="HYD-B5-RGk"/>
+                        <segue destination="vgI-qo-t4P" kind="presentation" identifier="ChatToEditMessageWarning" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="HYD-B5-RGk"/>
                         <segue destination="M0t-4g-gLg" kind="presentation" identifier="ChatToUserInfo" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="RqG-5Q-meC"/>
                         <segue destination="WN1-bb-RTS" kind="show" identifier="ChatToNewUserData" id="VED-6t-Kg4"/>
                     </connections>
@@ -861,10 +861,10 @@
             </objects>
             <point key="canvasLocation" x="3151" y="1210"/>
         </scene>
-        <!--Cancel Edit View Controller-->
+        <!--Edit Message Warning View Controller-->
         <scene sceneID="XpA-lX-E7N">
             <objects>
-                <viewController id="vgI-qo-t4P" customClass="CancelEditViewController" customModule="Flash_Chat_iOS13" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vgI-qo-t4P" customClass="EditMessageWarningViewController" customModule="Flash_Chat_iOS13" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="99s-tD-LCR">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
