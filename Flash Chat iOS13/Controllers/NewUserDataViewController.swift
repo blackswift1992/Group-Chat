@@ -93,8 +93,8 @@ class NewUserDataViewController: UIViewController {
     @IBAction private func continueButtonPressed(_ sender: UIButton) {
         activateScreenWaitingMode()
 
-        guard let safeFirstName = firstNameTextField.text else { return }
-        
+        guard let safeFirstName = firstNameTextField.text?.trim() else { return }
+
         if !safeFirstName.isEmpty {
             uploadAvatar()
         } else {
@@ -106,8 +106,8 @@ class NewUserDataViewController: UIViewController {
     private func uploadAvatar() {
         guard let safeUserId = Auth.auth().currentUser?.uid,
               let safeUserEmail = Auth.auth().currentUser?.email,
-              let safeFirstName = firstNameTextField.text,
-              let safeLastName = lastNameTextField.text,
+              let safeFirstName = firstNameTextField.text?.trim(),
+              let safeLastName = lastNameTextField.text?.trim(),
               let safeAvatarData = avatarImageView.image?.jpegData(compressionQuality: 0.02),
               let safeCompressedAvatar = UIImage(data: safeAvatarData)
         else {

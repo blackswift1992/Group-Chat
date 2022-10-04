@@ -338,7 +338,7 @@ class ChatViewController: UIViewController {
     
     
     private func createMessage() {
-        guard let safeMessageBody = messageTextField.text else { return }
+        guard let safeMessageBody = messageTextField.text?.trim() else { return }
 
         if !safeMessageBody.isEmpty {
             guard let safeChatSender = chatSender else { return }
@@ -369,7 +369,7 @@ class ChatViewController: UIViewController {
     
     
     private func editMessage() {
-        guard let safeMessageBody = messageTextField.text else { return }
+        guard let safeMessageBody = messageTextField.text?.trim() else { return }
         
         if !safeMessageBody.isEmpty {
             guard var messageData = selectedSenderMessage?.data,

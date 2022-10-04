@@ -20,6 +20,7 @@
 		45B850BF2A94518D1DA0DE5A /* Pods_Flash_Chat_iOS13.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3F7954D03B3DD8D76065F27 /* Pods_Flash_Chat_iOS13.framework */; };
 		4913F16E28A9A90F0056AB4D /* ChatUserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4913F16D28A9A90F0056AB4D /* ChatUserData.swift */; };
 		491AD50328E113FF00C042F7 /* ChatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491AD50228E113FF00C042F7 /* ChatUser.swift */; };
+		493AB1A228EBCCCE005B83FF /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493AB1A128EBCCCE005B83FF /* String.swift */; };
 		493B9C1028C4033600E0A95A /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493B9C0F28C4033600E0A95A /* UIView.swift */; };
 		494E508C28C239B600D411A5 /* ReceiverMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494E508A28C239B600D411A5 /* ReceiverMessageCell.swift */; };
 		494E508D28C239B600D411A5 /* ReceiverMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 494E508B28C239B600D411A5 /* ReceiverMessageCell.xib */; };
@@ -61,6 +62,7 @@
 		0B62819D235F0F4D00E35CAF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4913F16D28A9A90F0056AB4D /* ChatUserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUserData.swift; sourceTree = "<group>"; };
 		491AD50228E113FF00C042F7 /* ChatUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUser.swift; sourceTree = "<group>"; };
+		493AB1A128EBCCCE005B83FF /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		493B9C0F28C4033600E0A95A /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		494E508A28C239B600D411A5 /* ReceiverMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiverMessageCell.swift; sourceTree = "<group>"; };
 		494E508B28C239B600D411A5 /* ReceiverMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReceiverMessageCell.xib; sourceTree = "<group>"; };
@@ -185,8 +187,9 @@
 				493B9C0F28C4033600E0A95A /* UIView.swift */,
 				49541BB9289EAAFE00800CFE /* UIColor.swift */,
 				495717BE28DFA2D800400220 /* UIFont.swift */,
-				49912B5028E25FA400E09E83 /* Date.swift */,
 				495B7E2E28EBB87300D941A0 /* UIImage.swift */,
+				49912B5028E25FA400E09E83 /* Date.swift */,
+				493AB1A128EBCCCE005B83FF /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 				0B62818F235DF01000E35CAF /* LogInViewController.swift in Sources */,
 				49FF39D928885DDE00B508D0 /* Constants.swift in Sources */,
 				49912B4F28E1F87200E09E83 /* Message.swift in Sources */,
+				493AB1A228EBCCCE005B83FF /* String.swift in Sources */,
 				49541BBA289EAAFE00800CFE /* UIColor.swift in Sources */,
 				494F696B28B5399E003ED6BF /* UITextField.swift in Sources */,
 				0B628191235DF01B00E35CAF /* ChatViewController.swift in Sources */,
