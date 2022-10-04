@@ -27,6 +27,7 @@
 		49541BB7289E920F00800CFE /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49541BB6289E920F00800CFE /* Colors.xcassets */; };
 		49541BBA289EAAFE00800CFE /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49541BB9289EAAFE00800CFE /* UIColor.swift */; };
 		495717BF28DFA2D800400220 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495717BE28DFA2D800400220 /* UIFont.swift */; };
+		495B7E2F28EBB87300D941A0 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495B7E2E28EBB87300D941A0 /* UIImage.swift */; };
 		496D238C28A6B8A5005B1A7C /* NewUserDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496D238B28A6B8A5005B1A7C /* NewUserDataViewController.swift */; };
 		498B2AA728C7CB1F00B52BAD /* GreetingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B2AA628C7CB1F00B52BAD /* GreetingMessage.swift */; };
 		498B2AA928C7CB6300B52BAD /* TableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498B2AA828C7CB6300B52BAD /* TableCell.swift */; };
@@ -67,6 +68,7 @@
 		49541BB6289E920F00800CFE /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		49541BB9289EAAFE00800CFE /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		495717BE28DFA2D800400220 /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
+		495B7E2E28EBB87300D941A0 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		496D238B28A6B8A5005B1A7C /* NewUserDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewUserDataViewController.swift; sourceTree = "<group>"; };
 		498B2AA628C7CB1F00B52BAD /* GreetingMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreetingMessage.swift; sourceTree = "<group>"; };
 		498B2AA828C7CB6300B52BAD /* TableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCell.swift; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 				49541BB9289EAAFE00800CFE /* UIColor.swift */,
 				495717BE28DFA2D800400220 /* UIFont.swift */,
 				49912B5028E25FA400E09E83 /* Date.swift */,
+				495B7E2E28EBB87300D941A0 /* UIImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -369,6 +372,7 @@
 				496D238C28A6B8A5005B1A7C /* NewUserDataViewController.swift in Sources */,
 				49F8C0E328BBB4A60034EA6B /* UserInfoViewController.swift in Sources */,
 				0B62818B235DF00000E35CAF /* WelcomeViewController.swift in Sources */,
+				495B7E2F28EBB87300D941A0 /* UIImage.swift in Sources */,
 				49A4AFEA28959C9600E707FE /* CancelEditViewController.swift in Sources */,
 				49FFCC0828C0EA54001B0739 /* DeleteAccountWarningViewController.swift in Sources */,
 				49F2523428C252E200BBD462 /* GreetingTableCell.swift in Sources */,

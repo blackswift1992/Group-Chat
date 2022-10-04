@@ -169,7 +169,7 @@ class ChatViewController: UIViewController {
                 
                 if documents.count > 1 {
                     DispatchQueue.main.async {
-                        self?.setLeftBarButtonItem(with: UIImage(named: K.Image.defaultGroupAvatar))
+                        self?.setLeftBarButtonItem(with: UIImage.defaultGroupAvatar)
                     }
                 } else if documents.count == 1 {
                     guard let safeAvatarUrl = documents.first?.data()[K.FStore.avatarURLField] as? String else { return }

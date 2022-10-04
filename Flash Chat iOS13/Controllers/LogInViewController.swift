@@ -77,7 +77,7 @@ class LogInViewController: UIViewController {
                 do {
                     let chatUserData = try document.data(as: ChatUserData.self)
                     
-                    self?.chatSender = ChatUser(data: chatUserData, avatar: UIImage(named: K.Image.defaultAvatar))
+                    self?.chatSender = ChatUser(data: chatUserData, avatar: UIImage.defaultSingleAvatar)
                     self?.downloadAvatar(with: chatUserData.avatarURL)
                 }
                 catch {

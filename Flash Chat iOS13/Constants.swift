@@ -43,8 +43,6 @@ struct K {
     }
     
     struct Image {
-        static let defaultAvatar = "DefaultAvatar"
-        static let defaultGroupAvatar = "DefaultGroupAvatar"
         static let jpegType = "image/jpeg"
     }
     
