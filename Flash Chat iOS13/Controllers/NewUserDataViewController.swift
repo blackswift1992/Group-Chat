@@ -136,7 +136,9 @@ class NewUserDataViewController: UIViewController {
                         return
                     }
                     
-                    let chatUserData = ChatUserData(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, avatarURL: safeURL.absoluteString, userRGBColor: UIColor.getRandomRGBString())
+                    let userRGBColor = self?.chatSender?.data.userRGBColor ?? UIColor.getRandomRGBString()
+                    
+                    let chatUserData = ChatUserData(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, avatarURL: safeURL.absoluteString, userRGBColor: userRGBColor)
                     
                     self?.chatSender = ChatUser(data: chatUserData, avatar: safeCompressedAvatar)
                     
