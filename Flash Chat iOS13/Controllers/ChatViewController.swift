@@ -7,23 +7,20 @@ import IQKeyboardManagerSwift
 class ChatViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     
-    //замінити edit на editing
-    @IBOutlet private weak var editBlockView: UIView!
-    @IBOutlet private weak var editBlockMessageTextLabel: UILabel!
-    @IBOutlet private weak var editBlockCancelButton: UIButton!
+    @IBOutlet private weak var editingBlockView: UIView!
+    @IBOutlet private weak var editingBlockMessageTextLabel: UILabel!
+    @IBOutlet private weak var editingBlockCancelButton: UIButton!
     
     @IBOutlet private weak var messageTextField: UITextField!
     @IBOutlet private weak var sendButton: UIButton!
     
     @IBOutlet private weak var deletingView: UIView!
-    @IBOutlet private weak var deletingLabel: UILabel!
-    
-    @IBOutlet private weak var rightSideMenuBarButtonItem: UIBarButtonItem!
-    
+    @IBOutlet private weak var deletingViewLabel: UILabel!
+
     private let db = Firestore.firestore()
-    private var listener: ListenerRegistration?
+    private var realtimeDbListener: ListenerRegistration?
     
-    private var messageState: State = State.creating
+    private var messageState: State = State.creation
     private var tableCells: [TableCell] = []
     private var isAnimatedScrolling = false
     
@@ -64,7 +61,7 @@ class ChatViewController: UIViewController {
     private func hideEditingBlockView() {
         UIView.animate(withDuration: 0.3) {
             self.tableView.transform = .identity
-            self.editBlockView.transform = CGAffineTransform(translationX: 0.0, y: +50.0)
+            self.editingBlockView.transform = CGAffineTransform(translationX: 0.0, y: +50.0)
         }
     }
     
@@ -72,14 +69,14 @@ class ChatViewController: UIViewController {
     private func showEditingBlockView() {
         UIView.animate(withDuration: 0.2) {
             self.tableView.transform = CGAffineTransform(translationX: 0.0, y: -50.0)
-            self.editBlockView.transform = .identity
+            self.editingBlockView.transform = .identity
         }
     }
     
     
     private func showDeletionScreensaver() {
         activateBlurEffectInDeletingView()
-        deletingLabel.startBlink()
+        deletingViewLabel.startBlink()
         deletingView.isHidden = false
     }
     
@@ -90,7 +87,7 @@ class ChatViewController: UIViewController {
         blurEffectView.frame = deletingView.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         deletingView.addSubview(blurEffectView)
-        deletingView.addSubview(deletingLabel)
+        deletingView.addSubview(deletingViewLabel)
     }
     
     
@@ -99,13 +96,13 @@ class ChatViewController: UIViewController {
     }
     
     
-    private func setSendButtonCreationAppearance() {
+    private func setCreationAppearanceToSendButton() {
         sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
         sendButton.tintColor = UIColor.brandLightBlue
     }
     
     
-    private func setSendButtonEditingAppearance() {
+    private func setEditingAppearanceToSendButton() {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
         let largeBoldDoc = UIImage(systemName: "checkmark.circle.fill", withConfiguration: largeConfig)
         sendButton.setImage(largeBoldDoc, for: .normal)
@@ -129,7 +126,7 @@ class ChatViewController: UIViewController {
     
     
     private func stopTableViewCellsUpdating() {
-        listener?.remove()
+        realtimeDbListener?.remove()
     }
     
     
@@ -153,7 +150,7 @@ class ChatViewController: UIViewController {
     private func customizeViewElements() {
         customizeChatAvatar()
         customizeNavigationTitle()
-        customizeEditBlockView()
+        customizeEditingBlockView()
         customizeMessageTextField()
     }
     
@@ -225,10 +222,10 @@ class ChatViewController: UIViewController {
     
     
     
-    private func customizeEditBlockView() {
-        editBlockCancelButton.setTitle(K.Case.emptyString, for: .normal)
-        editBlockCancelButton.tintColor = UIColor.brandDarkMint
-        editBlockView.transform = CGAffineTransform(translationX: 0.0, y: +50.0)
+    private func customizeEditingBlockView() {
+        editingBlockCancelButton.setTitle(K.Case.emptyString, for: .normal)
+        editingBlockCancelButton.tintColor = UIColor.brandDarkMint
+        editingBlockView.transform = CGAffineTransform(translationX: 0.0, y: +50.0)
     }
     
     
@@ -267,7 +264,7 @@ class ChatViewController: UIViewController {
     
     
     private func loadMessages() {
-        listener = db.collection(K.FStore.messagesCollection).order(by: K.FStore.dateField).addSnapshotListener { [weak self] (querySnapshot, error) in
+        realtimeDbListener = db.collection(K.FStore.messagesCollection).order(by: K.FStore.dateField).addSnapshotListener { [weak self] (querySnapshot, error) in
             if let safeError = error {
                 print("Error load messages: \(safeError)")
             } else {
@@ -302,7 +299,7 @@ class ChatViewController: UIViewController {
     private func showLoadedMessages() {
         tableView.reloadData()
         
-        if messageState == State.creating {
+        if messageState == State.creation {
             let indexPath = IndexPath(row: tableCells.count - 1, section: 0)
             tableView.scrollToRow(at: indexPath, at: .top , animated: isAnimatedScrolling)
             
@@ -329,7 +326,7 @@ class ChatViewController: UIViewController {
     
     
     @IBAction private func sendButtonPressed(_ sender: UIButton) {
-        if messageState == State.creating {
+        if messageState == State.creation {
             createMessage()
         } else if messageState == State.editing {
             editMessage()
@@ -404,15 +401,15 @@ class ChatViewController: UIViewController {
     
     
     private func finishMessageEditing() {
-        messageState = State.creating
-        setSendButtonCreationAppearance()
+        messageState = State.creation
+        setCreationAppearanceToSendButton()
         hideEditingBlockView()
     }
     
     
     private func startMessageEditing() {
         messageState = State.editing
-        setSendButtonEditingAppearance()
+        setEditingAppearanceToSendButton()
         showEditingBlockView()
         moveUpKeyboard()
     }
@@ -514,7 +511,7 @@ extension ChatViewController: UITextFieldDelegate {
 
 extension ChatViewController {
     private enum State {
-        case creating, editing, deleting
+        case creation, editing, deleting
     }
 }
 
@@ -601,7 +598,7 @@ extension ChatViewController {
         else { return }
         
         messageTextField.text = selectedMessageTextBody
-        editBlockMessageTextLabel.text = selectedMessageTextBody
+        editingBlockMessageTextLabel.text = selectedMessageTextBody
         
         startMessageEditing()
         
@@ -622,7 +619,7 @@ extension ChatViewController {
                 print("Message deleting was failed: \(safeError)")
             }
             
-            self?.messageState = State.creating
+            self?.messageState = State.creation
         }
     }
 }
@@ -751,7 +748,7 @@ extension ChatViewController {
     
     private func failedToDeleteAccount() {
         errorMessage = "Account deletion was failed. Click \"Continue\" and try again."
-        deletingLabel.stopBlink()
+        deletingViewLabel.stopBlink()
         navigateToNewUserData()
     }
 }
