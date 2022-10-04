@@ -25,6 +25,7 @@ class ChatViewController: UIViewController {
     
     private var messageState: State = State.creating
     private var tableCells: [TableCell] = []
+    private var isAnimatedScrolling = false
     
     private var chatSender: ChatUser?
     private var selectedSenderMessage: Message?
@@ -303,7 +304,11 @@ class ChatViewController: UIViewController {
         
         if messageState == State.creating {
             let indexPath = IndexPath(row: tableCells.count - 1, section: 0)
-            tableView.scrollToRow(at: indexPath, at: .top , animated: true)
+            tableView.scrollToRow(at: indexPath, at: .top , animated: isAnimatedScrolling)
+            
+            if !isAnimatedScrolling {
+                isAnimatedScrolling = true
+            }
         }
     }
 
