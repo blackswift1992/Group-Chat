@@ -488,7 +488,7 @@ extension ChatViewController: UITableViewDataSource {
 extension ChatViewController: SenderMessageCellDelegate {
     func messageSelected(_ messageCell: SenderMessageCell, selectedMessage: Message) {
         selectedSenderMessage = selectedMessage
-        navigateToEditMenu()
+        navigateToMessageMenu()
     }
 }
 
@@ -525,8 +525,8 @@ extension ChatViewController {
 
 
 extension ChatViewController {
-    private func navigateToEditMenu() {
-        performSegue(withIdentifier: K.Segue.chatToEditMenu, sender: self)
+    private func navigateToMessageMenu() {
+        performSegue(withIdentifier: K.Segue.chatToMessageMenu, sender: self)
     }
     
     
@@ -550,8 +550,8 @@ extension ChatViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == K.Segue.chatToEditMenu {
-            if let destinationVC = segue.destination as? EditMenuViewController {
+        if segue.identifier == K.Segue.chatToMessageMenu {
+            if let destinationVC = segue.destination as? MessageMenuViewController {
                 destinationVC.setEditButtonPressedCallBack({ [weak self] in
                     self?.editSelectedMessage()
                 })
@@ -589,7 +589,7 @@ extension ChatViewController {
 
 
 
-//MARK: - EditMenuVC CALLBACKS
+//MARK: - MessageMenuVC CALLBACKS
 
 
 

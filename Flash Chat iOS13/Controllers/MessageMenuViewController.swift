@@ -1,6 +1,6 @@
 import UIKit
 
-class EditMenuViewController: UIViewController {
+class MessageMenuViewController: UIViewController {
     @IBOutlet private weak var deleteButton: UIButton!
     @IBOutlet private weak var editButton: UIButton!
 

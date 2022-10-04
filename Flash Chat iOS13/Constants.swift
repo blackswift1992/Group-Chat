@@ -12,7 +12,7 @@ struct K {
         
         static let chatToNewUserData = "ChatToNewUserData"
         
-        static let chatToEditMenu = "ChatToEditMenu"
+        static let chatToMessageMenu = "ChatToMessageMenu"
         static let chatToEditMessageWarning = "ChatToEditMessageWarning"
         static let chatToUserMenu = "ChatToUserMenu"
         

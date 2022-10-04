@@ -36,7 +36,7 @@
 		49912B4F28E1F87200E09E83 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49912B4E28E1F87200E09E83 /* Message.swift */; };
 		49912B5128E25FA400E09E83 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49912B5028E25FA400E09E83 /* Date.swift */; };
 		49A4AFEA28959C9600E707FE /* EditMessageWarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A4AFE928959C9600E707FE /* EditMessageWarningViewController.swift */; };
-		49B2F0E92891F2FB0034BBBA /* EditMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2F0E82891F2FB0034BBBA /* EditMenuViewController.swift */; };
+		49B2F0E92891F2FB0034BBBA /* MessageMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2F0E82891F2FB0034BBBA /* MessageMenuViewController.swift */; };
 		49C315D8288715D8008672BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 49C315D7288715D8008672BF /* GoogleService-Info.plist */; };
 		49F2523428C252E200BBD462 /* GreetingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F2523228C252E200BBD462 /* GreetingTableCell.swift */; };
 		49F2523528C252E200BBD462 /* GreetingTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 49F2523328C252E200BBD462 /* GreetingTableCell.xib */; };
@@ -78,7 +78,7 @@
 		49912B4E28E1F87200E09E83 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		49912B5028E25FA400E09E83 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		49A4AFE928959C9600E707FE /* EditMessageWarningViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMessageWarningViewController.swift; sourceTree = "<group>"; };
-		49B2F0E82891F2FB0034BBBA /* EditMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMenuViewController.swift; sourceTree = "<group>"; };
+		49B2F0E82891F2FB0034BBBA /* MessageMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageMenuViewController.swift; sourceTree = "<group>"; };
 		49C315D7288715D8008672BF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		49F2523228C252E200BBD462 /* GreetingTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreetingTableCell.swift; sourceTree = "<group>"; };
 		49F2523328C252E200BBD462 /* GreetingTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GreetingTableCell.xib; sourceTree = "<group>"; };
@@ -150,7 +150,7 @@
 				496D238B28A6B8A5005B1A7C /* NewUserDataViewController.swift */,
 				0B62818E235DF01000E35CAF /* LogInViewController.swift */,
 				0B628190235DF01B00E35CAF /* ChatViewController.swift */,
-				49B2F0E82891F2FB0034BBBA /* EditMenuViewController.swift */,
+				49B2F0E82891F2FB0034BBBA /* MessageMenuViewController.swift */,
 				49A4AFE928959C9600E707FE /* EditMessageWarningViewController.swift */,
 				49F8C0E228BBB4A60034EA6B /* UserMenuViewController.swift */,
 				49FFCC0728C0EA54001B0739 /* DeleteAccountWarningViewController.swift */,
@@ -379,7 +379,7 @@
 				49A4AFEA28959C9600E707FE /* EditMessageWarningViewController.swift in Sources */,
 				49FFCC0828C0EA54001B0739 /* DeleteAccountWarningViewController.swift in Sources */,
 				49F2523428C252E200BBD462 /* GreetingTableCell.swift in Sources */,
-				49B2F0E92891F2FB0034BBBA /* EditMenuViewController.swift in Sources */,
+				49B2F0E92891F2FB0034BBBA /* MessageMenuViewController.swift in Sources */,
 				0B628177235DEE8100E35CAF /* AppDelegate.swift in Sources */,
 				49912B5128E25FA400E09E83 /* Date.swift in Sources */,
 				0B628179235DEE8100E35CAF /* SceneDelegate.swift in Sources */,

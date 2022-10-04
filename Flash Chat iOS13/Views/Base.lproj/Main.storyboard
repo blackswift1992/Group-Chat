@@ -777,7 +777,7 @@
                         <outlet property="rightSideMenuBarButtonItem" destination="9Nh-UA-U7U" id="zLc-FQ-yui"/>
                         <outlet property="sendButton" destination="pym-e9-R2r" id="5gw-F7-1r2"/>
                         <outlet property="tableView" destination="S6L-hg-cne" id="dTJ-K9-WAe"/>
-                        <segue destination="L8K-gF-GuO" kind="presentation" identifier="ChatToEditMenu" modalPresentationStyle="overCurrentContext" modalTransitionStyle="coverVertical" id="hqh-rX-tMw"/>
+                        <segue destination="L8K-gF-GuO" kind="presentation" identifier="ChatToMessageMenu" modalPresentationStyle="overCurrentContext" modalTransitionStyle="coverVertical" id="hqh-rX-tMw"/>
                         <segue destination="vgI-qo-t4P" kind="presentation" identifier="ChatToEditMessageWarning" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="HYD-B5-RGk"/>
                         <segue destination="M0t-4g-gLg" kind="presentation" identifier="ChatToUserMenu" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="RqG-5Q-meC"/>
                         <segue destination="WN1-bb-RTS" kind="show" identifier="ChatToNewUserData" id="VED-6t-Kg4"/>
@@ -787,10 +787,10 @@
             </objects>
             <point key="canvasLocation" x="3151" y="481"/>
         </scene>
-        <!--Edit Menu View Controller-->
+        <!--Message Menu View Controller-->
         <scene sceneID="hzf-7R-szX">
             <objects>
-                <viewController id="L8K-gF-GuO" customClass="EditMenuViewController" customModule="Flash_Chat_iOS13" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="L8K-gF-GuO" customClass="MessageMenuViewController" customModule="Flash_Chat_iOS13" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="i0K-4S-jDw">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
