@@ -38,7 +38,7 @@ class MessageMenuViewController: UIViewController {
     
     
     @IBAction private func editButtonPressed(_ sender: UIButton) {
-        dismiss(animated: true) {
+        dismiss(animated: false) {
             self.editButtonPressedCallBack?()
         }
     }

@@ -67,7 +67,7 @@ class ChatViewController: UIViewController {
     
 
     private func showEditingBlockView() {
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: 0.3) {
             self.tableView.transform = CGAffineTransform(translationX: 0.0, y: -50.0)
             self.editingBlockView.transform = .identity
         }
@@ -347,7 +347,6 @@ class ChatViewController: UIViewController {
                 textBody: safeMessageBody,
                 isEdited: K.Case.no,
                 userRGBColor: safeChatSender.data.userRGBColor)
-            
             do {
                 let _ = try db.collection(K.FStore.messagesCollection).addDocument(from: messageData) { [weak self] error in
                     if let safeError = error {
@@ -402,15 +401,15 @@ class ChatViewController: UIViewController {
     
     private func finishMessageEditing() {
         messageState = State.creation
-        setCreationAppearanceToSendButton()
         hideEditingBlockView()
+        setCreationAppearanceToSendButton()
     }
     
     
     private func startMessageEditing() {
         messageState = State.editing
-        setEditingAppearanceToSendButton()
         showEditingBlockView()
+        setEditingAppearanceToSendButton()
         moveUpKeyboard()
     }
     
@@ -597,10 +596,10 @@ extension ChatViewController {
               let selectedMessageCellRow = selectedSenderMessage?.cellRow
         else { return }
         
+        startMessageEditing()
+        
         messageTextField.text = selectedMessageTextBody
         editingBlockMessageTextLabel.text = selectedMessageTextBody
-        
-        startMessageEditing()
         
         let indexPath = IndexPath(row: selectedMessageCellRow, section: 0)
         tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
