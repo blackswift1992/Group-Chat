@@ -79,7 +79,7 @@ class ChatViewController: UIViewController {
     
     private func showDeletionScreensaver() {
         activateBlurEffectInDeletingView()
-        deletingLabel.blink()
+        deletingLabel.startBlink()
         deletingView.isHidden = false
     }
     
@@ -751,6 +751,7 @@ extension ChatViewController {
     
     private func failedToDeleteAccount() {
         errorMessage = "Account deletion was failed. Click \"Continue\" and try again."
+        deletingLabel.stopBlink()
         navigateToNewUserData()
     }
 }
