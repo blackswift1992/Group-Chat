@@ -278,7 +278,7 @@ class ChatViewController: UIViewController {
                     do {
                         let messageData = try document.data(as: MessageData.self)
                         
-                        guard let cellRowNumber = self?.tableCells.count else { return }  //може continue????????????????????
+                        guard let cellRowNumber = self?.tableCells.count else { continue }
                         
                         let message = Message(cellRow: cellRowNumber, data: messageData)
                         
@@ -286,7 +286,7 @@ class ChatViewController: UIViewController {
                     }
                     catch {
                         print("Retrieving MessageData from Firestore was failed")
-                        return
+                        continue
                     }
                 }
                 
