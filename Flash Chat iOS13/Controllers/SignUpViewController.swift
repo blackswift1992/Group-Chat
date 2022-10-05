@@ -11,36 +11,17 @@ class SignUpViewController: UIViewController {
     @IBOutlet private weak var progressIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var signUpButton: UIButton!
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         customizeViewElements()
     }
-    
-    
-    private func customizeViewElements() {
-        progressIndicator.hidesWhenStopped = true
-    }
-    
-    
-    private func failedToSignUp(withMessage message: String) {
-        errorLabel.text = message
-        view.isUserInteractionEnabled = true
-        progressIndicator.stopAnimating()
-    }
-    
-    
-    private func activateScreenWaitingMode() {
-        errorLabel.text = K.Case.emptyString
-        view.isUserInteractionEnabled = false
-        progressIndicator.startAnimating()
-    }
-    
-    
-    //MARK: - SIGN UP BUTTON
-    
-    
-    
+}
+
+
+//MARK: - @IBActions
+
+
+extension SignUpViewController {
     @IBAction private func signUpButtonPressed(_ sender: UIButton) {
         guard let safeUserEmail = emailTextfield.text,
               let safeUserPassword = passwordTextfield.text else { return }
@@ -59,10 +40,36 @@ class SignUpViewController: UIViewController {
             }
         }
     }
+}
+
+
+//MARK: - Private methods
+
+
+extension SignUpViewController {
+    private func activateScreenWaitingMode() {
+        errorLabel.text = K.Case.emptyString
+        view.isUserInteractionEnabled = false
+        progressIndicator.startAnimating()
+    }
     
+    private func failedToSignUp(withMessage message: String) {
+        errorLabel.text = message
+        view.isUserInteractionEnabled = true
+        progressIndicator.stopAnimating()
+    }
     
     private func navigateToNewUserData() {
         performSegue(withIdentifier: K.Segue.signUpToNewUserData, sender: self)
     }
 }
 
+
+//MARK: - Set up methods
+
+
+extension SignUpViewController {
+    private func customizeViewElements() {
+        progressIndicator.hidesWhenStopped = true
+    }
+}

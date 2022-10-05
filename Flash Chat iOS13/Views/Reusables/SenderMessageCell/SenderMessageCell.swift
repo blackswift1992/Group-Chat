@@ -72,7 +72,7 @@ extension SenderMessageCell {
 }
 
 
-//MARK: - Customization methods
+//MARK: - Set up methods
 
 
 extension SenderMessageCell {

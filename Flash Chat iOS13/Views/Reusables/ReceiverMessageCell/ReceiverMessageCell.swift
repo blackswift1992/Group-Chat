@@ -27,7 +27,7 @@ extension ReceiverMessageCell {
 }
 
 
-//MARK: - Customization methods
+//MARK: - Set up methods
 
 
 extension ReceiverMessageCell {
