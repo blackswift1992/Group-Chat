@@ -6,7 +6,6 @@ protocol SenderMessageCellDelegate: AnyObject {
 }
 
 
-
 class SenderMessageCell: UITableViewCell {
     @IBOutlet private weak var messageBubble: UIView!
     @IBOutlet private weak var messageTail: UIImageView!
@@ -22,28 +21,25 @@ class SenderMessageCell: UITableViewCell {
         super.awakeFromNib()
         customizeViewElements()
     }
-    
-    
+}
+
+
+//MARK: - Public methods
+
+
+extension SenderMessageCell {
     func setData(_ message: Message) {
         senderMessage = message
         messageBodyLabel.text = message.data.textBody
         timestampLabel.text = message.timestamp
     }
-    
-    
-    private func customizeViewElements() {
-        let cornerRadius = messageBubble.frame.size.height / 2.30
-        messageBubble.layer.cornerRadius = cornerRadius
-        messageButton.layer.cornerRadius = cornerRadius
-        messageButton.setTitle(K.Case.emptyString, for: .normal)
-    }
-    
-    
-    
-    //MARK: - MESSAGE BUTTON
-    
-    
-    
+}
+
+
+//MARK: - @IBActions
+
+
+extension SenderMessageCell {
     @IBAction private func messageButtonPressed(_ sender: UIButton) {
         guard let safeSenderMessage = senderMessage else { return }
         
@@ -62,10 +58,28 @@ class SenderMessageCell: UITableViewCell {
             }
         }
     }
+}
 
-    
+
+//MARK: - Private methods
+
+
+extension SenderMessageCell {
     private func setMessageColor(_ color: UIColor?) {
         messageBubble.backgroundColor = color
         messageTail.tintColor = color
+    }
+}
+
+
+//MARK: - Customization methods
+
+
+extension SenderMessageCell {
+    private func customizeViewElements() {
+        let cornerRadius = messageBubble.frame.size.height / 2.30
+        messageBubble.layer.cornerRadius = cornerRadius
+        messageButton.layer.cornerRadius = cornerRadius
+        messageButton.setTitle(K.Case.emptyString, for: .normal)
     }
 }

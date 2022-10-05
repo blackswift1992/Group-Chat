@@ -11,16 +11,26 @@ class ReceiverMessageCell: UITableViewCell {
         super.awakeFromNib()
         customizeViewElements()
     }
+}
 
-    
+
+//MARK: - Public methods
+
+
+extension ReceiverMessageCell {
     func setData(_ message: Message) {
         firstNameLabel.text = message.data.userFirstName
         firstNameLabel.textColor = message.userColor
         messageBodyLabel.text = message.data.textBody
         timestampLabel.text = message.timestamp
     }
-    
-    
+}
+
+
+//MARK: - Customization methods
+
+
+extension ReceiverMessageCell {
     private func customizeViewElements() {
             let cornerRadius = messageBubble.frame.size.height / 2.30
             messageBubble.layer.cornerRadius = cornerRadius
