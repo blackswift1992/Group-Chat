@@ -71,7 +71,7 @@ extension LogInViewController {
                     return
                 }
             } else {
-                self?.errorMessage = "Your user data doesn't exist. Set data please."
+                self?.errorMessage = "Your user data doesn't exist. Set it please."
                 self?.navigateToNewUserData()
             }
         }
@@ -86,7 +86,7 @@ extension LogInViewController {
             if let safeError = error {
                 print(safeError)
                 
-                self?.errorMessage = "Your user avatar does not exist. Set your avatar or click \"Continue\" to leave the default one."
+                self?.errorMessage = "Your avatar does not exist. Set it or click \"Continue\" to leave the default one."
                 self?.navigateToNewUserData()
             } else {
                 guard let safeAvatarData = data,
