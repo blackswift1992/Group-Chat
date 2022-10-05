@@ -89,6 +89,7 @@ extension NewUserDataViewController {
 
 
 extension NewUserDataViewController {
+    //MARK: -- avatar uploading
     private func uploadAvatar() {
         guard let safeUserId = Auth.auth().currentUser?.uid,
               let safeUserEmail = Auth.auth().currentUser?.email,
@@ -134,6 +135,7 @@ extension NewUserDataViewController {
         }
     }
     
+    //MARK: -- data uploading
     private func uploadData(_ chatUserData: ChatUserData) {
         do {
             try Firestore.firestore().collection(K.FStore.usersCollection).document(chatUserData.userId).setData(from: chatUserData) { [weak self] error in
@@ -149,6 +151,7 @@ extension NewUserDataViewController {
         }
     }
     
+    //MARK: -- others
     private func activateScreenWaitingMode() {
         errorLabel.text = K.Case.emptyString
         view.isUserInteractionEnabled = false

@@ -22,7 +22,6 @@ class LogInViewController: UIViewController {
 }
 
 
-
 //MARK: - @IBActions
 
 
@@ -52,6 +51,7 @@ extension LogInViewController {
 
 
 extension LogInViewController {
+    //MARK: -- user data checking
     private func checkIsUserDataExists() {
         guard let safeCurrentUserId = Auth.auth().currentUser?.uid else {
             self.failedToLogIn(withMessage: "Try again")
@@ -102,6 +102,7 @@ extension LogInViewController {
         }
     }
     
+    //MARK: -- others
     private func activateScreenWaitingMode() {
         errorLabel.text = K.Case.emptyString
         view.isUserInteractionEnabled = false
