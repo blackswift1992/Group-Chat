@@ -19,33 +19,80 @@ class UserMenuViewController: UIViewController {
     private var logOutButtonPressedCallBack: (() -> ())?
     private var deleteAccountButtonPressedCallBack: (() -> ())?
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         customizeViewElements()
     }
+}
 
-    
+
+//MARK: - Public methods
+
+
+extension UserMenuViewController {
     func setChatSender(_ chatSender: ChatUser?) {
         self.chatSender = chatSender
     }
-    
     
     func setLogOutButtonPressedCallBack(_ logOutCallback: (() -> ())?) {
         logOutButtonPressedCallBack = logOutCallback
     }
     
-    
     func setEditAccountButtonPressedCallBack(_ editAccountCallback: (() -> ())?) {
         editAccountButtonPressedCallBack = editAccountCallback
     }
     
-    
     func setDeleteAccountButtonPressedCallBack(_ deleteAccountCallback: (() -> ())?) {
         deleteAccountButtonPressedCallBack = deleteAccountCallback
     }
+}
+
+
+//MARK: - @IBActions
+
+
+extension UserMenuViewController {
+    @IBAction private func editAccountButtonPressed(_ sender: UIButton) {
+        dismiss(animated: false) {
+            self.editAccountButtonPressedCallBack?()
+        }
+    }
     
+    @IBAction private func logOutButtonPressed(_ sender: UIButton) {
+        dismiss(animated: false) {
+            self.logOutButtonPressedCallBack?()
+        }
+    }
     
+    @IBAction private func deleteAccountButtonPressed(_ sender: UIButton) {
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        navigateToDeleteAccountWarning()
+    }
+}
+
+
+//MARK: - Private methods
+
+
+extension UserMenuViewController {
+    private func deleteAccountTotally() {
+        view.isHidden = true
+        
+        dismiss(animated: false) {
+            self.deleteAccountButtonPressedCallBack?()
+        }
+    }
+    
+    private func navigateToDeleteAccountWarning() {
+        performSegue(withIdentifier: K.Segue.userMenuToDeleteAccountWarning, sender: self)
+    }
+}
+
+
+//MARK: - Set up methods
+
+
+extension UserMenuViewController {
     private func customizeViewElements() {
         backgroundView.layer.cornerRadius = 29;
         backgroundView.layer.masksToBounds = true;
@@ -65,7 +112,6 @@ class UserMenuViewController: UIViewController {
         }
     }
     
-    
     private func activateBlurEffectInContainerView() {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.regular)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
@@ -75,41 +121,11 @@ class UserMenuViewController: UIViewController {
         containerView.addSubview(dataContainerView)
     }
     
-    
-    @IBAction private func editAccountButtonPressed(_ sender: UIButton) {
-        dismiss(animated: false) {
-            self.editAccountButtonPressedCallBack?()
-        }
+    //any touch out of the UI element heads back to previous view
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        dismiss(animated: true, completion: nil)
     }
-    
-    
-    
-    @IBAction private func logOutButtonPressed(_ sender: UIButton) {
-        dismiss(animated: false) {
-            self.logOutButtonPressedCallBack?()
-        }
-    }
-    
-    
-    @IBAction private func deleteAccountButtonPressed(_ sender: UIButton) {
-        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        navigateToDeleteAccountWarning()
-    }
-    
-    
-    private func deleteAccountTotally() {
-        view.isHidden = true
-        
-        dismiss(animated: false) {
-            self.deleteAccountButtonPressedCallBack?()
-        }
-    }
-    
-
-    private func navigateToDeleteAccountWarning() {
-        performSegue(withIdentifier: K.Segue.userMenuToDeleteAccountWarning, sender: self)
-    }
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == K.Segue.userMenuToDeleteAccountWarning {
@@ -120,13 +136,5 @@ class UserMenuViewController: UIViewController {
             }
         }
     }
-    
-
-    //any touch out of the UI element heads back to previous view
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        dismiss(animated: true, completion: nil)
-    }
 }
-
 

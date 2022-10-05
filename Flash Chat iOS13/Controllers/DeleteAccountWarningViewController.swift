@@ -7,25 +7,50 @@ class DeleteAccountWarningViewController: UIViewController {
     
     private var yesButtonPressedCallBack: (() -> ())?
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         customizeViewElements()
     }
-    
-    
+}
+
+
+//MARK: - Public methods
+
+
+extension DeleteAccountWarningViewController {
     func setYesButtonPressedCallBack(_ yesCallback: (() -> ())?) {
         yesButtonPressedCallBack = yesCallback
     }
+}
+
+
+//MARK: - @IBActions
+
+
+extension DeleteAccountWarningViewController {
+    @IBAction private func yesButtonPressed(_ sender: UIButton) {
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        
+        dismiss(animated: true) {
+            self.yesButtonPressedCallBack?()
+        }
+    }
     
-    
+    @IBAction private func noButtonPressed(_ sender: UIButton) {
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+
+//MARK: - Set up methods
+
+
+extension DeleteAccountWarningViewController {
     private func customizeViewElements() {
         containerView.layer.cornerRadius = 17;
         containerView.layer.masksToBounds = true;
-        
         activateBlurEffectInBackgroundView()
     }
-    
     
     private func activateBlurEffectInBackgroundView() {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
@@ -36,22 +61,7 @@ class DeleteAccountWarningViewController: UIViewController {
         backgroundView.addSubview(containerView)
     }
     
-    
-    @IBAction private func yesButtonPressed(_ sender: UIButton) {
-        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        
-        dismiss(animated: true) {
-            self.yesButtonPressedCallBack?()
-        }
-    }
-    
-    
-    @IBAction private func noButtonPressed(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    
-//    any touch out of the UI element heads back to previous view
+    //any touch out of the UI element heads back to previous view
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         dismiss(animated: true, completion: nil)

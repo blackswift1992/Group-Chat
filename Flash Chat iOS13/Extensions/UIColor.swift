@@ -13,7 +13,6 @@ extension UIColor {
     static let brandLightMint = UIColor(named: "BrandLightMint")
     static let brandRed = UIColor(named: "BrandRed")
     
-    
     static func getRandomRGBString() -> String {
         let red = round(Double.random(in: 0.4...1.0) * 100) / 100.0
         let green = round(Double.random(in: 0.4...1.0) * 100) / 100.0
@@ -21,7 +20,6 @@ extension UIColor {
         
         return "\(red),\(green),\(blue)"
     }
-    
     
     static func getColorFromRGBString(_ rgbString: String) -> UIColor {
         let rgb = rgbString.components(separatedBy: ",").compactMap{Double($0)}
