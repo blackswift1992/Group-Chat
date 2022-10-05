@@ -23,11 +23,6 @@ class NewUserDataViewController: UIViewController {
         customizeViewElements()
     }
     
-    func setChatSender(_ chatSender: ChatUser?, errorMessage: String?) {
-        self.chatSender = chatSender
-        self.errorMessage = errorMessage
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
@@ -38,57 +33,43 @@ class NewUserDataViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationController?.isNavigationBarHidden = false
     }
-    
-    
-    private func customizeViewElements() {
-        avatarImageView.layer.cornerRadius = 50
-        avatarImageView.layer.borderWidth = 0.5
-        
-        loadPhotoButton.layer.cornerRadius = 16
-        
-        progressIndicator.hidesWhenStopped = true
-        
-        if let safeChatSender = chatSender {
-            firstNameTextField.text = safeChatSender.data.firstName
-            lastNameTextField.text = safeChatSender.data.lastName
-            avatarImageView.image = safeChatSender.avatar
-            chatSender = nil
-        }
-        
-        errorLabel.text = errorMessage
-        
+}
+
+
+//MARK: - Public methods
+
+
+extension NewUserDataViewController {
+    func setChatSender(_ chatSender: ChatUser?, errorMessage: String?) {
+        self.chatSender = chatSender
+        self.errorMessage = errorMessage
     }
-    
-    
-    private func navigateToChat() {
-        performSegue(withIdentifier: K.Segue.newUserDataToChat, sender: self)
+}
+
+
+//MARK: - Protocols
+
+
+extension NewUserDataViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        
+        avatarImageView.image = image
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == K.Segue.newUserDataToChat {
-            if let destinationVC = segue.destination as? ChatViewController {
-                destinationVC.setChatSender(chatSender)
-            }
-        }
+}
+
+
+//MARK: - @IBActions
+
+
+extension NewUserDataViewController {
+    @IBAction private func loadPhotoButtonPressed(_ sender: UIButton) {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+        present(imagePickerController, animated: true, completion: nil)
     }
-    
-    
-    private func failedWithErrorMessage(_ message: String) {
-        errorLabel.text = message
-        view.isUserInteractionEnabled = true
-        progressIndicator.stopAnimating()
-    }
-    
-    private func activateScreenWaitingMode() {
-        errorLabel.text = K.Case.emptyString
-        view.isUserInteractionEnabled = false
-        progressIndicator.startAnimating()
-    }
-    
-    
-    //MARK: - CONTINUE BUTTON
-    
-    
     
     @IBAction private func continueButtonPressed(_ sender: UIButton) {
         activateScreenWaitingMode()
@@ -101,8 +82,13 @@ class NewUserDataViewController: UIViewController {
             failedWithErrorMessage("Type your first name")
         }
     }
-    
-    
+}
+
+
+//MARK: - Private methods
+
+
+extension NewUserDataViewController {
     private func uploadAvatar() {
         guard let safeUserId = Auth.auth().currentUser?.uid,
               let safeUserEmail = Auth.auth().currentUser?.email,
@@ -148,7 +134,6 @@ class NewUserDataViewController: UIViewController {
         }
     }
     
-    
     private func uploadData(_ chatUserData: ChatUserData) {
         do {
             try Firestore.firestore().collection(K.FStore.usersCollection).document(chatUserData.userId).setData(from: chatUserData) { [weak self] error in
@@ -163,27 +148,52 @@ class NewUserDataViewController: UIViewController {
             failedWithErrorMessage("Try again")
         }
     }
-}
-
-//MARK: - LOAD PHOTO BUTTON
-
-
-
-extension NewUserDataViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-    @IBAction private func loadPhotoButtonPressed(_ sender: UIButton) {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = .photoLibrary
-        present(imagePickerController, animated: true, completion: nil)
+    
+    private func activateScreenWaitingMode() {
+        errorLabel.text = K.Case.emptyString
+        view.isUserInteractionEnabled = false
+        progressIndicator.startAnimating()
     }
     
+    private func failedWithErrorMessage(_ message: String) {
+        errorLabel.text = message
+        view.isUserInteractionEnabled = true
+        progressIndicator.stopAnimating()
+    }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        picker.dismiss(animated: true, completion: nil)
-        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+    private func navigateToChat() {
+        performSegue(withIdentifier: K.Segue.newUserDataToChat, sender: self)
+    }
+}
+
+
+//MARK: - Set up methods
+
+
+extension NewUserDataViewController {
+    private func customizeViewElements() {
+        avatarImageView.layer.cornerRadius = 50
+        avatarImageView.layer.borderWidth = 0.5
         
-        avatarImageView.image = image
+        loadPhotoButton.layer.cornerRadius = 16
+        
+        progressIndicator.hidesWhenStopped = true
+        
+        if let safeChatSender = chatSender {
+            firstNameTextField.text = safeChatSender.data.firstName
+            lastNameTextField.text = safeChatSender.data.lastName
+            avatarImageView.image = safeChatSender.avatar
+            chatSender = nil
+        }
+        
+        errorLabel.text = errorMessage
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == K.Segue.newUserDataToChat {
+            if let destinationVC = segue.destination as? ChatViewController {
+                destinationVC.setChatSender(chatSender)
+            }
+        }
     }
 }
-
-
