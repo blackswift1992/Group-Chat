@@ -496,9 +496,9 @@ extension ChatViewController: SenderMessageCellDelegate {
 
 extension ChatViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
-        //Setting empty string allow keyboard hides down correctly.
-        //Otherwise keyboard has floating size and after it hides layout becomes floating too. Maybe this issue depends on CLTypingLabel(pod) specific.
-        clearMessageTextField()
+        //Setting empty string allow keyboard hides down correctly. Otherwise keyboard has floating size and after it hides layout becomes floating too. Maybe this issue depends on CLTypingLabel(pod) specific. Other negative side is that user text in textFields disappears when keyboard moves down after user click anywhere in the screen except for keyboard.
+        //Upd: Some time later this is no longer necessary. Maybe in future it will be useful.
+//        clearMessageTextField()
     }
 }
 
