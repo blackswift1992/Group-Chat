@@ -169,10 +169,13 @@ private extension ChatViewController {
     }
     
     @IBAction func sendButtonPressed(_ sender: UIButton) {
-        if messageState == State.creation {
+        switch messageState {
+        case State.creation:
             createMessage()
-        } else if messageState == State.updating {
+        case State.updating:
             updateMessage()
+        default:
+            return
         }
     }
     
