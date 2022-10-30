@@ -121,7 +121,7 @@ private extension NewUserDataViewController {
         avatarRef.putData(safeAvatarData, metadata: avatarMetaData) {
             [weak self] metaData, error in
             DispatchQueue.main.async {
-                guard let _ = metaData else {
+                if metaData == nil {
                     self?.failedWithErrorMessage("Try again")
                     return
                 }
