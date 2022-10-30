@@ -124,7 +124,7 @@ extension NewUserDataViewController {
                     }
                     
                     let userRGBColor = self?.chatSender?.data.userRGBColor ?? UIColor.getRandomRGBString()
-                    
+
                     let chatUserData = ChatUserData(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, avatarURL: safeURL.absoluteString, userRGBColor: userRGBColor)
                     
                     self?.chatSender = ChatUser(data: chatUserData, avatar: safeCompressedAvatar)
@@ -186,7 +186,6 @@ extension NewUserDataViewController {
             firstNameTextField.text = safeChatSender.data.firstName
             lastNameTextField.text = safeChatSender.data.lastName
             avatarImageView.image = safeChatSender.avatar
-            chatSender = nil
         }
         
         errorLabel.text = errorMessage
