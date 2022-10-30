@@ -123,26 +123,28 @@ private extension NewUserDataViewController {
         
         avatarRef.putData(safeAvatarData, metadata: avatarMetaData) {
             [weak self] metaData, error in
-            DispatchQueue.main.async {
-                if metaData == nil {
+            if metaData == nil {
+                DispatchQueue.main.async {
                     self?.failedWithErrorMessage("Try again")
+                }
+                return
+            }
+            
+            avatarRef.downloadURL { [weak self] url, error in
+                guard let safeURL = url else {
+                    DispatchQueue.main.async {
+                        self?.failedWithErrorMessage("Try again")
+                    }
                     return
                 }
                 
-                avatarRef.downloadURL { [weak self] url, error in
-                    guard let safeURL = url else {
-                        self?.failedWithErrorMessage("Try again")
-                        return
-                    }
-                    
-                    let userRGBColor = self?.chatSender?.data.userRGBColor ?? UIColor.getRandomRGBString()
-
-                    let chatUserData = ChatUserData(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, avatarURL: safeURL.absoluteString, userRGBColor: userRGBColor)
-                    
-                    self?.chatSender = ChatUser(data: chatUserData, avatar: safeCompressedAvatar)
-                    
-                    self?.uploadData(chatUserData)
-                }
+                let userRGBColor = self?.chatSender?.data.userRGBColor ?? UIColor.getRandomRGBString()
+                
+                let chatUserData = ChatUserData(userId: safeUserId, userEmail: safeUserEmail, firstName: safeFirstName, lastName: safeLastName, avatarURL: safeURL.absoluteString, userRGBColor: userRGBColor)
+                
+                self?.chatSender = ChatUser(data: chatUserData, avatar: safeCompressedAvatar)
+                
+                self?.uploadData(chatUserData)
             }
         }
     }
@@ -152,7 +154,7 @@ private extension NewUserDataViewController {
         do {
             try Firestore.firestore().collection(K.FStore.usersCollection).document(chatUserData.userId).setData(from: chatUserData) { [weak self] error in
                 DispatchQueue.main.async {
-                    if let _ = error {
+                    if error != nil {
                         self?.failedWithErrorMessage("Try again")
                     } else {
                         self?.navigateToChat()
@@ -160,8 +162,10 @@ private extension NewUserDataViewController {
                 }
             }
         } catch let error {
-            print("Error writing city to Firestore: \(error)")
-            failedWithErrorMessage("Try again")
+            DispatchQueue.main.async {
+                print("Error writing city to Firestore: \(error)")
+                self.failedWithErrorMessage("Try again")
+            }
         }
     }
     

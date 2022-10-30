@@ -47,13 +47,14 @@ private extension LogInViewController {
         
         Auth.auth().signIn(withEmail: safeUserEmail, password: safeUserPassword) {
             [weak self] authResult, error in
-            DispatchQueue.main.async {
-                if let safeError = error {
-                    print(safeError)
+            if let safeError = error {
+                print(safeError)
+                
+                DispatchQueue.main.async {
                     self?.failedToLogIn(withMessage: safeError.localizedDescription)
-                } else {
-                    self?.checkIsUserDataExists()
                 }
+            } else {
+                self?.checkIsUserDataExists()
             }
         }
     }
@@ -67,7 +68,9 @@ private extension LogInViewController {
     //MARK: -- user data checking
     func checkIsUserDataExists() {
         guard let safeCurrentUserId = Auth.auth().currentUser?.uid else {
-            self.failedToLogIn(withMessage: "Try again")
+            DispatchQueue.main.async {
+                self.failedToLogIn(withMessage: "Try again")
+            }
             return
         }
         
