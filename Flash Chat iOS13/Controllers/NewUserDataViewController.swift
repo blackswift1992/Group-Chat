@@ -83,7 +83,10 @@ private extension NewUserDataViewController {
     @IBAction func continueButtonPressed(_ sender: UIButton) {
         activateScreenWaitingMode()
 
-        guard let safeFirstName = firstNameTextField.text?.trim() else { return }
+        guard let safeFirstName = firstNameTextField.text?.trim() else {
+            failedWithErrorMessage("Don't use only spaces in first name")
+            return
+        }
 
         if !safeFirstName.isEmpty {
             uploadAvatar()
