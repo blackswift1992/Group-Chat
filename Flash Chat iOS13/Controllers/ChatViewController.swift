@@ -333,7 +333,7 @@ private extension ChatViewController {
 
     //MARK: -- account editing
     func editAccount() {
-        if let _ = chatSender {
+        if chatSender != nil {
             errorMessage = K.Case.emptyString
             navigateToNewUserData()
         }

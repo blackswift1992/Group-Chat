@@ -80,12 +80,16 @@ private extension LogInViewController {
                     self?.downloadAvatar(with: chatUserData.avatarURL)
                 }
                 catch {
-                    self?.failedToLogIn(withMessage: "Try again")
+                    DispatchQueue.main.async {
+                        self?.failedToLogIn(withMessage: "Try again")
+                    }
                     return
                 }
             } else {
                 self?.errorMessage = "Your user data doesn't exist. Set it please."
-                self?.navigateToNewUserData()
+                DispatchQueue.main.async {
+                    self?.navigateToNewUserData()
+                }
             }
         }
     }
@@ -100,17 +104,25 @@ private extension LogInViewController {
                 print(safeError)
                 
                 self?.errorMessage = "Your avatar does not exist. Set it or click \"Continue\" to leave the default one."
-                self?.navigateToNewUserData()
+                
+                DispatchQueue.main.async {
+                    self?.navigateToNewUserData()
+                }
             } else {
                 guard let safeAvatarData = data,
                       let safeAvatar = UIImage(data: safeAvatarData)
                 else {
-                    self?.failedToLogIn(withMessage: "Try again")
+                    DispatchQueue.main.async {
+                        self?.failedToLogIn(withMessage: "Try again")
+                    }
                     return
                 }
                 
                 self?.chatSender?.avatar = safeAvatar
-                self?.navigateToChat()
+                
+                DispatchQueue.main.async {
+                    self?.navigateToChat()
+                }
             }
         }
     }

@@ -151,10 +151,12 @@ private extension NewUserDataViewController {
     func uploadData(_ chatUserData: ChatUserData) {
         do {
             try Firestore.firestore().collection(K.FStore.usersCollection).document(chatUserData.userId).setData(from: chatUserData) { [weak self] error in
-                if let _ = error {
-                    self?.failedWithErrorMessage("Try again")
-                } else {
-                    self?.navigateToChat()
+                DispatchQueue.main.async {
+                    if let _ = error {
+                        self?.failedWithErrorMessage("Try again")
+                    } else {
+                        self?.navigateToChat()
+                    }
                 }
             }
         } catch let error {
