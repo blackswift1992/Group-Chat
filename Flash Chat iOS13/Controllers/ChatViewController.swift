@@ -39,6 +39,43 @@ class ChatViewController: UIViewController {
         registerTableViewNibs()
         loadMessages()
     }
+    
+    //MARK: -- preparing for segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == K.Segue.chatToMessageMenu {
+            if let destinationVC = segue.destination as? MessageMenuViewController {
+                destinationVC.setEditButtonPressedCallBack({ [weak self] in
+                    self?.editSelectedMessage()
+                })
+                
+                destinationVC.setDeleteButtonPressedCallBack({ [weak self] in
+                    self?.deleteSelectedMessage()
+                })
+            }
+        } else if segue.identifier == K.Segue.chatToUserMenu {
+            moveDownKeyboard()
+            
+            if let destinationVC = segue.destination as? UserMenuViewController {
+                destinationVC.setChatSender(chatSender)
+                
+                destinationVC.setEditAccountButtonPressedCallBack { [weak self] in
+                    self?.editAccount()
+                }
+                
+                destinationVC.setLogOutButtonPressedCallBack({ [weak self] in
+                    self?.logOut()
+                })
+                
+                destinationVC.setDeleteAccountButtonPressedCallBack({ [weak self] in
+                    self?.deleteAccountTotally()
+                })
+            }
+        } else if segue.identifier == K.Segue.chatToNewUserData {
+            if let destinationVC = segue.destination as? NewUserDataViewController {
+                destinationVC.setChatSender(chatSender, errorMessage: errorMessage)
+            }
+        }
+    }
 }
 
 
@@ -126,12 +163,12 @@ extension ChatViewController: UITextFieldDelegate {
 //MARK: - @IBActions
 
 
-extension ChatViewController {
-    @IBAction private func userMenuBarButtonPressed(_ sender: UIBarButtonItem) {
+private extension ChatViewController {
+    @IBAction func userMenuBarButtonPressed(_ sender: UIBarButtonItem) {
         navigateToUserMenu()
     }
     
-    @IBAction private func sendButtonPressed(_ sender: UIButton) {
+    @IBAction func sendButtonPressed(_ sender: UIButton) {
         if messageState == State.creation {
             createMessage()
         } else if messageState == State.updating {
@@ -139,7 +176,7 @@ extension ChatViewController {
         }
     }
     
-    @IBAction private func cancelButtonPressed(_ sender: UIButton) {
+    @IBAction func cancelButtonPressed(_ sender: UIButton) {
         clearMessageTextField()
         finishMessageEditing()
     }
@@ -149,9 +186,9 @@ extension ChatViewController {
 //MARK: - Private methods
 
 
-extension ChatViewController {
+private extension ChatViewController {
     //MARK: -- messages loading
-    private func loadMessages() {
+    func loadMessages() {
         realtimeDbListener = db.collection(K.FStore.messagesCollection).order(by: K.FStore.dateField).addSnapshotListener { [weak self] (querySnapshot, error) in
             if let safeError = error {
                 print("Error load messages: \(safeError)")
@@ -183,7 +220,7 @@ extension ChatViewController {
         }
     }
     
-    private func showLoadedMessages() {
+    func showLoadedMessages() {
         tableView.reloadData()
         
         if messageState == State.creation {
@@ -197,7 +234,7 @@ extension ChatViewController {
     }
     
     //MARK: -- message creation
-    private func createMessage() {
+    func createMessage() {
         guard let safeMessageBody = messageTextField.text?.trim() else { return }
 
         if !safeMessageBody.isEmpty {
@@ -227,7 +264,7 @@ extension ChatViewController {
     }
     
     //MARK: -- message updating
-    private func updateMessage() {
+    func updateMessage() {
         guard let safeMessageBody = messageTextField.text?.trim() else { return }
         
         if !safeMessageBody.isEmpty {
@@ -263,7 +300,7 @@ extension ChatViewController {
     
     
     //MARK: -- message editing
-    private func editSelectedMessage() {
+    func editSelectedMessage() {
         guard let selectedMessageTextBody = selectedSenderMessage?.data.textBody,
               let selectedMessageCellRow = selectedSenderMessage?.cellRow
         else { return }
@@ -279,7 +316,7 @@ extension ChatViewController {
     
     
     //MARK: -- message deleting
-    private func deleteSelectedMessage() {
+    func deleteSelectedMessage() {
         guard let selectedMessageId = selectedSenderMessage?.data.documentId
         else { return }
         
@@ -295,7 +332,7 @@ extension ChatViewController {
     }
 
     //MARK: -- account editing
-    private func editAccount() {
+    func editAccount() {
         if let _ = chatSender {
             errorMessage = K.Case.emptyString
             navigateToNewUserData()
@@ -304,7 +341,7 @@ extension ChatViewController {
     
     
     //MARK: -- account deleting
-    private func deleteAccountTotally() {
+    func deleteAccountTotally() {
         if let safeUser = Auth.auth().currentUser {
             showDeletionScreensaver()
             setUserInteraction(isEnabled: false)
@@ -313,7 +350,7 @@ extension ChatViewController {
         }
     }
     
-    private func deleteAccountAvatar(forUser user: User) {
+    func deleteAccountAvatar(forUser user: User) {
         Storage.storage().reference().child(K.FStore.avatarsCollection).child(user.uid).delete { [weak self] error in
             if let safeError = error {
                 print("Avatar deletion was failed: \(safeError)")
@@ -326,7 +363,7 @@ extension ChatViewController {
         }
     }
     
-    private func deleteAccountData(forUser user: User) {
+    func deleteAccountData(forUser user: User) {
         db.collection(K.FStore.usersCollection).document(user.uid).delete { [weak self] error in
             if let safeError = error {
                 print("User data deletion was failed: \(safeError)")
@@ -337,7 +374,7 @@ extension ChatViewController {
         }
     }
     
-    private func deleteAccountMessages(forUser user: User) {
+    func deleteAccountMessages(forUser user: User) {
         stopTableViewCellsUpdating()
 
         db.collection(K.FStore.messagesCollection)
@@ -376,7 +413,7 @@ extension ChatViewController {
         }
     }
 
-    private func deleteAccount(forUser user: User) {
+    func deleteAccount(forUser user: User) {
         user.delete { [weak self] error in
             if let safeError = error {
                 print("User deletion was failed: \(safeError)")
@@ -387,14 +424,14 @@ extension ChatViewController {
         }
     }
     
-    private func failedToDeleteAccount() {
+    func failedToDeleteAccount() {
         errorMessage = "Account deletion was failed. Click \"Continue\" and try again."
         deletingViewLabel.stopBlink()
         navigateToNewUserData()
     }
     
     //MARK: -- log out
-    private func logOut() {
+    func logOut() {
         setUserInteraction(isEnabled: false)
         
         do {
@@ -408,49 +445,49 @@ extension ChatViewController {
     
     //MARK: -- others
     
-    private func finishMessageEditing() {
+    func finishMessageEditing() {
         messageState = State.creation
         hideEditingBlockView()
         setCreationAppearanceToSendButton()
     }
     
-    private func startMessageEditing() {
+    func startMessageEditing() {
         messageState = State.updating
         showEditingBlockView()
         setEditingAppearanceToSendButton()
         moveUpKeyboard()
     }
     
-    private func setUserInteraction(isEnabled state: Bool) {
+    func setUserInteraction(isEnabled state: Bool) {
         navigationController?.navigationBar.isUserInteractionEnabled = state
         view.isUserInteractionEnabled = state
     }
     
-    private func hideEditingBlockView() {
+    func hideEditingBlockView() {
         UIView.animate(withDuration: 0.3) {
             self.tableView.transform = .identity
             self.editingBlockView.transform = CGAffineTransform(translationX: 0.0, y: +50.0)
         }
     }
     
-    private func showEditingBlockView() {
+    func showEditingBlockView() {
         UIView.animate(withDuration: 0.3) {
             self.tableView.transform = CGAffineTransform(translationX: 0.0, y: -50.0)
             self.editingBlockView.transform = .identity
         }
     }
     
-    private func hideDeletionScreensaver() {
+    func hideDeletionScreensaver() {
         deletingView.isHidden = true
     }
     
-    private func showDeletionScreensaver() {
+    func showDeletionScreensaver() {
         activateBlurEffectInDeletingView()
         deletingViewLabel.startBlink()
         deletingView.isHidden = false
     }
     
-    private func activateBlurEffectInDeletingView() {
+    func activateBlurEffectInDeletingView() {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = deletingView.bounds
@@ -459,56 +496,56 @@ extension ChatViewController {
         deletingView.addSubview(deletingViewLabel)
     }
     
-    private func setCreationAppearanceToSendButton() {
+    func setCreationAppearanceToSendButton() {
         sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
         sendButton.tintColor = UIColor.brandLightBlue
     }
     
-    private func setEditingAppearanceToSendButton() {
+    func setEditingAppearanceToSendButton() {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
         let largeBoldDoc = UIImage(systemName: "checkmark.circle.fill", withConfiguration: largeConfig)
         sendButton.setImage(largeBoldDoc, for: .normal)
         sendButton.tintColor = UIColor.brandMint
     }
     
-    private func clearMessageTextField() {
+    func clearMessageTextField() {
         messageTextField.text = K.Case.emptyString
     }
     
-    private func moveUpKeyboard() {
+    func moveUpKeyboard() {
         messageTextField.becomeFirstResponder()
     }
     
-    private func moveDownKeyboard() {
+    func moveDownKeyboard() {
         messageTextField.resignFirstResponder()
     }
     
-    private func stopTableViewCellsUpdating() {
+    func stopTableViewCellsUpdating() {
         realtimeDbListener?.remove()
     }
     
-    @objc private func chatAvatarLeftBarButtonPressed() {
+    @objc func chatAvatarLeftBarButtonPressed() {
         //for future
         print(#function)
     }
     
-    private func navigateToMessageMenu() {
+    func navigateToMessageMenu() {
         performSegue(withIdentifier: K.Segue.chatToMessageMenu, sender: self)
     }
     
-    private func navigateToUserMenu() {
+    func navigateToUserMenu() {
         performSegue(withIdentifier: K.Segue.chatToUserMenu, sender: self)
     }
     
-    private func navigateToEditMessageWarning() {
+    func navigateToEditMessageWarning() {
         performSegue(withIdentifier: K.Segue.chatToEditMessageWarning, sender: self)
     }
     
-    private func navigateToWelcome() {
+    func navigateToWelcome() {
         navigationController?.popToRootViewController(animated: true)
     }
     
-    private func navigateToNewUserData() {
+    func navigateToNewUserData() {
         performSegue(withIdentifier: K.Segue.chatToNewUserData, sender: self)
     }
 }
@@ -517,9 +554,9 @@ extension ChatViewController {
 //MARK: - Set up methods
 
 
-extension ChatViewController {
+private extension ChatViewController {
     //MARK: -- ui customization
-    private func customizeViewElements() {
+    func customizeViewElements() {
         customizeChatAvatar()
         customizeNavigationTitle()
         customizeEditingBlockView()
@@ -528,13 +565,13 @@ extension ChatViewController {
     
     
     
-    private func customizeEditingBlockView() {
+    func customizeEditingBlockView() {
         editingBlockCancelButton.setTitle(K.Case.emptyString, for: .normal)
         editingBlockCancelButton.tintColor = UIColor.brandDarkMint
         editingBlockView.transform = CGAffineTransform(translationX: 0.0, y: +50.0)
     }
     
-    private func customizeNavigationTitle() {
+    func customizeNavigationTitle() {
         guard let safeColor =  UIColor.brandLightMint,
               let safeFont = UIFont.getAvenirNextHeavy(size: 20)
         else { return }
@@ -553,14 +590,14 @@ extension ChatViewController {
         navigationItem.titleView = titleLabel
     }
     
-    private func customizeMessageTextField() {
+    func customizeMessageTextField() {
         messageTextField.layer.cornerRadius = 18
         messageTextField.setLeftPaddingPoints(10)
         messageTextField.setRightPaddingPoints(10)
     }
     
     //MARK: -- setting a chat avatar
-    private func customizeChatAvatar() {
+    func customizeChatAvatar() {
         guard let safeSenderId = Auth.auth().currentUser?.uid else { return }
         
         db.collection(K.FStore.usersCollection).whereField(K.FStore.userIdField, isNotEqualTo: safeSenderId).getDocuments() { [weak self] (querySnapshot, error) in
@@ -582,7 +619,7 @@ extension ChatViewController {
         }
     }
     
-    private func downloadChatAvatar(stringURL: String) {
+    func downloadChatAvatar(stringURL: String) {
         let ref = Storage.storage().reference(forURL: stringURL)
         
         let megaByte = Int64(1 * 1024 * 1024)
@@ -600,7 +637,7 @@ extension ChatViewController {
         }
     }
     
-    private func setLeftBarButtonItem(with image: UIImage?){
+    func setLeftBarButtonItem(with image: UIImage?){
         let button = UIButton(type: .custom)
         button.frame = CGRect(x: 0.0, y: 0.0, width: 38, height: 38)
         button.setImage(image, for: .normal)
@@ -618,47 +655,10 @@ extension ChatViewController {
     }
     
     //MARK: -- nibs registration
-    private func registerTableViewNibs() {
+    func registerTableViewNibs() {
         tableView.register(UINib(nibName: K.TableCell.greetingNibName, bundle: nil), forCellReuseIdentifier: K.TableCell.greetingNibIdentifier)
         tableView.register(UINib(nibName: K.TableCell.senderNibName, bundle: nil), forCellReuseIdentifier: K.TableCell.senderNibIdentifier)
         tableView.register(UINib(nibName: K.TableCell.receiverNibName, bundle: nil), forCellReuseIdentifier: K.TableCell.receiverNibIdentifier)
-    }
-    
-    //MARK: -- preparing for segue
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == K.Segue.chatToMessageMenu {
-            if let destinationVC = segue.destination as? MessageMenuViewController {
-                destinationVC.setEditButtonPressedCallBack({ [weak self] in
-                    self?.editSelectedMessage()
-                })
-                
-                destinationVC.setDeleteButtonPressedCallBack({ [weak self] in
-                    self?.deleteSelectedMessage()
-                })
-            }
-        } else if segue.identifier == K.Segue.chatToUserMenu {
-            moveDownKeyboard()
-            
-            if let destinationVC = segue.destination as? UserMenuViewController {
-                destinationVC.setChatSender(chatSender)
-                
-                destinationVC.setEditAccountButtonPressedCallBack { [weak self] in
-                    self?.editAccount()
-                }
-                
-                destinationVC.setLogOutButtonPressedCallBack({ [weak self] in
-                    self?.logOut()
-                })
-                
-                destinationVC.setDeleteAccountButtonPressedCallBack({ [weak self] in
-                    self?.deleteAccountTotally()
-                })
-            }
-        } else if segue.identifier == K.Segue.chatToNewUserData {
-            if let destinationVC = segue.destination as? NewUserDataViewController {
-                destinationVC.setChatSender(chatSender, errorMessage: errorMessage)
-            }
-        }
     }
 }
 
@@ -666,8 +666,8 @@ extension ChatViewController {
 //MARK: - MESSAGE STATES
 
 
-extension ChatViewController {
-    private enum State {
+private extension ChatViewController {
+    enum State {
         case creation, updating, deleting
     }
 }

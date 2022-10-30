@@ -30,8 +30,8 @@ extension ReceiverMessageCell {
 //MARK: - Set up methods
 
 
-extension ReceiverMessageCell {
-    private func customizeViewElements() {
+private extension ReceiverMessageCell {
+    func customizeViewElements() {
             let cornerRadius = messageBubble.frame.size.height / 2.30
             messageBubble.layer.cornerRadius = cornerRadius
             messageButton.layer.cornerRadius = cornerRadius

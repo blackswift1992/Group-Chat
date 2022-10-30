@@ -21,8 +21,8 @@ class SignUpViewController: UIViewController {
 //MARK: - @IBActions
 
 
-extension SignUpViewController {
-    @IBAction private func signUpButtonPressed(_ sender: UIButton) {
+private extension SignUpViewController {
+    @IBAction func signUpButtonPressed(_ sender: UIButton) {
         guard let safeUserEmail = emailTextfield.text,
               let safeUserPassword = passwordTextfield.text else { return }
         
@@ -45,20 +45,20 @@ extension SignUpViewController {
 //MARK: - Private methods
 
 
-extension SignUpViewController {
-    private func activateScreenWaitingMode() {
+private extension SignUpViewController {
+    func activateScreenWaitingMode() {
         errorLabel.text = K.Case.emptyString
         view.isUserInteractionEnabled = false
         progressIndicator.startAnimating()
     }
     
-    private func failedToSignUp(withMessage message: String) {
+    func failedToSignUp(withMessage message: String) {
         errorLabel.text = message
         view.isUserInteractionEnabled = true
         progressIndicator.stopAnimating()
     }
     
-    private func navigateToNewUserData() {
+    func navigateToNewUserData() {
         performSegue(withIdentifier: K.Segue.signUpToNewUserData, sender: self)
     }
 }
@@ -67,8 +67,8 @@ extension SignUpViewController {
 //MARK: - Set up methods
 
 
-extension SignUpViewController {
-    private func customizeViewElements() {
+private extension SignUpViewController {
+    func customizeViewElements() {
         progressIndicator.hidesWhenStopped = true
     }
 }

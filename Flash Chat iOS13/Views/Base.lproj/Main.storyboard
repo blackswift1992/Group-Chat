@@ -19,21 +19,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dWe-nW-2HB">
-                                <rect key="frame" x="100" y="834" width="214" height="28"/>
-                                <color key="backgroundColor" name="BrandDarkGray"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="45" translatesAutoresizingMaskIntoConstraints="NO" id="1dP-Vv-XmK" customClass="CLTypingLabel" customModule="CLTypingLabel">
+                                <rect key="frame" x="15" y="363" width="369" height="80"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="28" id="SnA-Gb-m65"/>
+                                    <constraint firstAttribute="height" constant="80" id="wCu-vd-BB9"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="Sign Up">
-                                    <color key="titleColor" name="BrandMint"/>
-                                </state>
-                                <connections>
-                                    <segue destination="BYZ-38-t0r" kind="show" id="exF-dw-9J3"/>
-                                </connections>
-                            </button>
+                                <fontDescription key="fontDescription" name="AvenirNext-Heavy" family="Avenir Next" pointSize="53"/>
+                                <color key="textColor" name="BrandLightMint"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h2x-tz-C9Y">
                                 <rect key="frame" x="50" y="773" width="314" height="48"/>
                                 <color key="backgroundColor" name="BrandMint"/>
@@ -50,15 +44,21 @@
                                     <segue destination="5v2-hE-4Ub" kind="show" id="aN2-FI-xwp"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="45" translatesAutoresizingMaskIntoConstraints="NO" id="1dP-Vv-XmK" customClass="CLTypingLabel" customModule="CLTypingLabel">
-                                <rect key="frame" x="15" y="363" width="369" height="80"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dWe-nW-2HB">
+                                <rect key="frame" x="100" y="834" width="214" height="28"/>
+                                <color key="backgroundColor" name="BrandDarkGray"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="wCu-vd-BB9"/>
+                                    <constraint firstAttribute="height" constant="28" id="SnA-Gb-m65"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="AvenirNext-Heavy" family="Avenir Next" pointSize="53"/>
-                                <color key="textColor" name="BrandLightMint"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Sign Up">
+                                    <color key="titleColor" name="BrandMint"/>
+                                </state>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="show" id="exF-dw-9J3"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="w0w-hE-MVy"/>
                         <color key="backgroundColor" name="BrandGray5"/>
@@ -791,11 +791,11 @@
             <objects>
                 <viewController id="L8K-gF-GuO" customClass="MessageMenuViewController" customModule="Flash_Chat_iOS13" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="i0K-4S-jDw">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="838"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jpb-N9-i71">
-                                <rect key="frame" x="0.0" y="758" width="414" height="80"/>
+                                <rect key="frame" x="0.0" y="816" width="414" height="80"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="hbc-dY-yaS">
                                         <rect key="frame" x="10" y="10" width="394" height="40"/>
@@ -865,14 +865,14 @@
             <objects>
                 <viewController id="vgI-qo-t4P" customClass="EditMessageWarningViewController" customModule="Flash_Chat_iOS13" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="99s-tD-LCR">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="838"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sux-Jr-1AP">
-                                <rect key="frame" x="0.0" y="92" width="414" height="700"/>
+                                <rect key="frame" x="0.0" y="92" width="414" height="724"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="TH2-WC-b7V">
-                                        <rect key="frame" x="67" y="285" width="280" height="130"/>
+                                        <rect key="frame" x="67" y="297" width="280" height="130"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="egH-tl-pjf">
                                                 <rect key="frame" x="0.0" y="0.0" width="280" height="79"/>

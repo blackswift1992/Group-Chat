@@ -11,6 +11,12 @@ class DeleteAccountWarningViewController: UIViewController {
         super.viewDidLoad()
         customizeViewElements()
     }
+    
+    //any touch out of the UI element heads back to previous view
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 
@@ -27,8 +33,8 @@ extension DeleteAccountWarningViewController {
 //MARK: - @IBActions
 
 
-extension DeleteAccountWarningViewController {
-    @IBAction private func yesButtonPressed(_ sender: UIButton) {
+private extension DeleteAccountWarningViewController {
+    @IBAction func yesButtonPressed(_ sender: UIButton) {
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         
         dismiss(animated: true) {
@@ -36,7 +42,7 @@ extension DeleteAccountWarningViewController {
         }
     }
     
-    @IBAction private func noButtonPressed(_ sender: UIButton) {
+    @IBAction func noButtonPressed(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
 }
@@ -45,26 +51,20 @@ extension DeleteAccountWarningViewController {
 //MARK: - Set up methods
 
 
-extension DeleteAccountWarningViewController {
-    private func customizeViewElements() {
+private extension DeleteAccountWarningViewController {
+    func customizeViewElements() {
         containerView.layer.cornerRadius = 17;
         containerView.layer.masksToBounds = true;
         activateBlurEffectInBackgroundView()
     }
     
-    private func activateBlurEffectInBackgroundView() {
+    func activateBlurEffectInBackgroundView() {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = backgroundView.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         backgroundView.addSubview(blurEffectView)
         backgroundView.addSubview(containerView)
-    }
-    
-    //any touch out of the UI element heads back to previous view
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        dismiss(animated: true, completion: nil)
     }
 }
 

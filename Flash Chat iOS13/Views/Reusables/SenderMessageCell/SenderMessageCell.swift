@@ -39,8 +39,8 @@ extension SenderMessageCell {
 //MARK: - @IBActions
 
 
-extension SenderMessageCell {
-    @IBAction private func messageButtonPressed(_ sender: UIButton) {
+private extension SenderMessageCell {
+    @IBAction func messageButtonPressed(_ sender: UIButton) {
         guard let safeSenderMessage = senderMessage else { return }
         
         setMessageColor(UIColor.brandDarkMint)
@@ -64,8 +64,8 @@ extension SenderMessageCell {
 //MARK: - Private methods
 
 
-extension SenderMessageCell {
-    private func setMessageColor(_ color: UIColor?) {
+private extension SenderMessageCell {
+    func setMessageColor(_ color: UIColor?) {
         messageBubble.backgroundColor = color
         messageTail.tintColor = color
     }
@@ -75,8 +75,8 @@ extension SenderMessageCell {
 //MARK: - Set up methods
 
 
-extension SenderMessageCell {
-    private func customizeViewElements() {
+private extension SenderMessageCell {
+    func customizeViewElements() {
         let cornerRadius = messageBubble.frame.size.height / 2.30
         messageBubble.layer.cornerRadius = cornerRadius
         messageButton.layer.cornerRadius = cornerRadius

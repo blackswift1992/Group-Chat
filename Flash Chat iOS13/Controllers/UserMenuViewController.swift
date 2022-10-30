@@ -23,6 +23,23 @@ class UserMenuViewController: UIViewController {
         super.viewDidLoad()
         customizeViewElements()
     }
+    
+    //any touch out of the UI element heads back to previous view
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    //MARK: -- preparing for segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == K.Segue.userMenuToDeleteAccountWarning {
+            if let destinationVC = segue.destination as? DeleteAccountWarningViewController {
+                destinationVC.setYesButtonPressedCallBack({ [weak self] in
+                    self?.deleteAccountTotally()
+                })
+            }
+        }
+    }
 }
 
 
@@ -51,20 +68,20 @@ extension UserMenuViewController {
 //MARK: - @IBActions
 
 
-extension UserMenuViewController {
-    @IBAction private func editAccountButtonPressed(_ sender: UIButton) {
+private extension UserMenuViewController {
+    @IBAction func editAccountButtonPressed(_ sender: UIButton) {
         dismiss(animated: false) {
             self.editAccountButtonPressedCallBack?()
         }
     }
     
-    @IBAction private func logOutButtonPressed(_ sender: UIButton) {
+    @IBAction func logOutButtonPressed(_ sender: UIButton) {
         dismiss(animated: false) {
             self.logOutButtonPressedCallBack?()
         }
     }
     
-    @IBAction private func deleteAccountButtonPressed(_ sender: UIButton) {
+    @IBAction func deleteAccountButtonPressed(_ sender: UIButton) {
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         navigateToDeleteAccountWarning()
     }
@@ -74,8 +91,8 @@ extension UserMenuViewController {
 //MARK: - Private methods
 
 
-extension UserMenuViewController {
-    private func deleteAccountTotally() {
+private extension UserMenuViewController {
+    func deleteAccountTotally() {
         view.isHidden = true
         
         dismiss(animated: false) {
@@ -83,7 +100,7 @@ extension UserMenuViewController {
         }
     }
     
-    private func navigateToDeleteAccountWarning() {
+    func navigateToDeleteAccountWarning() {
         performSegue(withIdentifier: K.Segue.userMenuToDeleteAccountWarning, sender: self)
     }
 }
@@ -92,8 +109,8 @@ extension UserMenuViewController {
 //MARK: - Set up methods
 
 
-extension UserMenuViewController {
-    private func customizeViewElements() {
+private extension UserMenuViewController {
+    func customizeViewElements() {
         backgroundView.layer.cornerRadius = 29;
         backgroundView.layer.masksToBounds = true;
         
@@ -112,29 +129,13 @@ extension UserMenuViewController {
         }
     }
     
-    private func activateBlurEffectInContainerView() {
+    func activateBlurEffectInContainerView() {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.regular)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = containerView.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         containerView.addSubview(blurEffectView)
         containerView.addSubview(dataContainerView)
-    }
-    
-    //any touch out of the UI element heads back to previous view
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        dismiss(animated: true, completion: nil)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == K.Segue.userMenuToDeleteAccountWarning {
-            if let destinationVC = segue.destination as? DeleteAccountWarningViewController {
-                destinationVC.setYesButtonPressedCallBack({ [weak self] in
-                    self?.deleteAccountTotally()
-                })
-            }
-        }
     }
 }
 

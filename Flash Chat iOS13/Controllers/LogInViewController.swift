@@ -19,14 +19,27 @@ class LogInViewController: UIViewController {
         super.viewDidLoad()
         customizeViewElements()
     }
+    
+    //MARK: -- preparing for segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == K.Segue.logInToChat {
+            if let destinationVC = segue.destination as? ChatViewController {
+                destinationVC.setChatSender(chatSender)
+            }
+        } else if segue.identifier == K.Segue.logInToNewUserData {
+            if let destinationVC = segue.destination as? NewUserDataViewController {
+                destinationVC.setChatSender(chatSender, errorMessage: errorMessage)
+            }
+        }
+    }
 }
 
 
 //MARK: - @IBActions
 
 
-extension LogInViewController {
-    @IBAction private func logInButtonPressed(_ sender: UIButton) {
+private extension LogInViewController {
+    @IBAction func logInButtonPressed(_ sender: UIButton) {
         guard let safeUserEmail = emailTextfield.text,
               let safeUserPassword = passwordTextfield.text else { return }
         
@@ -50,9 +63,9 @@ extension LogInViewController {
 //MARK: - Private methods
 
 
-extension LogInViewController {
+private extension LogInViewController {
     //MARK: -- user data checking
-    private func checkIsUserDataExists() {
+    func checkIsUserDataExists() {
         guard let safeCurrentUserId = Auth.auth().currentUser?.uid else {
             self.failedToLogIn(withMessage: "Try again")
             return
@@ -77,7 +90,7 @@ extension LogInViewController {
         }
     }
     
-    private func downloadAvatar(with url: String) {
+    func downloadAvatar(with url: String) {
         let ref = Storage.storage().reference(forURL: url)
         
         let megaByte = Int64(1 * 1024 * 1024)
@@ -103,24 +116,24 @@ extension LogInViewController {
     }
     
     //MARK: -- others
-    private func activateScreenWaitingMode() {
+    func activateScreenWaitingMode() {
         errorLabel.text = K.Case.emptyString
         view.isUserInteractionEnabled = false
         progressIndicator.startAnimating()
     }
     
-    private func failedToLogIn(withMessage message: String) {
+    func failedToLogIn(withMessage message: String) {
         errorLabel.text = message
         view.isUserInteractionEnabled = true
         progressIndicator.stopAnimating()
     }
     
-    private func navigateToChat() {
+    func navigateToChat() {
         performSegue(withIdentifier: K.Segue.logInToChat, sender: self)
     }
     
     
-    private func navigateToNewUserData() {
+    func navigateToNewUserData() {
         performSegue(withIdentifier: K.Segue.logInToNewUserData, sender: self)
     }
 }
@@ -129,21 +142,9 @@ extension LogInViewController {
 //MARK: - Set up methods
 
 
-extension LogInViewController {
-    private func customizeViewElements() {
+private extension LogInViewController {
+    func customizeViewElements() {
         progressIndicator.hidesWhenStopped = true
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == K.Segue.logInToChat {
-            if let destinationVC = segue.destination as? ChatViewController {
-                destinationVC.setChatSender(chatSender)
-            }
-        } else if segue.identifier == K.Segue.logInToNewUserData {
-            if let destinationVC = segue.destination as? NewUserDataViewController {
-                destinationVC.setChatSender(chatSender, errorMessage: errorMessage)
-            }
-        }
     }
 }
 

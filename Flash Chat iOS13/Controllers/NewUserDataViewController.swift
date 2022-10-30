@@ -33,6 +33,15 @@ class NewUserDataViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationController?.isNavigationBarHidden = false
     }
+    
+    //MARK: -- preparing for segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == K.Segue.newUserDataToChat {
+            if let destinationVC = segue.destination as? ChatViewController {
+                destinationVC.setChatSender(chatSender)
+            }
+        }
+    }
 }
 
 
@@ -63,15 +72,15 @@ extension NewUserDataViewController: UINavigationControllerDelegate, UIImagePick
 //MARK: - @IBActions
 
 
-extension NewUserDataViewController {
-    @IBAction private func loadPhotoButtonPressed(_ sender: UIButton) {
+private extension NewUserDataViewController {
+    @IBAction func loadPhotoButtonPressed(_ sender: UIButton) {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         imagePickerController.sourceType = .photoLibrary
         present(imagePickerController, animated: true, completion: nil)
     }
     
-    @IBAction private func continueButtonPressed(_ sender: UIButton) {
+    @IBAction func continueButtonPressed(_ sender: UIButton) {
         activateScreenWaitingMode()
 
         guard let safeFirstName = firstNameTextField.text?.trim() else { return }
@@ -88,9 +97,9 @@ extension NewUserDataViewController {
 //MARK: - Private methods
 
 
-extension NewUserDataViewController {
+private extension NewUserDataViewController {
     //MARK: -- avatar uploading
-    private func uploadAvatar() {
+    func uploadAvatar() {
         guard let safeUserId = Auth.auth().currentUser?.uid,
               let safeUserEmail = Auth.auth().currentUser?.email,
               let safeFirstName = firstNameTextField.text?.trim(),
@@ -136,7 +145,7 @@ extension NewUserDataViewController {
     }
     
     //MARK: -- data uploading
-    private func uploadData(_ chatUserData: ChatUserData) {
+    func uploadData(_ chatUserData: ChatUserData) {
         do {
             try Firestore.firestore().collection(K.FStore.usersCollection).document(chatUserData.userId).setData(from: chatUserData) { [weak self] error in
                 if let _ = error {
@@ -152,19 +161,19 @@ extension NewUserDataViewController {
     }
     
     //MARK: -- others
-    private func activateScreenWaitingMode() {
+    func activateScreenWaitingMode() {
         errorLabel.text = K.Case.emptyString
         view.isUserInteractionEnabled = false
         progressIndicator.startAnimating()
     }
     
-    private func failedWithErrorMessage(_ message: String) {
+    func failedWithErrorMessage(_ message: String) {
         errorLabel.text = message
         view.isUserInteractionEnabled = true
         progressIndicator.stopAnimating()
     }
     
-    private func navigateToChat() {
+    func navigateToChat() {
         performSegue(withIdentifier: K.Segue.newUserDataToChat, sender: self)
     }
 }
@@ -173,8 +182,8 @@ extension NewUserDataViewController {
 //MARK: - Set up methods
 
 
-extension NewUserDataViewController {
-    private func customizeViewElements() {
+private extension NewUserDataViewController {
+    func customizeViewElements() {
         avatarImageView.layer.cornerRadius = 50
         avatarImageView.layer.borderWidth = 0.5
         
@@ -189,13 +198,5 @@ extension NewUserDataViewController {
         }
         
         errorLabel.text = errorMessage
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == K.Segue.newUserDataToChat {
-            if let destinationVC = segue.destination as? ChatViewController {
-                destinationVC.setChatSender(chatSender)
-            }
-        }
     }
 }

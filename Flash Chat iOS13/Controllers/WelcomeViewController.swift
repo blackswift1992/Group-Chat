@@ -26,8 +26,8 @@ class WelcomeViewController: UIViewController {
 //MARK: - Set up methods
 
 
-extension WelcomeViewController {
-    private func customizeViewElements() {
+private extension WelcomeViewController {
+    func customizeViewElements() {
         titleLabel.text = K.appName
         logInButton.layer.cornerRadius = 23
         registerButton.layer.cornerRadius = 13
