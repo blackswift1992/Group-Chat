@@ -29,14 +29,13 @@ extension SignUpViewController {
         activateScreenWaitingMode()
         
         Auth.auth().createUser(withEmail: safeUserEmail, password: safeUserPassword) { [weak self] authResult, error in
-            if let safeError = error {
-                print(safeError)
-                
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                if let safeError = error {
+                    print(safeError)
                     self?.failedToSignUp(withMessage: safeError.localizedDescription)
+                } else {
+                    self?.navigateToNewUserData()
                 }
-            } else {
-                self?.navigateToNewUserData()
             }
         }
     }
