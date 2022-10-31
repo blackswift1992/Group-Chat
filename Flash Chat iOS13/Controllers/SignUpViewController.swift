@@ -24,7 +24,8 @@ class SignUpViewController: UIViewController {
 private extension SignUpViewController {
     @IBAction func signUpButtonPressed(_ sender: UIButton) {
         guard let safeUserEmail = emailTextfield.text,
-              let safeUserPassword = passwordTextfield.text else { return }
+              let safeUserPassword = passwordTextfield.text
+        else { return }
         
         activateScreenWaitingMode()
         

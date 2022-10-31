@@ -250,6 +250,7 @@ private extension ChatViewController {
                 textBody: safeMessageBody,
                 isEdited: K.Case.no,
                 userRGBColor: safeChatSender.data.userRGBColor)
+            
             do {
                 let _ = try db.collection(K.FStore.messagesCollection).addDocument(from: messageData) { [weak self] error in
                     if let safeError = error {

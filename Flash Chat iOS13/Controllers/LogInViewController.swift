@@ -90,6 +90,7 @@ private extension LogInViewController {
                 }
             } else {
                 self?.errorMessage = "Your user data doesn't exist. Set it please."
+                
                 DispatchQueue.main.async {
                     self?.navigateToNewUserData()
                 }

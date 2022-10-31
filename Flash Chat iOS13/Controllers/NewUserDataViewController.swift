@@ -81,12 +81,9 @@ private extension NewUserDataViewController {
     }
     
     @IBAction func continueButtonPressed(_ sender: UIButton) {
+        guard let safeFirstName = firstNameTextField.text?.trim() else { return }
+        
         activateScreenWaitingMode()
-
-        guard let safeFirstName = firstNameTextField.text?.trim() else {
-            failedWithErrorMessage("Don't use only spaces in first name")
-            return
-        }
 
         if !safeFirstName.isEmpty {
             uploadAvatar()
@@ -162,8 +159,9 @@ private extension NewUserDataViewController {
                 }
             }
         } catch let error {
+            print("Error writing city to Firestore: \(error)")
+            
             DispatchQueue.main.async {
-                print("Error writing city to Firestore: \(error)")
                 self.failedWithErrorMessage("Try again")
             }
         }
