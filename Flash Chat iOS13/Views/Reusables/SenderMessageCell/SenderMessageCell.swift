@@ -36,31 +36,6 @@ extension SenderMessageCell {
 }
 
 
-//MARK: - @IBActions
-
-
-private extension SenderMessageCell {
-    @IBAction func messageButtonPressed(_ sender: UIButton) {
-        guard let safeSenderMessage = senderMessage else { return }
-        
-        setMessageColor(UIColor.brandDarkMint)
-        
-        Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) {
-            [unowned self] timer in
-            DispatchQueue.main.async {
-                if sender.isTracking {
-                    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-                    
-                    self.delegate?.messageSelected(self, selectedMessage: safeSenderMessage)
-                }
-                
-                self.setMessageColor(UIColor.brandMint)
-            }
-        }
-    }
-}
-
-
 //MARK: - Private methods
 
 
@@ -68,6 +43,20 @@ private extension SenderMessageCell {
     func setMessageColor(_ color: UIColor?) {
         messageBubble.backgroundColor = color
         messageTail.tintColor = color
+    }
+    
+    @objc func selectMessageBubble(gesture: UILongPressGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            setMessageColor(UIColor.brandDarkMint)
+            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        case .ended:
+            setMessageColor(UIColor.brandMint)
+            guard let safeSenderMessage = self.senderMessage else { return }
+            delegate?.messageSelected(self, selectedMessage: safeSenderMessage)
+        default:
+            return
+        }
     }
 }
 
@@ -81,5 +70,12 @@ private extension SenderMessageCell {
         messageBubble.layer.cornerRadius = cornerRadius
         messageButton.layer.cornerRadius = cornerRadius
         messageButton.setTitle(K.Case.emptyString, for: .normal)
+        setGestureRecognizerToMessageBubble()
+    }
+    
+    func setGestureRecognizerToMessageBubble() {
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(selectMessageBubble))
+        messageBubble.addGestureRecognizer(longPressGestureRecognizer)
+        messageBubble.isUserInteractionEnabled = true
     }
 }
