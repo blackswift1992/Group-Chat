@@ -28,6 +28,8 @@ class ChatViewController: UIViewController {
     private var selectedSenderMessage: Message?
     
     private var errorMessage: String?
+    
+    let tableCellsArraySerialQueue = DispatchQueue(label: "ua.org.zoromjavadev.table-cells-array-serial-queue")
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -198,7 +200,9 @@ private extension ChatViewController {
             } else {
                 guard let documents = querySnapshot?.documents else { return }
                 
-                self?.tableCells = [GreetingMessage()]
+                self?.tableCellsArraySerialQueue.sync {
+                    self?.tableCells = [GreetingMessage()]
+                }
                 
                 for document in documents {
                     do {
@@ -208,7 +212,9 @@ private extension ChatViewController {
                         
                         let message = Message(cellRow: cellRowNumber, data: messageData)
                         
-                        self?.tableCells.append(message)
+                        self?.tableCellsArraySerialQueue.sync {
+                            self?.tableCells.append(message)
+                        }
                     }
                     catch {
                         print("Retrieving MessageData from Firestore was failed")
