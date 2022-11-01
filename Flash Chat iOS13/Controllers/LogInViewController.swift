@@ -101,7 +101,7 @@ private extension LogInViewController {
     func downloadAvatar(with url: String) {
         let ref = Storage.storage().reference(forURL: url)
         
-        let megaByte = Int64(1 * 1024 * 1024)
+        let megaByte = Int64(1024 * 1024 * 1024)
         
         ref.getData(maxSize: megaByte) { [weak self] data, error in
             if let safeError = error {

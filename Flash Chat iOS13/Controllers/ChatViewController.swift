@@ -626,7 +626,7 @@ private extension ChatViewController {
     func downloadChatAvatar(stringURL: String) {
         let ref = Storage.storage().reference(forURL: stringURL)
         
-        let megaByte = Int64(1 * 1024 * 1024)
+        let megaByte = Int64(1024 * 1024 * 1024)
         
         ref.getData(maxSize: megaByte) { [weak self] data, error in
             if let safeError = error {
