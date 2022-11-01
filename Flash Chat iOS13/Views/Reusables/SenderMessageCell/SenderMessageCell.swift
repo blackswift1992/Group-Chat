@@ -75,6 +75,7 @@ private extension SenderMessageCell {
     
     func setGestureRecognizerToMessageBubble() {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(selectMessageBubble))
+        longPressGestureRecognizer.minimumPressDuration = 0.25
         messageBubble.addGestureRecognizer(longPressGestureRecognizer)
         messageBubble.isUserInteractionEnabled = true
     }

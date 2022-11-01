@@ -24,12 +24,6 @@ class UserMenuViewController: UIViewController {
         customizeViewElements()
     }
     
-    //any touch out of the UI element heads back to previous view
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        dismiss(animated: true, completion: nil)
-    }
-    
     //MARK: -- preparing for segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == K.Segue.userMenuToDeleteAccountWarning {
@@ -103,6 +97,10 @@ private extension UserMenuViewController {
     func navigateToDeleteAccountWarning() {
         performSegue(withIdentifier: K.Segue.userMenuToDeleteAccountWarning, sender: self)
     }
+    
+    @objc func respondToGesture() {
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 
@@ -121,6 +119,7 @@ private extension UserMenuViewController {
         deleteAccountButton.layer.cornerRadius = 17
         
         activateBlurEffectInContainerView()
+        setGestureRecognizerToView()
         
         if let safeChatSender = chatSender {
             firstNameLabel.text = safeChatSender.data.firstName
@@ -136,6 +135,12 @@ private extension UserMenuViewController {
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         containerView.addSubview(blurEffectView)
         containerView.addSubview(dataContainerView)
+    }
+    
+    func setGestureRecognizerToView() {
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(respondToGesture))
+        view.addGestureRecognizer(gestureRecognizer)
+        view.isUserInteractionEnabled = true
     }
 }
 

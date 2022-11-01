@@ -11,12 +11,6 @@ class MessageMenuViewController: UIViewController {
         super.viewDidLoad()
         customizeViewElements()
     }
-    
-    //any touch out of the UI element heads back to previous view
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        dismiss(animated: true, completion: nil)
-    }
 }
 
 
@@ -52,6 +46,16 @@ private extension MessageMenuViewController {
 }
 
 
+//MARK: - Private methods
+
+
+private extension MessageMenuViewController {
+    @objc func respondToGesture() {
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+
 //MARK: - Set up methods
 
 
@@ -59,6 +63,13 @@ private extension MessageMenuViewController {
     func customizeViewElements() {
         deleteButton.layer.cornerRadius = 18
         editButton.layer.cornerRadius = 18
+        setGestureRecognizerToView()
+    }
+    
+    func setGestureRecognizerToView() {
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(respondToGesture))
+        view.addGestureRecognizer(gestureRecognizer)
+        view.isUserInteractionEnabled = true
     }
 }
 

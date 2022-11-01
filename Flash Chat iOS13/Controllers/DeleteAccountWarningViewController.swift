@@ -11,12 +11,6 @@ class DeleteAccountWarningViewController: UIViewController {
         super.viewDidLoad()
         customizeViewElements()
     }
-    
-    //any touch out of the UI element heads back to previous view
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        dismiss(animated: true, completion: nil)
-    }
 }
 
 
@@ -48,6 +42,16 @@ private extension DeleteAccountWarningViewController {
 }
 
 
+//MARK: - Private methods
+
+
+private extension DeleteAccountWarningViewController {
+    @objc func respondToGesture() {
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+
 //MARK: - Set up methods
 
 
@@ -56,6 +60,7 @@ private extension DeleteAccountWarningViewController {
         containerView.layer.cornerRadius = 17;
         containerView.layer.masksToBounds = true;
         activateBlurEffectInBackgroundView()
+        setGestureRecognizerToView()
     }
     
     func activateBlurEffectInBackgroundView() {
@@ -65,6 +70,12 @@ private extension DeleteAccountWarningViewController {
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         backgroundView.addSubview(blurEffectView)
         backgroundView.addSubview(containerView)
+    }
+    
+    func setGestureRecognizerToView() {
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(respondToGesture))
+        view.addGestureRecognizer(gestureRecognizer)
+        view.isUserInteractionEnabled = true
     }
 }
 
