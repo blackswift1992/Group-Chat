@@ -1,37 +1,38 @@
+# Group Chat
 Group Chat is an app where people can chat with each other. This app includes a full CrUD cycle for messages and user accounts. Were taken into account as positive as negative user interaction scenarios. The application is based on Firestore/Firebase, Swift, UIKit, AutoLayout, GCD, CocoaPods, OOP, MVC, etc.
 
 Here video presentation of the app on Youtube: https://www.youtube.com/...
 
 Below there are some screenshots:
 
-1)First screens that user meets when the app runs
+1)First screens that user meets when the app runs. "⚡️GroupChat" is animated. Authorization, registration, and user data loading have an activity indicator.
 
-<img height="420" alt="Screenshot 2022-11-01 at 18 59 38" src="https://user-images.githubusercontent.com/113255680/199307262-624537cc-0bbf-4fee-aaad-f526f738c141.png"> <img height="420" alt="Screenshot 2022-11-01 at 19 01 00" src="https://user-images.githubusercontent.com/113255680/199307290-31f14d31-7a53-4704-a271-b0fd4c52e84e.png"> <img height="420" alt="Screenshot 2022-11-01 at 19 07 11" src="https://user-images.githubusercontent.com/113255680/199307333-250af988-0943-45f1-aa7c-ca82fec6917a.png">
+<img height="450" alt="Screenshot 2022-11-01 at 18 59 38 2" src="https://user-images.githubusercontent.com/113255680/199349944-ae4286b9-40e1-4c93-9df4-0c21cace1dc6.png"> <img height="450" alt="Screenshot 2022-11-01 at 19 01 00" src="https://user-images.githubusercontent.com/113255680/199349968-2a151849-42a3-43c4-834e-9639222a9d30.png"> <img height="450" alt="Screenshot 2022-11-01 at 19 07 11" src="https://user-images.githubusercontent.com/113255680/199349987-a461efd8-5560-4ac9-be42-c19019910a65.png">
 
 2)If something goes wrong, the user will receive tips to solve the problem.
 
-<img height="420" alt="Screenshot 2022-11-01 at 19 02 50" src="https://user-images.githubusercontent.com/113255680/199309721-a067517b-e240-420a-94c4-acec4c731b70.png"> <img height="420" alt="Screenshot 2022-11-01 at 19 09 09" src="https://user-images.githubusercontent.com/113255680/199309742-4fd729be-d0c2-4cdb-b936-32dacdb6f97e.png">
+<img height="450" alt="Screenshot 2022-11-01 at 19 02 50" src="https://user-images.githubusercontent.com/113255680/199350126-83927243-7835-4933-907c-12249f7a012e.png"> <img height="450" alt="Screenshot 2022-11-01 at 19 09 09" src="https://user-images.githubusercontent.com/113255680/199350154-c654571f-fae7-4e89-9531-9a357d47195d.png">
 
-3)Next, a special view will appear where the user can put his data. This view is used when the user also wants to edit his account information. First name is necessary.
+3)Next, a special view will appear where the user can put his data. This view is used when the user also wants to edit his account information. Also this view is used when  an account deleting might go wrong. A first name must be provided.
 
-<img height="420" alt="Screenshot 2022-11-01 at 19 13 26" src="https://user-images.githubusercontent.com/113255680/199311885-aec0084b-2fb3-4b50-93f5-79dc8badd644.png"> <img height="420" alt="Screenshot 2022-11-01 at 19 16 51" src="https://user-images.githubusercontent.com/113255680/199312449-2a0bde34-b904-47da-b1fa-9b1fd5a60214.png">
+<img height="450" alt="Screenshot 2022-11-01 at 19 13 26" src="https://user-images.githubusercontent.com/113255680/199350288-c3e10fc7-4286-45ae-8e22-6795185d8350.png"> <img height="450" alt="Screenshot 2022-11-01 at 19 16 51" src="https://user-images.githubusercontent.com/113255680/199350318-39beb265-6cbc-4331-963a-7a533eddd8cf.png">
 
-4)After that chat opens. Here you can write, edit, delete your messages. Edited messages are marked as "edited". In the right corner is a menu where the user can edit, delete his account or leave the chat.
+4)After that chat opens. Here you can write, edit, delete your messages. Edited messages are marked as "edited". A long press on a message opens an edit menu where the user can choose an action (delete, edit). In the right corner is a menu where the user can edit, delete his account or leave the chat.
 
-<img height="420" alt="Screenshot 2022-11-01 at 19 19 50" src="https://user-images.githubusercontent.com/113255680/199314627-d6b30ea4-2011-44c9-8c12-e2f80ec95664.png"><img height="420" alt="Screenshot 2022-11-01 at 19 22 35" src="https://user-images.githubusercontent.com/113255680/199314669-5b02fd48-16bd-4c76-b534-3badf6413981.png"><img height="420" alt="Screenshot 2022-11-01 at 19 23 44" src="https://user-images.githubusercontent.com/113255680/199314697-09399eb7-5402-4c0b-8902-0c1554094cfe.png"><img height="420" alt="Screenshot 2022-11-01 at 19 24 26" src="https://user-images.githubusercontent.com/113255680/199314726-2d784331-3e75-46f0-839a-6cd695ec24ac.png">
+<img height="450" alt="Screenshot 2022-11-01 at 19 19 50" src="https://user-images.githubusercontent.com/113255680/199350562-a599bd33-9ac8-4d89-8656-bdebb7fe9406.png"> <img height="450" alt="Screenshot 2022-11-01 at 19 22 35" src="https://user-images.githubusercontent.com/113255680/199350607-884073a3-c87b-4a7d-907d-a1ab2a28f941.png"> <img height="450" alt="Screenshot 2022-11-01 at 19 23 44" src="https://user-images.githubusercontent.com/113255680/199350626-09461ba6-3563-4dd7-ab1f-23f4406f8c73.png"> <img height="450" alt="Screenshot 2022-11-02 at 00 13 33" src="https://user-images.githubusercontent.com/113255680/199352429-e64c2910-c740-4644-8e7c-1fedcc6a1b29.png">
 
 5)When there are 3 or more users in the chat, the interlocutor's avatar changes to the standard group picture. Also, each user has an individual name color in the group chat. This helps to understand who you are writing to.
 
-<img height="420" alt="Screenshot 2022-11-01 at 19 29 50" src="https://user-images.githubusercontent.com/113255680/199318035-2008dbdc-20c7-4b39-9f69-8b48181c6037.png">
+<img height="450" alt="Screenshot 2022-11-01 at 19 29 50" src="https://user-images.githubusercontent.com/113255680/199351083-6992b23c-7dda-46ec-968e-59f8d8d055b9.png">
 
 6)There are also some warnings for the user. One of them appears when the user tries to edit a message with an empty string. The other one appears when the user tries to delete his account.
 
-<img height="420" alt="Screenshot 2022-11-01 at 19 25 50" src="https://user-images.githubusercontent.com/113255680/199318830-cde06334-f30b-4a42-8e24-276ec55005bf.png"> <img height="420" alt="Screenshot 2022-11-01 at 19 26 54" src="https://user-images.githubusercontent.com/113255680/199318867-e25b0a5f-6eea-43a7-a8e1-5f5b2fc7143d.png">
+<img height="450" alt="Screenshot 2022-11-01 at 19 25 50" src="https://user-images.githubusercontent.com/113255680/199351231-89f08a61-8fe7-4b52-90a5-68163094aae2.png"> <img height="450" alt="Screenshot 2022-11-01 at 19 26 54" src="https://user-images.githubusercontent.com/113255680/199351255-66c63dda-4e9a-4629-b267-79edd85ba684.png">
 
 7)Deleting an account is animated with the blinking word "Deleting..." and the blurred background.
 
-<img height="420" alt="Screenshot 2022-11-01 at 19 38 37" src="https://user-images.githubusercontent.com/113255680/199319656-67502019-c64a-480a-9be7-a6cd63d2fd41.png">
+<img height="450" alt="Screenshot 2022-11-01 at 19 38 37" src="https://user-images.githubusercontent.com/113255680/199351340-18682422-ad94-4fb7-9bef-678dd96b0e9b.png">
 
-8)Some special negative scenarios were taken into account. When a user tries to log in, the application checks if all user data exists in Firestore. If something goes wrong, the application will ask the user to specify his data again. Another negative case can happen when a user tries to delete an account and something goes wrong in the middle (some data has been deleted and some hasn't yet). So in this case, the application asks the user to specify his data again and try to delete one more time.
+8)Some special negative scenarios were taken into account. When a user tries to log in, the application checks if all user data exists in Firestore. If something goes wrong, the application will ask the user to specify his missing data. Another negative case can happen when a user tries to delete an account and something goes wrong in the middle (some data in Firestore was lost). So in this case, the application asks the user to specify his missing data and try to delete account one more time.
 
-<img height="420" alt="Screenshot 2022-11-01 at 19 32 17" src="https://user-images.githubusercontent.com/113255680/199322302-c8e3e0e8-d5ef-4269-a54d-37f86d6907a3.png"> <img height="420" alt="Screenshot 2022-11-01 at 19 34 15" src="https://user-images.githubusercontent.com/113255680/199322338-fc05d438-4402-4d9e-ba0d-5cbe053cb492.png"> <img height="420" alt="Screenshot 2022-11-01 at 19 39 32" src="https://user-images.githubusercontent.com/113255680/199322352-75b98818-002c-4e28-8c75-0b65d62fa10b.png">
+<img height="450" alt="Screenshot 2022-11-01 at 19 32 17" src="https://user-images.githubusercontent.com/113255680/199351409-c24f66bc-de16-4ad8-baa9-be95ca2997d4.png"> <img height="450" alt="Screenshot 2022-11-01 at 19 34 15" src="https://user-images.githubusercontent.com/113255680/199351437-dd0530b3-3615-402a-9177-7dc7764d4d88.png"> <img height="450" alt="Screenshot 2022-11-01 at 19 39 32" src="https://user-images.githubusercontent.com/113255680/199351461-a0018e02-2acc-4579-a52f-f7b751e6fb3c.png">
