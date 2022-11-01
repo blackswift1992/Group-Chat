@@ -1,7 +1,9 @@
 # Group Chat
-Group Chat is an app where people can chat with each other. This app includes a full CrUD cycle for messages and user accounts. Were taken into account as positive as negative user interaction scenarios. The application is based on Firestore/Firebase, Swift, UIKit, AutoLayout, GCD, CocoaPods, OOP, MVC, etc.
+Group Chat is an app where people can chat with each other. This app includes a full CrUD cycle for messages and user accounts. Were taken into account as positive as negative user interaction scenarios. The application is based on Firestore/Firebase, Swift, UIKit, AutoLayout, GCD, CocoaPods, OOP, MVC, etc. There are some animations and vibration responses in the app.
 
-Here video presentation of the app on Youtube: https://www.youtube.com/...
+Here video presentation on Youtube:
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/-MPezfT8AD4/0.jpg)](https://www.youtube.com/watch?v=-MPezfT8AD4)
 
 Below there are some screenshots:
 
